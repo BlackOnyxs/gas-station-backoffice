@@ -1,7 +1,7 @@
-import { BarChartOutlined, PushpinOutlined, UsergroupDeleteOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, DownOutlined  } from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons';
 import { Layout, Menu, Space, Dropdown  } from 'antd';
 import React, { useEffect } from 'react'
-import { Route, Routes, Link, Navigate } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import { AppRoutes } from '../app/routes/AppRoutes'
 import { AuthRoutes } from '../auth/routes/AuthRoutes'
 import { accountOptions, siderOptions } from '../data/menus';
@@ -70,7 +70,7 @@ export const Router = () => {
               <a onClick={ e=> e.preventDefault() }>
                 <Space>
                   { user.name }
-                  <DownOutlined />
+                  <DownOutlined/>
                 </Space>
               </a>
            </Dropdown>
@@ -94,7 +94,7 @@ export const Router = () => {
                )
                : (
                   <>
-                    <Route path="/" element={ <AppRoutes /> } /> 
+                    <Route path="*" element={ <AppRoutes /> } /> 
                     <Route path="/*" element={ <Navigate to="/" /> } /> 
                   </>
                )

@@ -1,14 +1,18 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
-import { LoginPage } from '../../auth/pages/LoginPage'
 import { DashBoardPage } from '../pages/DashBoardPage'
-import { PeoplePage } from '../pages/PeoplePage'
+import { SchedulePage } from '../pages/SchedulePage'
+import { TurnPage } from '../pages/TurnPage'
+import { WorkersPage } from '../pages/WorkersPage'
 
 export const AppRoutes = () => {
   return (
    <Routes>
     <Route path="/" element={ <DashBoardPage /> } />
-    <Route path="/people" element={ <PeoplePage /> } /> 
-    <Route path="/location" element={ <LoginPage /> } />
+
+    {/* -----Workers */}
+    <Route path="/trabajadores" element={ <WorkersPage /> } /> 
+    <Route path="/trabajadores/turnos" element={ <TurnPage /> } />
+    <Route path="/trabajadores/horarios" element={ <SchedulePage /> } />
 
     <Route path="/*" element={ <Navigate to="/" /> } />
    </Routes>
