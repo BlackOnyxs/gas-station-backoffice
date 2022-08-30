@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import pApi from '../api/pApi';
+import gasApi from '../api/gasApi';
 import { clearErrorMessage, onChecking, onLogin, onLogout } from '../store';
 
 export const useAuthStore = () => {
@@ -15,10 +15,11 @@ export const useAuthStore = () => {
     const starLogin = async({ email, password }) => {
         dispatch( onChecking() );
         try {
-             const { data } = await pApi.post('/auth', { email, password });
+             const { data } = await gasApi.post('/auth', { email, password });
              localStorage.setItem('token', data.token );
              dispatch( onLogin({ name: data.name, uid: data.uid }) );
         } catch (error) {
+            console.log(error)
             dispatch( onLogout('Credenciales incorrectas.') );
             setTimeout( () => {
                dispatch( clearErrorMessage() );
@@ -31,7 +32,7 @@ export const useAuthStore = () => {
         if ( !token ) return dispatch( onLogout() );
 
         try {
-            const { data } = await pApi.get('/auth/renew');  
+            const { data } = await gasApi.get('/auth/renew');  
             localStorage.setItem('token', data.token);
             dispatch( onLogin({ name: data.name, uid: data.uid }) );
         } catch (error) {

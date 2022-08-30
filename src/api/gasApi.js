@@ -3,19 +3,19 @@ import { getEnvVariables } from '../helpers/getEnvVariables';
 
 const { VITE_API_URL } = getEnvVariables();
 
-const pApi = axios.create({
+const gasApi = axios.create({
     baseURL: VITE_API_URL
 });
 
-pApi.interceptors.request.use( config => {
+gasApi.interceptors.request.use( config => {
 
     config.headers = {
         ...config.headers,
         'x-token': localStorage.getItem('token')
     }
-
+    console.log(VITE_API_URL)
     return config;
 })
 
 
-export default pApi;
+export default gasApi;
