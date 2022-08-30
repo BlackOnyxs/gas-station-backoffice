@@ -3,6 +3,7 @@ import {
   CalendarOutlined, 
   ContactsOutlined, 
   ExperimentOutlined, 
+  FieldTimeOutlined, 
   FileDoneOutlined, 
   FireOutlined,  
   LoginOutlined,  
@@ -31,13 +32,18 @@ export const accountOptions = [
 const subMenuWorkers = [
     {
       key: '3',
-      icon: <CalendarOutlined />,
+      icon: <FieldTimeOutlined />,
       label: <Link to="/trabajadores/turnos">Turnos</Link>
     },
     {
       key: '4',
       icon: <ContactsOutlined />,
       label: <Link to="/trabajadores">Colaboradores</Link>
+    },
+    {
+      key: '12',
+      icon: <CalendarOutlined />,
+      label: <Link to="/trabajadores/horarios">Horarios</Link>
     },
 ];
 
@@ -98,4 +104,22 @@ export const siderOptions = [
       icon: <PartitionOutlined />,
       label: <Link to="/proveedores">Proveedores</Link>,
     },
-  ]
+  ];
+
+  export const validRoles = [
+      {
+        _id: '1',
+        label: 'Secretaria',
+        value: 'SECRETARY_ROLE',
+      },
+      {
+        _id: '2',
+        label: 'Despachador',
+        value: 'DISPENSER_ROLE',
+      },
+      {
+        _id: '3',
+        label: 'Gerente',
+        value: 'ADMIN_ROLE',
+      },
+  ];
