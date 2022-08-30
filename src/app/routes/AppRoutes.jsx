@@ -1,5 +1,8 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
 import { DashBoardPage } from '../pages/DashBoardPage'
+import { FuelPage } from '../pages/FuelPage'
+import { OilPage } from '../pages/OilPage'
+import { ProviderPage } from '../pages/ProviderPage'
 import { SchedulePage } from '../pages/SchedulePage'
 import { TurnPage } from '../pages/TurnPage'
 import { WorkersPage } from '../pages/WorkersPage'
@@ -13,6 +16,14 @@ export const AppRoutes = () => {
     <Route path="/trabajadores" element={ <WorkersPage /> } /> 
     <Route path="/trabajadores/turnos" element={ <TurnPage /> } />
     <Route path="/trabajadores/horarios" element={ <SchedulePage /> } />
+
+    {/* Inventory */}
+    <Route path="/inventario/combustibles" element={ <FuelPage /> } /> 
+    <Route path="/inventario/aceites" element={ <OilPage /> } /> 
+
+    {/* Provider */}
+    <Route path="/proveedores" element={ <ProviderPage /> } /> 
+
 
     <Route path="/*" element={ <Navigate to="/" /> } />
    </Routes>
