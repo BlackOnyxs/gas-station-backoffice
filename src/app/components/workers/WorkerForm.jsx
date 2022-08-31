@@ -53,12 +53,12 @@ export const WorkerForm = () => {
             label="Contraseña"
             name="password"
             key="password"
-            rules={[
-                {
-                  required: true,
-                  message: 'Campo reuqerido',
-                },
-              ]}
+            // rules={[
+            //     {
+            //       required: A,
+            //       message: 'Campo reuqerido',
+            //     },
+            //   ]}
         >
             <Input type="text" />
         </Form.Item>
@@ -105,7 +105,7 @@ export const WorkerForm = () => {
                 },
               ]}
         >
-            <Switch checked onChange={ handleCheked }
+            <Switch defaultChecked onChange={ handleCheked }
             />
         </Form.Item>
         </>

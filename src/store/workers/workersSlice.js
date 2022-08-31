@@ -34,10 +34,10 @@ export const WorkersSlice = createSlice({
         },
         onUpdateWorker: (state, { payload }) => {
             state.workers = state.workers.map( worker => {
-                if ( worker.uid === payload ) {
-                    return payload;
+                if ( worker.uid === payload.uid ) {
+                    return setObjectKey(payload);
                 }
-                return worker;
+                return setObjectKey(worker);
             });
         }
     }

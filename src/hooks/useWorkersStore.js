@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import { onCreateWorker, onLoadWorkers, onSetActiveWorker } from '../store';
+import { onCreateWorker, onDeleteWorker, onLoadWorkers, onSetActiveWorker, onUpdateWorker } from '../store';
 import gasApi from '../api/gasApi';
 
 export const useWorkersStore = () => {
@@ -10,6 +10,16 @@ export const useWorkersStore = () => {
 
     const setActiveWorker = ( worker ) => {
         dispatch( onSetActiveWorker( worker ) );
+    }
+
+    const startDeleteWorker = async( worker ) => {
+        try {
+            const resp = await gasApi.delete(`/users/${ worker.uid }`);
+            dispatch( onDeleteWorker() );
+        } catch (error) {
+            console.log(error)
+        }
+        
     }
 
     const startLoadingWorkers = async() => {
@@ -23,11 +33,13 @@ export const useWorkersStore = () => {
     }
 
     const startSavingWorker = async( worker ) => {
-        if ( worker._id ) {
+        if ( worker.uid ) {
+            console.log(worker.uid)
             try {
-                
+                const { data } = await gasApi.put(`/users/${ worker.uid }`, worker);
+                dispatch( onUpdateWorker( data ) );
             } catch (error) {
-                console.log(error.response.data.msg)
+                console.log(error)
             }
         }else {
             try {
@@ -47,6 +59,7 @@ export const useWorkersStore = () => {
     isLoadingWorkers,
     //Methods
     setActiveWorker,
+    startDeleteWorker,
     startLoadingWorkers,
     startSavingWorker,
   }

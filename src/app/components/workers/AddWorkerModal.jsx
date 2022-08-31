@@ -8,12 +8,14 @@ import { WorkerForm } from './WorkerForm';
 export const AddWorkerModal = () => {
   const [form] = Form.useForm();
     const { isWorkersModalOpen, closeWorkersModal } = useUiStore();
-    const { startSavingWorker, activeWorker, setActiveWorker} = useWorkersStore();
+    const { startSavingWorker, activeWorker, startDeleteWorker, setActiveWorker} = useWorkersStore();
 
     const handleOk = ({ name, cip, phone, email, role, status, password}) => {
-        if ( activeWorker ) {
-            startSavingWorker({ name, cip, phone, email, role, _id: activeWorker._id, password, status })
-        } else {
+        if ( activeWorker.uid && status === true ) {
+            startSavingWorker({ name, cip, phone, email, role, uid: activeWorker.uid, password, status })
+        } else if ( status === false ) {
+          startDeleteWorker( activeWorker );
+        }else {
           startSavingWorker({ name, cip, phone, email, role, password});
         }
         closeWorkersModal();
@@ -21,17 +23,7 @@ export const AddWorkerModal = () => {
 
     const handleCancel = () => {
       setActiveWorker(null);
-      // form.setFieldsValue({
-      //   name: '',
-      //   cip: '',
-      //   email: '',
-      //   password: '',
-      //   phone: '',
-      //   status: '',
-      //   role: '',
-      // })
-      // form.resetFields(['name'])
-        closeWorkersModal();
+      closeWorkersModal();
     };
 
     return (
