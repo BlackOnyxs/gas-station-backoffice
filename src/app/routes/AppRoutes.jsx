@@ -1,9 +1,11 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
+import { BuyInvoicePage } from '../pages/BuyInvoicePage'
 import { DashBoardPage } from '../pages/DashBoardPage'
 import { FuelPage } from '../pages/FuelPage'
 import { OilPage } from '../pages/OilPage'
 import { ProviderPage } from '../pages/ProviderPage'
 import { SchedulePage } from '../pages/SchedulePage'
+import { SellInvoicePage } from '../pages/SellInvoicePage'
 import { TurnPage } from '../pages/TurnPage'
 import { WorkersPage } from '../pages/WorkersPage'
 
@@ -23,6 +25,10 @@ export const AppRoutes = () => {
 
     {/* Provider */}
     <Route path="/proveedores" element={ <ProviderPage /> } /> 
+
+    {/* Invoices */}
+    <Route path="/compras" element={ <BuyInvoicePage /> } /> 
+    <Route path="/ventas" element={ <SellInvoicePage /> } /> 
 
 
     <Route path="/*" element={ <Navigate to="/" /> } />

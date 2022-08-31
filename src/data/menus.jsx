@@ -196,6 +196,17 @@ export const siderOptions = [
     },
   ];
 
+  export const validProductType = [
+    {
+      _id: '1',
+      name: 'Combustible',
+    },
+    {
+      _id: '2',
+      name: 'Oil',
+    },
+  ];
+
   export const validSize = [
     {
       _id: '1',
