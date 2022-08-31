@@ -13,7 +13,6 @@ gasApi.interceptors.request.use( config => {
         ...config.headers,
         'x-token': localStorage.getItem('token')
     }
-    console.log(VITE_API_URL)
     return config;
 })
 

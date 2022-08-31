@@ -1,27 +1,27 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { onClosePeopleModal, onOpenPeopleModal } from '../store/';
+import { onCloseWorkersModal, onOpenWorkersModal, } from '../store/';
 
 export const useUiStore = () => {
 
     const dispatch = useDispatch();
 
     const {
-        isPeopleModalOpen,
+        isWorkersModalOpen,
     } = useSelector( state => state.ui );
 
-    const openPeopleModal = () => {
-        dispatch( onOpenPeopleModal() )
+    const openWorkersModal = () => {
+        dispatch( onOpenWorkersModal() )
     }
 
-    const closePeopleModal = () => {
-        dispatch( onClosePeopleModal() )
+    const closeWorkersModal = () => {
+        dispatch( onCloseWorkersModal() )
     }
 
     return {
         //* Propiedades
-        isPeopleModalOpen,
+        isWorkersModalOpen,
         //*Metodos
-        openPeopleModal,
-        closePeopleModal,
+        closeWorkersModal,
+        openWorkersModal,
     }
 }

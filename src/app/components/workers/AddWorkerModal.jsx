@@ -1,35 +1,39 @@
 import React from 'react';
-import { Modal, Button, Form, Input, Select, Switch } from 'antd';
+import { Modal, Button, Form } from 'antd';
 import { validRoles } from '../../../data/menus';
 
-// import { useCategoryStore, useInventoryStore, useUiStore } from '../../../hooks';
+import { useWorkersStore,  useUiStore } from '../../../hooks';
+import { WorkerForm } from './WorkerForm';
 
 export const AddWorkerModal = () => {
-    // const { isProductModalOpen, closeProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { startSavingProducts, activeProduct } = useInventoryStore();
+  const [form] = Form.useForm();
+    const { isWorkersModalOpen, closeWorkersModal } = useUiStore();
+    const { startSavingWorker, activeWorker, startDeleteWorker, setActiveWorker} = useWorkersStore();
 
-    const handleOk = ({ name, category, price, description }) => {
-        // if ( activeProduct ) {
-        //     startSavingProducts({ name, category, price, description, _id: activeProduct._id })
-        // } else {
-        //   startSavingProducts({ name, category, price, description })
-        // }
-        // closeProductModal();
+    const handleOk = ({ name, cip, phone, email, role, status, password}) => {
+        if ( activeWorker.uid && status === true ) {
+            startSavingWorker({ name, cip, phone, email, role, uid: activeWorker.uid, password, status })
+        } else if ( status === false ) {
+          startDeleteWorker( activeWorker );
+        }else {
+          startSavingWorker({ name, cip, phone, email, role, password});
+        }
+        closeWorkersModal();
     };
 
     const handleCancel = () => {
-      // closeProductModal();
+      setActiveWorker(null);
+      closeWorkersModal();
     };
 
     return (
       <>
         <Modal 
-            title="Nuevo Trabajador" //Todo: si existe el plato
-            // visible={isProductModalOpen} 
-            // visible={true} 
+            title={ (activeWorker) ? activeWorker.name : 'Nuevo Colaborador'} //Todo: si existe el plato
+            visible={isWorkersModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
+            destroyOnClose={ true }
             footer={[
               <Button 
                   key="back" 
@@ -48,6 +52,7 @@ export const AddWorkerModal = () => {
           ]}
         >
         <Form
+            form={form}
             id="category-form"
             labelCol={{ span: 8 }}
             layout="horizontal"
@@ -55,71 +60,18 @@ export const AddWorkerModal = () => {
                 span: 16,
             }}
             onFinish={ handleOk }
+            initialValues={{
+              name:  activeWorker ? activeWorker.name  : '',
+              cip:   activeWorker ? activeWorker.cip   : '',
+              email: activeWorker ? activeWorker.email : '',
+              password: '',
+              phone: activeWorker ? activeWorker.phone : '',
+              status: activeWorker ?  activeWorker.status : true,
+              role: activeWorker ?  activeWorker.role : validRoles[0].label
+            }}
+            
         >
-            <Form.Item
-                label="Nombre"
-                name="name"
-                key="name"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="text"/>
-            </Form.Item>
-            <Form.Item
-                label="Cédula"
-                name="CIP"
-                key="CIP"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="text"/>
-            </Form.Item>
-            <Form.Item
-              label="Rol"
-              name="role"
-              key="role"
-            >
-              {
-                validRoles && (
-                  <Select
-                    defaultValue={ validRoles[0].label }
-                  >
-                    {
-                      validRoles.map( c => (
-                        <Select.Option
-                          key={ c._id }
-                        >
-                          { c.label }
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-  
-            {/* Todo: add image file if activeproduct */}
-            <Form.Item
-                label="Estado"
-                name="status"
-                key="status"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Switch checked onChange={()=> {}}/>
-            </Form.Item>
+            <WorkerForm />
         </Form>
         </Modal>
       </>

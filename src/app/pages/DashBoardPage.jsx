@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, Col, Row, Statistic } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons'
 import { ChartDashboard } from '../components/dashboard/ChartDashboard';
+import { useWorkersStore } from '../../hooks/useWorkersStore';
 
 export const DashBoardPage = () => {
+
+  // const { startLoadingWorkers } = useWorkersStore();
+
+  // useEffect(() => {
+  //   startLoadingWorkers();
+  // }, [])
+  
+
   return (
     <div className="site-statistic-demo-card">
       <Row gutter={16} style={{ marginBottom: 50}}>

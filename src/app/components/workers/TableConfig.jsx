@@ -1,22 +1,20 @@
 import React,  { useRef, useState }  from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Switch } from 'antd';
+import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-// import { useUiStore } from '../../../hooks';
-// import { useCategoryStore, useInventoryStore } from '../../../hooks';
-const products = [];
-const roles = [];
+import { useUiStore } from '../../../hooks';
+import { useWorkersStore } from '../../../hooks/useWorkersStore';
+import { validRoles } from '../../../data/menus';
 
 export const TableConfig = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    // const { openProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { products, setActiveProduct } = useInventoryStore();
+    const { openWorkersModal } = useUiStore();
+    const { workers, setActiveWorker } = useWorkersStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -124,19 +122,19 @@ export const TableConfig = () => {
         },
         {
           title: 'Cedula',
-          dataIndex: 'CIP',
-          key: 'CIP',
+          dataIndex: 'cip',
+          key: 'cip',
           width: '20%',
-          ...getColumnSearchProps('CIP')
+          ...getColumnSearchProps('cip')
         },
         {
           title: 'Rol',
           dataIndex: 'role',
           key: 'role',
-          filters: roles.map( r => {
+          filters: validRoles.map( r => {
             return {
-              text: r.name,
-              value: r.name
+              text: r.label,
+              value: r.value
             }
           }),
           onFilter: ( value, record ) => {
@@ -155,14 +153,14 @@ export const TableConfig = () => {
     return (
         <Table 
             columns={columns} 
-            dataSource={products}  
+            dataSource={workers}  
             style={{ height: '100vh'}}
-            pagination={ 20 }
+            pagination={ 10 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  // setActiveProduct(record)
-                  // openProductModal();
+                  setActiveWorker(record)
+                  openWorkersModal();
                 }
               }
             }}
