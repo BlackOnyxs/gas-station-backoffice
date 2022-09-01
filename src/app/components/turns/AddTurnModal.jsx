@@ -2,36 +2,42 @@ import React from 'react';
 import moment from 'moment';
 import { Modal, Button, Form, TimePicker, Switch } from 'antd';
 
-// import { useCategoryStore, useInventoryStore, useUiStore } from '../../../hooks';
+import { useUiStore } from '../../../hooks';
+import { useTurnsStore } from '../../../hooks/useTurnsStore';
 
 export const AddTurnModal = () => {
-    // const { isProductModalOpen, closeProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { startSavingProducts, activeProduct } = useInventoryStore();
+    const { isTurnsModalOpen, closeTurnsModal } = useUiStore();
+    const { startSavingTurn, activeTurn, startDeleteTurn } = useTurnsStore();
 
-    const handleOk = ({ name, category, price, description }) => {
-        // if ( activeProduct ) {
-        //     startSavingProducts({ name, category, price, description, _id: activeProduct._id })
-        // } else {
-        //   startSavingProducts({ name, category, price, description })
-        // }
-        // closeProductModal();
+    const handleOk = ({ startTime, endTime, status }) => {
+        if ( activeTurn._id && status === true ) {
+            startSavingTurn({ startTime, endTime, _id: activeTurn._id })
+        } else if ( activeTurn._id && status === false ) {
+          startDeleteTurn(activeTurn);
+        } else {
+          startSavingTurn({ startTime, endTime })
+        }
+        closeTurnsModal();
     };
 
     const handleCancel = () => {
-      // closeProductModal();
+      closeTurnsModal();
     };
 
-    const format = 'HH:mm';
+    const handleStatusChange = () => {
+
+    }
+
+    const format = 'HH:mm:ss';
 
     return (
       <>
         <Modal 
-            title="Nuevo Turno" //Todo: si existe el plato
-            // visible={isProductModalOpen} 
-            // visible={true} 
+            title={ activeTurn ? `Turno ${ activeTurn.startTime } - ${ activeTurn.endTime}`: 'Nuevo Turno' } //Todo: si existe el plato
+            visible={isTurnsModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
+            destroyOnClose
             footer={[
               <Button 
                   key="back" 
@@ -57,6 +63,11 @@ export const AddTurnModal = () => {
                 span: 16,
             }}
             onFinish={ handleOk }
+            initialValues={{
+              startTime: activeTurn ? moment(activeTurn.startTime, format) : moment('12:08', format),
+              endTime: activeTurn ? moment(activeTurn.endTime, format) : moment('12:08', format),
+              status: activeTurn ?  activeTurn.status : true,
+            }}
         >
             <Form.Item
                 label="Hora Inicio"
@@ -69,7 +80,9 @@ export const AddTurnModal = () => {
                     },
                   ]}
             >
-                <TimePicker defaultValue={moment('12:08', format)} format={format} />
+                <TimePicker 
+                  format={format} 
+                />
             </Form.Item>
             <Form.Item
                 label="Hora Fin"
@@ -82,7 +95,9 @@ export const AddTurnModal = () => {
                     },
                   ]}
             >
-                 <TimePicker defaultValue={moment('12:08', format)} format={format} />
+                 <TimePicker 
+                  format={format} 
+                />
             </Form.Item>
   
             {/* Todo: add image file if activeproduct */}
@@ -90,14 +105,8 @@ export const AddTurnModal = () => {
                 label="Estado"
                 name="status"
                 key="status"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
             >
-                <Switch checked onChange={()=> {}}/>
+                <Switch defaultChecked onChange={ handleStatusChange }/>
             </Form.Item>
         </Form>
         </Modal>

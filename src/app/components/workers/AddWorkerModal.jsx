@@ -11,14 +11,16 @@ export const AddWorkerModal = () => {
     const { startSavingWorker, activeWorker, startDeleteWorker, setActiveWorker} = useWorkersStore();
 
     const handleOk = ({ name, cip, phone, email, role, status, password}) => {
+      if ( activeWorker ) {
         if ( activeWorker.uid && status === true ) {
             startSavingWorker({ name, cip, phone, email, role, uid: activeWorker.uid, password, status })
         } else if ( status === false ) {
           startDeleteWorker( activeWorker );
-        }else {
+        } 
+      } else {
           startSavingWorker({ name, cip, phone, email, role, password});
-        }
-        closeWorkersModal();
+      }
+      closeWorkersModal();
     };
 
     const handleCancel = () => {

@@ -13,7 +13,7 @@ export const WorkersSlice = createSlice({
             state.activeWorker = payload
         },
         onCreateWorker: (state, { payload }) => {
-            state.workers.push( payload );
+            state.workers.push( setObjectKey(payload) );
             state.activeWorker = null;
         },
         onDeleteWorker: (state) => {
@@ -37,7 +37,7 @@ export const WorkersSlice = createSlice({
                 if ( worker.uid === payload.uid ) {
                     return setObjectKey(payload);
                 }
-                return setObjectKey(worker);
+                return worker;
             });
         }
     }

@@ -1,22 +1,19 @@
 import React,  { useRef, useState }  from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Switch } from 'antd';
+import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-// import { useUiStore } from '../../../hooks';
-// import { useCategoryStore, useInventoryStore } from '../../../hooks';
-const products = [];
-const roles = [];
+import { useUiStore } from '../../../hooks';
+import { useTurnsStore } from '../../../hooks/useTurnsStore';
 
 export const TableConfigTurn = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    // const { openProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { products, setActiveProduct } = useInventoryStore();
+    const { openTurnsModal } = useUiStore();
+    const { turns, setActiveTurn } = useTurnsStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -142,14 +139,14 @@ export const TableConfigTurn = () => {
     return (
         <Table 
             columns={columns} 
-            dataSource={products}  
+            dataSource={turns}  
             style={{ height: '100vh'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  // setActiveProduct(record)
-                  // openProductModal();
+                  setActiveTurn(record)
+                  openTurnsModal();
                 }
               }
             }}

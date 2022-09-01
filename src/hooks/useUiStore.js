@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { onCloseWorkersModal, onOpenWorkersModal, } from '../store/';
+import { onCloseTurnsModal, onCloseWorkersModal, onOpenTurnsModal, onOpenWorkersModal, } from '../store/';
 
 export const useUiStore = () => {
 
@@ -7,6 +7,7 @@ export const useUiStore = () => {
 
     const {
         isWorkersModalOpen,
+        isTurnsModalOpen
     } = useSelector( state => state.ui );
 
     const openWorkersModal = () => {
@@ -16,12 +17,22 @@ export const useUiStore = () => {
     const closeWorkersModal = () => {
         dispatch( onCloseWorkersModal() )
     }
+    const openTurnsModal = () => {
+        dispatch( onOpenTurnsModal() )
+    }
+
+    const closeTurnsModal = () => {
+        dispatch( onCloseTurnsModal() )
+    }
 
     return {
         //* Propiedades
         isWorkersModalOpen,
+        isTurnsModalOpen,
         //*Metodos
         closeWorkersModal,
         openWorkersModal,
+        openTurnsModal,
+        closeTurnsModal,
     }
 }
