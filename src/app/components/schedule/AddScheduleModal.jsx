@@ -1,39 +1,59 @@
 import React from 'react';
-import { Modal, Button, Form, Switch, Tag, Select, DatePicker } from 'antd';
+import { Modal, Button, Form } from 'antd';
+import moment from 'moment';
 
-// import { useCategoryStore, useInventoryStore, useUiStore } from '../../../hooks';
-const turns = [{ _id: '1', startTime: '01:00', endTime: '08:00'}];
-const dispensers = [];
+import { useScheduleStore, useTurnsStore, useUiStore, useWorkersStore } from '../../../hooks';
+import { useEffect } from 'react';
+import { FormSchedule } from './FormSchedule';
+
+
 export const AddScheduleModal = () => {
-    // const { isProductModalOpen, closeProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { startSavingProducts, activeProduct } = useInventoryStore();
+    const [form] = Form.useForm();
+    const { isScheduleModalOpen, closeScheduleModal } = useUiStore();
+    const { startSavingSchedule, activeSchedule, startDeleteSchedule } = useScheduleStore();
+    const { turns } = useTurnsStore();
+    const { workers } = useWorkersStore();
 
-    const handleOk = ({ name, category, price, description }) => {
-        // if ( activeProduct ) {
-        //     startSavingProducts({ name, category, price, description, _id: activeProduct._id })
-        // } else {
-        //   startSavingProducts({ name, category, price, description })
-        // }
-        // closeProductModal();
+    const handleOk = ({ dispenser, turn, date, status }) => {
+      console.log(status)
+        if ( status ) {
+          startSavingSchedule({...activeSchedule, dispenser, turn, date, status })
+        } else {
+          startDeleteSchedule( activeSchedule );
+        }
+        closeScheduleModal();
     };
 
     const handleCancel = () => {
-      // closeProductModal();
+      closeScheduleModal();
     };
 
-    const handleDateChange = (date)=> {
-      // ActiveDate TODO:
-    }
+   const setInitialValues = () => {
+      if ( activeSchedule ) {
+        form.setFieldsValue({
+          'dispenser': activeSchedule.dispenser.name,
+          'turn': activeSchedule.turn._id,
+          'date': moment(activeSchedule.date, 'YYYY/MM/DD'),
+        })        
+      } else {
+        form.setFieldsValue({
+          'dispenser': workers,
+          'turn': turns,
+          'date': moment()
+        })          
+      }
+   }
 
+   useEffect(() => {
+     setInitialValues();
+   }, [activeSchedule])
    
 
     return (
       <>
         <Modal 
             title="Nuevo Horario" //Todo: si existe el plato
-            // visible={isProductModalOpen} 
-            // visible={true} 
+            visible={ isScheduleModalOpen } 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[
@@ -55,6 +75,7 @@ export const AddScheduleModal = () => {
         >
         <Form
             id="category-form"
+            form={ form }
             labelCol={{ span: 8 }}
             layout="horizontal"
             wrapperCol={{
@@ -62,90 +83,7 @@ export const AddScheduleModal = () => {
             }}
             onFinish={ handleOk }
         >
-            <Form.Item
-                label="Despachador"
-                name="dispenser"
-                key="dispenser"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-              {
-                turns && (
-                  <Select
-                    defaultValue={ turns[0].name }
-                  >
-                    {
-                      turns.map( t => (
-                        <Select.Option
-                          key={ t._id }
-                        >
-                          <a>Inicio: <Tag color="cyan">{t.startTime}</Tag> Fin: <Tag color="magenta">{t.endTime}</Tag></a>
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            <Form.Item
-                label="Turno"
-                name="turn"
-                key="turn"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-              {
-                turns && (
-                  <Select
-                    defaultValue={ turns[0]._id }
-                  >
-                    {
-                      turns.map( t => (
-                        <Select.Option
-                          key={ t._id }
-                        >
-                          <a>Inicio: <Tag color="cyan">{t.startTime}</Tag> Fin: <Tag color="magenta">{t.endTime}</Tag></a>
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            <Form.Item
-                label="Fecha"
-                name="date"
-                key="date"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <DatePicker onChange={handleDateChange} />
-            </Form.Item>
-            <Form.Item
-                label="Estado"
-                name="status"
-                key="status"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Switch checked onChange={()=> {}}/>
-            </Form.Item>
+          <FormSchedule />
         </Form>
         </Modal>
       </>

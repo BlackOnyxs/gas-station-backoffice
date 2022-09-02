@@ -140,7 +140,7 @@ export const TableConfigTurn = () => {
         <Table 
             columns={columns} 
             dataSource={turns}  
-            style={{ height: '100vh'}}
+            style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {

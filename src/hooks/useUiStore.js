@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { onCloseTurnsModal, onCloseWorkersModal, onOpenTurnsModal, onOpenWorkersModal, } from '../store/';
+import { onCloseScheduleModal, onCloseTurnsModal, onCloseWorkersModal, onOpenScheduleModal, onOpenTurnsModal, onOpenWorkersModal, } from '../store/';
 
 export const useUiStore = () => {
 
@@ -7,7 +7,8 @@ export const useUiStore = () => {
 
     const {
         isWorkersModalOpen,
-        isTurnsModalOpen
+        isTurnsModalOpen,
+        isScheduleModalOpen,
     } = useSelector( state => state.ui );
 
     const openWorkersModal = () => {
@@ -24,15 +25,25 @@ export const useUiStore = () => {
     const closeTurnsModal = () => {
         dispatch( onCloseTurnsModal() )
     }
+    const openScheduleModal = () => {
+        dispatch( onOpenScheduleModal() )
+    }
+
+    const closeScheduleModal = () => {
+        dispatch( onCloseScheduleModal() )
+    }
 
     return {
         //* Propiedades
         isWorkersModalOpen,
         isTurnsModalOpen,
+        isScheduleModalOpen,
         //*Metodos
         closeWorkersModal,
         openWorkersModal,
         openTurnsModal,
         closeTurnsModal,
+        openScheduleModal,
+        closeScheduleModal,
     }
 }

@@ -154,7 +154,7 @@ export const TableConfig = () => {
         <Table 
             columns={columns} 
             dataSource={workers}  
-            style={{ height: '100vh'}}
+            style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 10 }
             onRow={ (record, rowIndex) => {
               return {

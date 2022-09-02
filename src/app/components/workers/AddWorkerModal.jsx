@@ -1,6 +1,5 @@
-import React from 'react';
+import React,  { useEffect } from 'react';
 import { Modal, Button, Form } from 'antd';
-import { validRoles } from '../../../data/menus';
 
 import { useWorkersStore,  useUiStore } from '../../../hooks';
 import { WorkerForm } from './WorkerForm';
@@ -11,15 +10,12 @@ export const AddWorkerModal = () => {
     const { startSavingWorker, activeWorker, startDeleteWorker, setActiveWorker} = useWorkersStore();
 
     const handleOk = ({ name, cip, phone, email, role, status, password}) => {
-      if ( activeWorker ) {
-        if ( activeWorker.uid && status === true ) {
-            startSavingWorker({ name, cip, phone, email, role, uid: activeWorker.uid, password, status })
-        } else if ( status === false ) {
-          startDeleteWorker( activeWorker );
-        } 
+      if ( status ) {
+        startSavingWorker({...activeWorker, name, cip, phone, email, password, role});
       } else {
-          startSavingWorker({ name, cip, phone, email, role, password});
+        startDeleteWorker( activeWorker );
       }
+          
       closeWorkersModal();
     };
 
@@ -27,6 +23,36 @@ export const AddWorkerModal = () => {
       setActiveWorker(null);
       closeWorkersModal();
     };
+
+    const setInitialValues = () => {
+      if ( activeWorker !== null ) {
+          form.setFieldsValue({
+            name:  activeWorker.name,
+            cip:   activeWorker.cip,
+            email: activeWorker.email,
+            password: '',
+            phone: activeWorker.phone,
+            status: activeWorker.status,
+            role: activeWorker.role,
+          })
+      }else {
+        form.setFieldsValue({
+          name: '',
+          cip: '',
+          email: '',
+          password: '',
+          phone: '',
+          status: '',
+          role: '',
+        })
+      }
+    }
+
+    useEffect(() => {
+      setInitialValues();
+    }, [activeWorker])
+    
+
 
     return (
       <>
@@ -62,15 +88,15 @@ export const AddWorkerModal = () => {
                 span: 16,
             }}
             onFinish={ handleOk }
-            initialValues={{
-              name:  activeWorker ? activeWorker.name  : '',
-              cip:   activeWorker ? activeWorker.cip   : '',
-              email: activeWorker ? activeWorker.email : '',
-              password: '',
-              phone: activeWorker ? activeWorker.phone : '',
-              status: activeWorker ?  activeWorker.status : true,
-              role: activeWorker ?  activeWorker.role : validRoles[0].label
-            }}
+            // initialValues={{
+            //   name:  activeWorker ? activeWorker.name  : '',
+            //   cip:   activeWorker ? activeWorker.cip   : '',
+            //   email: activeWorker ? activeWorker.email : '',
+            //   password: '',
+            //   phone: activeWorker ? activeWorker.phone : '',
+            //   status: activeWorker ?  activeWorker.status : true,
+            //   role: activeWorker ?  activeWorker.role : validRoles[0].label
+            // }}
             
         >
             <WorkerForm />
