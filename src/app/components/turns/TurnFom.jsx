@@ -41,14 +41,7 @@ export const TurnFom = () => {
                 />
             </Form.Item>
   
-            {/* Todo: add image file if activeproduct */}
-            <Form.Item
-                label="Estado"
-                name="status"
-                key="status"
-            >
-                <Switch defaultChecked onChange={ handleStatusChange }/>
-            </Form.Item>
+           
         </>
     )
 }

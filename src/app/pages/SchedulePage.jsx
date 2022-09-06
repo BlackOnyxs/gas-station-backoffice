@@ -12,7 +12,7 @@ import { FabAddNew } from '../components/schedule/FabAddNew';
 
 
 export const SchedulePage = () => {
-    const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week')
+    const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month')
 
     const { openScheduleModal } = useUiStore();
     const { isLoadingSchedule, starLoadingSchedule, schedule, setActiveSchedule } = useScheduleStore();

@@ -32,7 +32,7 @@ export const AddScheduleModal = () => {
       if ( activeSchedule ) {
         form.setFieldsValue({
           'dispenser': activeSchedule.dispenser.name,
-          'turn': activeSchedule.turn._id,
+          'turn': activeSchedule.turn,
           'date': moment(activeSchedule.date, 'YYYY/MM/DD'),
         })        
       } else {
@@ -46,7 +46,12 @@ export const AddScheduleModal = () => {
 
    useEffect(() => {
      setInitialValues();
-   }, [activeSchedule])
+   }, [activeSchedule]);
+
+   const handleDelete = () => {
+      startDeleteSchedule(activeSchedule);
+      closeScheduleModal();
+   }
    
 
     return (
@@ -62,6 +67,15 @@ export const AddScheduleModal = () => {
                   onClick={handleCancel}
               >
                 Cerrar
+              </Button>,
+               <Button
+                  danger
+                  type='primary'
+                  key="delete" 
+                  onClick={ handleDelete }
+                  disabled={ !activeSchedule }
+              >
+                Borrar
               </Button>,
               <Button
                   key="submit"

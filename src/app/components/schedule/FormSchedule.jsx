@@ -88,16 +88,7 @@ export const FormSchedule = () => {
               >
                   <DatePicker  locale={ locale } onChange={handleDateChange} />
               </Form.Item>
-              <Form.Item
-                  label="Estado"
-                  name="status"
-                  key="status"
-              >
-                  <Switch 
-                    defaultChecked={ true }
-                    onChange={ handleStatusChange }
-                  />
-              </Form.Item>
+              
               </>
             }
           </>

@@ -35,7 +35,6 @@ export const useScheduleStore = () => {
             try {
                 const { data } = await gasApi.put(`/schedule/${ schedule._id }`, schedule);
                 dispatch( onUpdateSchedule( data ) );
-                console.log(data)
             } catch (error) {
                 console.log(error)
             }
@@ -43,7 +42,6 @@ export const useScheduleStore = () => {
             try {
                 const { data } = await gasApi.post('/schedule', schedule);
                 dispatch( onCreateSchedule( data ) );
-                console.log(data)
             } catch (error) {
                 console.log(error)
             }

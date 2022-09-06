@@ -92,22 +92,6 @@ export const WorkerForm = () => {
             }
             </Select>
         </Form.Item>
-        
-        {/* Todo: add image file if activeWorker */}
-        <Form.Item
-            label="Estado"
-            name="status"
-            key="status"
-            rules={[
-                {
-                  required: true,
-                  message: 'Campo reuqerido',
-                },
-              ]}
-        >
-            <Switch defaultChecked onChange={ handleCheked }
-            />
-        </Form.Item>
         </>
   )
 }

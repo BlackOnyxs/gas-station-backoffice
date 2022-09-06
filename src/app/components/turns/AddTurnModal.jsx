@@ -13,11 +13,7 @@ export const AddTurnModal = () => {
     const { startSavingTurn, activeTurn, startDeleteTurn } = useTurnsStore();
 
     const handleOk = ({ startTime, endTime, status }) => {
-        if ( status ) {
-          startSavingTurn({...activeTurn, startTime, endTime})
-        }else {
-          startDeleteTurn( activeTurn )
-        }
+        startSavingTurn({...activeTurn, startTime, endTime});
         closeTurnsModal();
     };
 
@@ -47,6 +43,10 @@ export const AddTurnModal = () => {
       setInitialValues();
     }, [activeTurn])
     
+    const handleDelete = () => {
+      startDeleteTurn(activeTurn);
+      closeTurnsModal();
+    }
 
     return (
       <>
@@ -61,6 +61,15 @@ export const AddTurnModal = () => {
                   onClick={handleCancel}
               >
                 Cerrar
+              </Button>,
+              <Button
+                  danger
+                  type='primary'
+                  key="delete" 
+                  onClick={ handleDelete }
+                  disabled={ !activeTurn }
+              >
+                Borrar
               </Button>,
               <Button
                   key="submit"

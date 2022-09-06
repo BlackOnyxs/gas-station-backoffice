@@ -9,13 +9,8 @@ export const AddWorkerModal = () => {
     const { isWorkersModalOpen, closeWorkersModal } = useUiStore();
     const { startSavingWorker, activeWorker, startDeleteWorker, setActiveWorker} = useWorkersStore();
 
-    const handleOk = ({ name, cip, phone, email, role, status, password}) => {
-      if ( status ) {
-        startSavingWorker({...activeWorker, name, cip, phone, email, password, role});
-      } else {
-        startDeleteWorker( activeWorker );
-      }
-          
+    const handleOk = ({ name, cip, phone, email, role, password}) => {
+      startSavingWorker({...activeWorker, name, cip, phone, email, password, role});   
       closeWorkersModal();
     };
 
@@ -52,6 +47,10 @@ export const AddWorkerModal = () => {
       setInitialValues();
     }, [activeWorker])
     
+    const handleDelete = () => {
+      startDeleteWorker(activeWorker);
+      closeWorkersModal();
+    }
 
 
     return (
@@ -68,6 +67,15 @@ export const AddWorkerModal = () => {
                   onClick={handleCancel}
               >
                 Cerrar
+              </Button>,
+              <Button
+                  danger
+                  type='primary'
+                  key="delete" 
+                  onClick={ handleDelete }
+                  disabled={ !activeWorker }
+              >
+                Borrar
               </Button>,
               <Button
                   key="submit"
@@ -88,16 +96,6 @@ export const AddWorkerModal = () => {
                 span: 16,
             }}
             onFinish={ handleOk }
-            // initialValues={{
-            //   name:  activeWorker ? activeWorker.name  : '',
-            //   cip:   activeWorker ? activeWorker.cip   : '',
-            //   email: activeWorker ? activeWorker.email : '',
-            //   password: '',
-            //   phone: activeWorker ? activeWorker.phone : '',
-            //   status: activeWorker ?  activeWorker.status : true,
-            //   role: activeWorker ?  activeWorker.role : validRoles[0].label
-            // }}
-            
         >
             <WorkerForm />
         </Form>
