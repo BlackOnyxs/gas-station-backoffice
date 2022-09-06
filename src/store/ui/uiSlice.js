@@ -4,7 +4,9 @@ import { createSlice } from '@reduxjs/toolkit';
 export const uiSlice = createSlice({
     name: 'ui',
     initialState: {
-        isWorkersModalOpen: false
+        isWorkersModalOpen: false,
+        isTurnsModalOpen: false,
+        isScheduleModalOpen: false,
     },
     reducers: {
         onOpenWorkersModal: ( state ) => {
@@ -13,7 +15,26 @@ export const uiSlice = createSlice({
         onCloseWorkersModal: ( state ) => {
             state.isWorkersModalOpen = false 
         },
+        onOpenTurnsModal: ( state ) => {
+            state.isTurnsModalOpen = true 
+        },
+        onCloseTurnsModal: ( state ) => {
+            state.isTurnsModalOpen = false 
+        },
+        onOpenScheduleModal: ( state ) => {
+            state.isScheduleModalOpen = true 
+        },
+        onCloseScheduleModal: ( state ) => {
+            state.isScheduleModalOpen = false 
+        },
     }
 });
 
-export const { onOpenWorkersModal, onCloseWorkersModal } = uiSlice.actions;
+export const { 
+    onOpenWorkersModal, 
+    onCloseWorkersModal,
+    onOpenTurnsModal,
+    onCloseTurnsModal,
+    onOpenScheduleModal,
+    onCloseScheduleModal,
+} = uiSlice.actions;

@@ -1,6 +1,5 @@
-import React from 'react';
+import React,  { useEffect } from 'react';
 import { Modal, Button, Form } from 'antd';
-import { validRoles } from '../../../data/menus';
 
 import { useWorkersStore,  useUiStore } from '../../../hooks';
 import { WorkerForm } from './WorkerForm';
@@ -10,21 +9,49 @@ export const AddWorkerModal = () => {
     const { isWorkersModalOpen, closeWorkersModal } = useUiStore();
     const { startSavingWorker, activeWorker, startDeleteWorker, setActiveWorker} = useWorkersStore();
 
-    const handleOk = ({ name, cip, phone, email, role, status, password}) => {
-        if ( activeWorker.uid && status === true ) {
-            startSavingWorker({ name, cip, phone, email, role, uid: activeWorker.uid, password, status })
-        } else if ( status === false ) {
-          startDeleteWorker( activeWorker );
-        }else {
-          startSavingWorker({ name, cip, phone, email, role, password});
-        }
-        closeWorkersModal();
+    const handleOk = ({ name, cip, phone, email, role, password}) => {
+      startSavingWorker({...activeWorker, name, cip, phone, email, password, role});   
+      closeWorkersModal();
     };
 
     const handleCancel = () => {
       setActiveWorker(null);
       closeWorkersModal();
     };
+
+    const setInitialValues = () => {
+      if ( activeWorker !== null ) {
+          form.setFieldsValue({
+            name:  activeWorker.name,
+            cip:   activeWorker.cip,
+            email: activeWorker.email,
+            password: '',
+            phone: activeWorker.phone,
+            status: activeWorker.status,
+            role: activeWorker.role,
+          })
+      }else {
+        form.setFieldsValue({
+          name: '',
+          cip: '',
+          email: '',
+          password: '',
+          phone: '',
+          status: '',
+          role: '',
+        })
+      }
+    }
+
+    useEffect(() => {
+      setInitialValues();
+    }, [activeWorker])
+    
+    const handleDelete = () => {
+      startDeleteWorker(activeWorker);
+      closeWorkersModal();
+    }
+
 
     return (
       <>
@@ -40,6 +67,15 @@ export const AddWorkerModal = () => {
                   onClick={handleCancel}
               >
                 Cerrar
+              </Button>,
+              <Button
+                  danger
+                  type='primary'
+                  key="delete" 
+                  onClick={ handleDelete }
+                  disabled={ !activeWorker }
+              >
+                Borrar
               </Button>,
               <Button
                   key="submit"
@@ -60,16 +96,6 @@ export const AddWorkerModal = () => {
                 span: 16,
             }}
             onFinish={ handleOk }
-            initialValues={{
-              name:  activeWorker ? activeWorker.name  : '',
-              cip:   activeWorker ? activeWorker.cip   : '',
-              email: activeWorker ? activeWorker.email : '',
-              password: '',
-              phone: activeWorker ? activeWorker.phone : '',
-              status: activeWorker ?  activeWorker.status : true,
-              role: activeWorker ?  activeWorker.role : validRoles[0].label
-            }}
-            
         >
             <WorkerForm />
         </Form>

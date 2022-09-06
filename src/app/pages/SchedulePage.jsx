@@ -1,55 +1,94 @@
-import React from 'react';
-import { Row, Col, Calendar } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Calendar  }  from 'react-big-calendar';
+
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+
 import { AddScheduleModal } from '../components/schedule/AddScheduleModal';
+import { LoadingPage } from '../components/common/LoadingPage';
+import { localizer, getMessagesES } from '../../helpers';
+import { CalendarEventBox } from '../components/schedule/calendarEventBox';
+import { useUiStore, useScheduleStore, useWorkersStore, useTurnsStore } from '../../hooks/';
+import { FabAddNew } from '../components/schedule/FabAddNew';
 
-const getMonthData = (value) => {
-    if (value.month() === 8) {
-      return 1394;
-    }
-  };
-
-const turns = [];
-const dispensers = [];
 
 export const SchedulePage = () => {
-    const monthCellRender = (value) => {
-        const num = getMonthData(value);
-        return num ? (
-          <div className="notes-month">
-            <section>{num}</section>
-            <span>Backlog number</span>
-          </div>
-        ) : null;
-      };
+    const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month')
+
+    const { openScheduleModal } = useUiStore();
+    const { isLoadingSchedule, starLoadingSchedule, schedule, setActiveSchedule } = useScheduleStore();
+    const { startLoadingWorkers } = useWorkersStore();
+    const { startLoadingTurns  } = useTurnsStore();
+
+    useEffect(() => {
+      starLoadingSchedule();
+    }, []);
+
+    useEffect(() => {
+      startLoadingWorkers();
+    }, []);
+
+    useEffect(() => {
+      startLoadingTurns();
+    }, []);
+
+    const eventStyleGetter = ( event, start, end, isSelected ) => {
+      const style = {
+        backgroundColor: '#347CF7',
+        borderRadius: '0px',
+        opacity: 0.8,
+        color: 'white'
+      }
+
+      return {
+        style
+      }
+
+    }
+
+    const onDoubleClick = ( event ) => {
+      setActiveSchedule( event );
+      console.log(event)
+      openScheduleModal();
+    }
+
+    const onSelect = ( event ) => {
+      console.log({ onSeclect: event })
+    }
+
+    const onViewChanged = ( event ) => {
+      localStorage.setItem('lastView', event );
+      setLastView( event );
+    }
     
-      const dateCellRender = (value) => {
-        return (
-          <ul className="events">
-            {turns.map((item) => ( //Change to scheduleData
-              <li key={item.content}>
-                <Badge status={item.type} text={item.content} />
-              </li>
-            ))}
-          </ul>
-        );
-      };
-      
     return (
-        <>
-          <Row>
-            <Col span={ 24 } style={{ marginBottom: 15, paddingLeft: 20, paddingRight: 20 }}>
-              <Calendar 
-                onPanelChange={()=>{}}
-                dateCellRender={ dateCellRender }
-                monthCellRender={ monthCellRender }
-                style={{
-                    textAlign: 'center'
-                }}
-            />
-            </Col>
-          </Row>
+      <>
+      {
+        (isLoadingSchedule)
+        ? <LoadingPage /> 
+        : (
+          <Calendar 
+            culture='es'
+            localizer={ localizer }
+            events={ schedule }
+            defaultView={ lastView }
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: 'calc( 100vh - 120px )' }}
+            messages={ getMessagesES() }
+            eventPropGetter={ eventStyleGetter }
+            components={{
+              event: CalendarEventBox 
+            }}
+            onDoubleClickEvent={ onDoubleClick }
+            onSelectEvent={ onSelect }
+            onView={ onViewChanged }
             
-          <AddScheduleModal />
-        </>
-      )
+          />
+        )
+      }
+      <AddScheduleModal />
+      <FabAddNew />
+      </>
+    )
+    
 }

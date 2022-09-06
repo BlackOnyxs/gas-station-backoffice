@@ -34,7 +34,6 @@ export const useWorkersStore = () => {
 
     const startSavingWorker = async( worker ) => {
         if ( worker.uid ) {
-            console.log(worker.uid)
             try {
                 const { data } = await gasApi.put(`/users/${ worker.uid }`, worker);
                 dispatch( onUpdateWorker( data ) );

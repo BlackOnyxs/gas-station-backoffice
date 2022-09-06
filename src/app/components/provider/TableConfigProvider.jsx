@@ -136,7 +136,7 @@ export const TableConfigProvider = () => {
         <Table 
             columns={columns} 
             dataSource={products}  
-            style={{ height: '100vh'}}
+            style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
