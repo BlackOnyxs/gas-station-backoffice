@@ -1,41 +1,72 @@
 import React from 'react';
-import { Modal, Button, Form, Input, Select, Switch } from 'antd';
-import { validRoles } from '../../../data/menus';
+import { Modal, Button, Form } from 'antd';
+import { ProviderForm } from './ProviderForm';
 
-// import { useCategoryStore, useInventoryStore, useUiStore } from '../../../hooks';
+import { useProviderStore, useUiStore } from '../../../hooks';
+import { useEffect } from 'react';
 
 export const AddProviderModal = () => {
-    // const { isProductModalOpen, closeProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { startSavingProducts, activeProduct } = useInventoryStore();
+  const [form] = Form.useForm();
+    const { isProviderModalOpen , closeProviderModal } = useUiStore();
+    const { startSavingProvider, startDeleteProvide, activeProvider, setActiveProvider } = useProviderStore();
 
-    const handleOk = ({ name, category, price, description }) => {
-        // if ( activeProduct ) {
-        //     startSavingProducts({ name, category, price, description, _id: activeProduct._id })
-        // } else {
-        //   startSavingProducts({ name, category, price, description })
-        // }
-        // closeProductModal();
+    const handleOk = ({ name, phone }) => {
+        startSavingProvider({...activeProvider, name, phone})
+        closeProviderModal();
     };
 
     const handleCancel = () => {
-      // closeProductModal();
+      setActiveProvider(null);
+      closeProviderModal();
     };
+
+    const handleDelete = () => {
+      startDeleteProvide()
+      closeProviderModal();
+    }
+
+    const setInitialValues = () => {
+      if ( activeProvider ) {
+        console.log('true')
+        form.setFieldsValue({
+          name: activeProvider.name,
+          phone: activeProvider.phone
+        });
+      } else {
+        console.log('false')
+        form.setFieldsValue({
+          name: '',
+          phone: ''
+        })
+      }
+    }
+
+    useEffect(() => {
+      setInitialValues();
+    },[ activeProvider ]);
 
     return (
       <>
         <Modal 
-            title="Nuevo Proveedor" //Todo: si existe el plato
-            // visible={isProductModalOpen} 
-            // visible={true} 
-            onOk={handleOk} 
-            onCancel={handleCancel}
+            title={ activeProvider ? activeProvider.name : 'Nuevo Proveedor'}           // visible={isProviderModalOpen } 
+            visible={ isProviderModalOpen } 
+            onOk={ handleOk } 
+            onCancel={ handleCancel }
             footer={[
               <Button 
                   key="back" 
                   onClick={handleCancel}
               >
                 Cerrar
+              </Button>,
+              <Button
+                  danger
+                  type='primary'
+                  key="delete" 
+                  onClick={ handleDelete }
+                  disabled={ !activeProvider }
+              >
+                Borrar
               </Button>,
               <Button
                   key="submit"
@@ -49,6 +80,7 @@ export const AddProviderModal = () => {
         >
         <Form
             id="category-form"
+            form={ form }
             labelCol={{ span: 8 }}
             layout="horizontal"
             wrapperCol={{
@@ -56,48 +88,7 @@ export const AddProviderModal = () => {
             }}
             onFinish={ handleOk }
         >
-            <Form.Item
-                label="Nombre"
-                name="name"
-                key="name"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="text"/>
-            </Form.Item>
-            <Form.Item
-                label="Teléfono"
-                name="telefono"
-                key="telefono"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="tel"/>
-            </Form.Item>
-            
-  
-            {/* Todo: add image file if activeproduct */}
-            <Form.Item
-                label="Estado"
-                name="status"
-                key="status"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Switch checked onChange={()=> {}}/>
-            </Form.Item>
+          <ProviderForm />
         </Form>
         </Modal>
       </>

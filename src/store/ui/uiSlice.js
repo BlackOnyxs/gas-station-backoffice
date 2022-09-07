@@ -7,6 +7,7 @@ export const uiSlice = createSlice({
         isWorkersModalOpen: false,
         isTurnsModalOpen: false,
         isScheduleModalOpen: false,
+        isProviderModalOpen: false,
     },
     reducers: {
         onOpenWorkersModal: ( state ) => {
@@ -27,6 +28,12 @@ export const uiSlice = createSlice({
         onCloseScheduleModal: ( state ) => {
             state.isScheduleModalOpen = false 
         },
+        onOpenProviderModal: ( state ) => {
+            state.isProviderModalOpen = true 
+        },
+        onCloseProviderModal: ( state ) => {
+            state.isProviderModalOpen = false 
+        },
     }
 });
 
@@ -37,4 +44,6 @@ export const {
     onCloseTurnsModal,
     onOpenScheduleModal,
     onCloseScheduleModal,
+    onOpenProviderModal,
+    onCloseProviderModal,
 } = uiSlice.actions;
