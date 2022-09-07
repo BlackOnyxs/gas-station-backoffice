@@ -1,4 +1,5 @@
 export * from './useAuthStore';
+export * from './useFuelStore';
 export * from './useProviderStore';
 export * from './useScheduleStore';
 export * from './useTurnsStore';

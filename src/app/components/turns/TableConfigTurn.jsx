@@ -4,15 +4,14 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-import { useUiStore } from '../../../hooks';
-import { useTurnsStore } from '../../../hooks/useTurnsStore';
+import { useUiStore, useTurnsStore } from '../../../hooks';
 
 export const TableConfigTurn = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    const { openTurnsModal } = useUiStore();
+    const { openModal } = useUiStore();
     const { turns, setActiveTurn } = useTurnsStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -146,7 +145,7 @@ export const TableConfigTurn = () => {
               return {
                 onDoubleClick: event => {
                   setActiveTurn(record)
-                  openTurnsModal();
+                  openModal();
                 }
               }
             }}

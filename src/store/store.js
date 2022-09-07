@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { uiSlice, authSlice, WorkersSlice, turnsSlice, schedulaSlice, providerSlice } from './';
+import { uiSlice, authSlice, WorkersSlice, turnsSlice, schedulaSlice, providerSlice, fuelSlice } from './';
 
 export const store = configureStore({
     reducer: {
         auth: authSlice.reducer,
+        fuels: fuelSlice.reducer,
         providers: providerSlice.reducer,
         schedule: schedulaSlice.reducer,
         turns: turnsSlice.reducer,

@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 
 export const WorkersPage = () => {
 
-  const { openWorkersModal } = useUiStore();
+  const { openModal } = useUiStore();
   const { isLoadingWorkers, startLoadingWorkers  } = useWorkersStore();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export const WorkersPage = () => {
                       backgroundColor: '#74cc26',
                       borderColor: 'white',
                     }}
-                    onClick={ () => openWorkersModal()  }
+                    onClick={ () => openModal()  }
                   >
                       Agregar Colaborador
                   </Button>

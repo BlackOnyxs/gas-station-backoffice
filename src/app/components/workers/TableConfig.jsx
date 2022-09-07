@@ -13,7 +13,7 @@ export const TableConfig = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    const { openWorkersModal } = useUiStore();
+    const { openModal } = useUiStore();
     const { workers, setActiveWorker } = useWorkersStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -160,7 +160,7 @@ export const TableConfig = () => {
               return {
                 onDoubleClick: event => {
                   setActiveWorker(record)
-                  openWorkersModal();
+                  openModal();
                 }
               }
             }}

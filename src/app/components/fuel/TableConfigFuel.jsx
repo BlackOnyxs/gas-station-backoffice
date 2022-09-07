@@ -3,20 +3,16 @@ import React,  { useRef, useState }  from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, Switch } from 'antd';
 import Highlighter from 'react-highlight-words';
+import { useFuelStore, useUiStore } from '../../../hooks';
 
-// import { useUiStore } from '../../../hooks';
-// import { useCategoryStore, useInventoryStore } from '../../../hooks';
-const products = [];
-const roles = [];
 
 export const TableConfigFuel = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    // const { openProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { products, setActiveProduct } = useInventoryStore();
+    const { openModal } = useUiStore();
+    const { fuels, setActiveFuel } = useFuelStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -131,8 +127,8 @@ export const TableConfigFuel = () => {
         },
         {
           title: 'Precio',
-          dataIndex: 'price',
-          key: 'price',
+          dataIndex: 'sellPrice',
+          key: 'sellPrice',
         },
         {
           title: 'Inventario',
@@ -145,14 +141,14 @@ export const TableConfigFuel = () => {
     return (
         <Table 
             columns={columns} 
-            dataSource={products}  
+            dataSource={fuels}  
             style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  // setActiveProduct(record)
-                  // openProductModal();
+                  setActiveFuel(record)
+                  openModal();
                 }
               }
             }}
