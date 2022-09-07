@@ -11,7 +11,7 @@ export const TableConfigProvider = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    const { openProviderModal } = useUiStore();
+    const { openModal } = useUiStore();
     const { providers, setActiveProvider } = useProviderStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -138,7 +138,7 @@ export const TableConfigProvider = () => {
               return {
                 onDoubleClick: event => {
                   setActiveProvider(record)
-                  openProviderModal();
+                  openModal();
                 }
               }
             }}

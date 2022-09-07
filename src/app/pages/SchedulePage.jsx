@@ -14,7 +14,7 @@ import { FabAddNew } from '../components/schedule/FabAddNew';
 export const SchedulePage = () => {
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month')
 
-    const { openScheduleModal } = useUiStore();
+    const { openModal } = useUiStore();
     const { isLoadingSchedule, starLoadingSchedule, schedule, setActiveSchedule } = useScheduleStore();
     const { startLoadingWorkers } = useWorkersStore();
     const { startLoadingTurns  } = useTurnsStore();
@@ -48,7 +48,7 @@ export const SchedulePage = () => {
     const onDoubleClick = ( event ) => {
       setActiveSchedule( event );
       console.log(event)
-      openScheduleModal();
+      openModal();
     }
 
     const onSelect = ( event ) => {

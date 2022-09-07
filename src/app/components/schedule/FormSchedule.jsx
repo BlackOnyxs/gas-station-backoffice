@@ -12,8 +12,6 @@ export const FormSchedule = () => {
 
     const handleDateChange = (date)=> {}
   
-      const handleStatusChange = () => {}
-
     return (
         <>
             <>

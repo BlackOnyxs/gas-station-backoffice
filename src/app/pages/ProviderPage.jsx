@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 
 export const ProviderPage = () => {
     const { isLoadingProviders, startLoadProviders } = useProviderStore();
-    const { openProviderModal } = useUiStore();
+    const { openModal } = useUiStore();
     useEffect(() => {
       startLoadProviders();
     },[]);
@@ -28,7 +28,7 @@ export const ProviderPage = () => {
                       backgroundColor: '#74cc26',
                       borderColor: 'white',
                     }}
-                    onClick={ () => openProviderModal()  }
+                    onClick={ () => openModal()  }
                   >
                       Agregar Proveedor
                   </Button>

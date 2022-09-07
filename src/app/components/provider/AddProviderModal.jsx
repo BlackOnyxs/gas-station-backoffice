@@ -1,28 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Button, Form } from 'antd';
 import { ProviderForm } from './ProviderForm';
 
 import { useProviderStore, useUiStore } from '../../../hooks';
-import { useEffect } from 'react';
 
 export const AddProviderModal = () => {
   const [form] = Form.useForm();
-    const { isProviderModalOpen , closeProviderModal } = useUiStore();
+    const { isModalOpen , closeModal } = useUiStore();
     const { startSavingProvider, startDeleteProvide, activeProvider, setActiveProvider } = useProviderStore();
 
     const handleOk = ({ name, phone }) => {
         startSavingProvider({...activeProvider, name, phone})
-        closeProviderModal();
+        closeModal();
     };
 
     const handleCancel = () => {
       setActiveProvider(null);
-      closeProviderModal();
+      closeModal();
     };
 
     const handleDelete = () => {
       startDeleteProvide()
-      closeProviderModal();
+      closeModal();
     }
 
     const setInitialValues = () => {
@@ -48,8 +47,8 @@ export const AddProviderModal = () => {
     return (
       <>
         <Modal 
-            title={ activeProvider ? activeProvider.name : 'Nuevo Proveedor'}           // visible={isProviderModalOpen } 
-            visible={ isProviderModalOpen } 
+            title={ activeProvider ? activeProvider.name : 'Nuevo Proveedor'}  
+            visible={ isModalOpen } 
             onOk={ handleOk } 
             onCancel={ handleCancel }
             footer={[

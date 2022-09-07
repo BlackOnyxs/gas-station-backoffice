@@ -9,16 +9,16 @@ import { TurnFom } from './TurnFom';
 
 export const AddTurnModal = () => {
     const [form] = Form.useForm();
-    const { isTurnsModalOpen, closeTurnsModal } = useUiStore();
+    const { isModalOpen, closeModal } = useUiStore();
     const { startSavingTurn, activeTurn, startDeleteTurn } = useTurnsStore();
 
     const handleOk = ({ startTime, endTime, status }) => {
         startSavingTurn({...activeTurn, startTime, endTime});
-        closeTurnsModal();
+        closeModal();
     };
 
     const handleCancel = () => {
-      closeTurnsModal();
+      closeModal();
     };
 
     const format = 'HH:mm';
@@ -45,14 +45,14 @@ export const AddTurnModal = () => {
     
     const handleDelete = () => {
       startDeleteTurn(activeTurn);
-      closeTurnsModal();
+      closeModal();
     }
 
     return (
       <>
         <Modal 
             title={ activeTurn ? `Turno ${ activeTurn.startTime } - ${ activeTurn.endTime}`: 'Nuevo Turno' } //Todo: si existe el plato
-            visible={isTurnsModalOpen} 
+            visible={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[

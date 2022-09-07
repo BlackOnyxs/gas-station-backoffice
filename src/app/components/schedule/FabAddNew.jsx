@@ -4,11 +4,11 @@ import { useUiStore } from '../../../hooks';
 
 export const FabAddNew = () => {
 
-    const { openScheduleModal } = useUiStore();
+    const { openModal } = useUiStore();
     // const { setActiveEvent } = useScheduleStore();
 
     const handleClickNew = () => {
-        openScheduleModal();
+        openModal();
         console.log('hey')
     }
 

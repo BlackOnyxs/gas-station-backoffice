@@ -6,17 +6,17 @@ import { WorkerForm } from './WorkerForm';
 
 export const AddWorkerModal = () => {
   const [form] = Form.useForm();
-    const { isWorkersModalOpen, closeWorkersModal } = useUiStore();
+    const { isModalOpen, closeModal } = useUiStore();
     const { startSavingWorker, activeWorker, startDeleteWorker, setActiveWorker} = useWorkersStore();
 
     const handleOk = ({ name, cip, phone, email, role, password}) => {
       startSavingWorker({...activeWorker, name, cip, phone, email, password, role});   
-      closeWorkersModal();
+      closeModal();
     };
 
     const handleCancel = () => {
       setActiveWorker(null);
-      closeWorkersModal();
+      closeModal();
     };
 
     const setInitialValues = () => {
@@ -49,7 +49,7 @@ export const AddWorkerModal = () => {
     
     const handleDelete = () => {
       startDeleteWorker(activeWorker);
-      closeWorkersModal();
+      closeModal();
     }
 
 
@@ -57,7 +57,7 @@ export const AddWorkerModal = () => {
       <>
         <Modal 
             title={ (activeWorker) ? activeWorker.name : 'Nuevo Colaborador'} //Todo: si existe el plato
-            visible={isWorkersModalOpen} 
+            visible={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             destroyOnClose={ true }

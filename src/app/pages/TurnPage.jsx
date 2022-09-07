@@ -8,8 +8,8 @@ import { LoadingPage } from '../components/common/LoadingPage';
 
 export const TurnPage = () => {
 
-  const { openTurnsModal } = useUiStore();
-  const { isLoadingTurns, startLoadingTurns, setActiveTurn } = useTurnsStore();
+  const { openModal } = useUiStore();
+  const { isLoadingTurns, startLoadingTurns } = useTurnsStore();
 
   useEffect(() => {
     startLoadingTurns();
@@ -31,10 +31,7 @@ export const TurnPage = () => {
                   backgroundColor: '#74cc26',
                   borderColor: 'white',
                 }}
-                onClick={ () => {
-                  openTurnsModal();
-                  setActiveTurn({ startTime: '', endTime: ''});
-                }}
+                onClick={ () => openModal() }
               >
                   Agregar Turno
               </Button>

@@ -9,23 +9,18 @@ import { FormSchedule } from './FormSchedule';
 
 export const AddScheduleModal = () => {
     const [form] = Form.useForm();
-    const { isScheduleModalOpen, closeScheduleModal } = useUiStore();
+    const { isModalOpen, closeModal } = useUiStore();
     const { startSavingSchedule, activeSchedule, startDeleteSchedule } = useScheduleStore();
     const { turns } = useTurnsStore();
     const { workers } = useWorkersStore();
 
     const handleOk = ({ dispenser, turn, date, status }) => {
-      console.log(status)
-        if ( status ) {
-          startSavingSchedule({...activeSchedule, dispenser, turn, date, status })
-        } else {
-          startDeleteSchedule( activeSchedule );
-        }
-        closeScheduleModal();
+        startSavingSchedule({...activeSchedule, dispenser, turn, date, status })
+        closeModal();
     };
 
     const handleCancel = () => {
-      closeScheduleModal();
+      closeModal();
     };
 
    const setInitialValues = () => {
@@ -50,15 +45,15 @@ export const AddScheduleModal = () => {
 
    const handleDelete = () => {
       startDeleteSchedule(activeSchedule);
-      closeScheduleModal();
+      closeModal();
    }
    
 
     return (
       <>
         <Modal 
-            title="Nuevo Horario" //Todo: si existe el plato
-            visible={ isScheduleModalOpen } 
+            title={ activeSchedule ? activeSchedule._id : 'Nuevo Horario'}
+            visible={ isModalOpen } 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[

@@ -1,33 +1,60 @@
-import React from 'react';
-import { Modal, Button, Form, Input, Select, Switch } from 'antd';
-import { validFuel, validOctane, validRoles } from '../../../data/menus';
+import React, { useEffect } from 'react';
+import { Modal, Button, Form } from 'antd';
 
-// import { useCategoryStore, useInventoryStore, useUiStore } from '../../../hooks';
+import { FuelForm } from './FuelForm';
+import { useFuelStore, useUiStore } from '../../../hooks';
+import { validFuel, validOctane } from '../../../data/menus';
 
 export const AddFuelModal = () => {
-    // const { isProductModalOpen, closeProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { startSavingProducts, activeProduct } = useInventoryStore();
+    const [form] = Form.useForm();
+    const { isModalOpen, closeModal } = useUiStore();
+    const { startSavingFuel, startDeleteFuel, activeFuel } = useFuelStore();
 
-    const handleOk = ({ name, category, price, description }) => {
-        // if ( activeProduct ) {
-        //     startSavingProducts({ name, category, price, description, _id: activeProduct._id })
-        // } else {
-        //   startSavingProducts({ name, category, price, description })
-        // }
-        // closeProductModal();
+    const handleOk = ({ name, type, sellPrice, octane, inventory }) => {
+        startSavingFuel({ ...activeFuel, name, type, sellPrice, octane, inventory })
+        closeModal();
     };
 
     const handleCancel = () => {
-      // closeProductModal();
+      closeModal();
     };
+
+    const setInitialValues = () => {
+      if ( activeFuel ) {
+        console.log({ activeFuel })
+        form.setFieldsValue({
+          'name': activeFuel.name,
+          'sellPrice': activeFuel.sellPrice,
+          'type': activeFuel.type,
+          'octane': activeFuel.octane,
+          'inventory': activeFuel.inventory,
+        })        
+      } else {
+        form.setFieldsValue({
+          'name': '',
+          'sellPrice': '',
+          'type': validFuel[0].label,
+          'octane': validOctane[0].label,
+          'inventory': '',
+        })          
+      }
+   }
+
+    const handleDelete = () => {
+      startDeleteFuel();
+      closeModal();
+    }
+
+    useEffect(() => {
+      setInitialValues();
+    }, [activeFuel])
+  
 
     return (
       <>
         <Modal 
-            title="Nuevo Combustible" //Todo: si existe el plato
-            // visible={isProductModalOpen} 
-            // visible={true} 
+            title={ activeFuel ? activeFuel.name : 'Nuevo Combustible' } 
+            visible={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[
@@ -36,6 +63,15 @@ export const AddFuelModal = () => {
                   onClick={handleCancel}
               >
                 Cerrar
+              </Button>,
+              <Button
+                  danger
+                  type='primary'
+                  key="delete" 
+                  onClick={ handleDelete }
+                  disabled={ !activeFuel }
+              >
+                Borrar
               </Button>,
               <Button
                   key="submit"
@@ -49,6 +85,7 @@ export const AddFuelModal = () => {
         >
         <Form
             id="category-form"
+            form={ form }
             labelCol={{ span: 8 }}
             layout="horizontal"
             wrapperCol={{
@@ -56,94 +93,7 @@ export const AddFuelModal = () => {
             }}
             onFinish={ handleOk }
         >
-            <Form.Item
-                label="Nombre"
-                name="name"
-                key="name"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="text"/>
-            </Form.Item>
-            <Form.Item
-              label="Tipo"
-              name="type"
-              key="type"
-            >
-              {
-                validFuel && (
-                  <Select
-                    defaultValue={ validFuel[0].label }
-                  >
-                    {
-                      validFuel.map( f => (
-                        <Select.Option
-                          key={ f._id }
-                        >
-                          { f.label }
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            <Form.Item
-              label="Octanage"
-              name="octane"
-              key="octane"
-            >
-              {
-                validOctane && (
-                  <Select
-                    defaultValue={ validOctane[0].label }
-                  >
-                    {
-                      validOctane.map( o => (
-                        <Select.Option
-                          key={ o._id }
-                        >
-                          { o.label }
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            <Form.Item
-                label="Inventario"
-                name="inventory"
-                key="inventory"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="number"/>
-            </Form.Item>
-            
-  
-            {/* Todo: add image file if activeproduct */}
-            <Form.Item
-                label="Estado"
-                name="status"
-                key="status"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Switch checked onChange={()=> {}}/>
-            </Form.Item>
+            <FuelForm />
         </Form>
         </Modal>
       </>
