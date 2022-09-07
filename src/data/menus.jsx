@@ -194,6 +194,10 @@ export const siderOptions = [
       _id: '3',
       name: '15W-40',
     },
+    {
+      _id: '100',
+      name: '10W-40',
+    },
   ];
 
   export const validProductType = [

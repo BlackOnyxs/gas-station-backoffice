@@ -1,23 +1,19 @@
 import React,  { useRef, useState }  from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Switch } from 'antd';
+import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { validBranch, validOilType, validSize, validViscosity } from '../../../data/menus';
 
-// import { useUiStore } from '../../../hooks';
-// import { useCategoryStore, useInventoryStore } from '../../../hooks';
-const products = [];
-const roles = [];
+import { validBranch, validOilType, validSize, validViscosity } from '../../../data/menus';
+import { useUiStore, useOilStore } from '../../../hooks';
 
 export const TableConfigOil = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    // const { openProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { products, setActiveProduct } = useInventoryStore();
+    const { openModal } = useUiStore();
+    const { oils, setActiveOil } = useOilStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -120,14 +116,14 @@ export const TableConfigOil = () => {
           title: 'Nombre',
           dataIndex: 'name',
           key: 'name',
-          width: '30%',
+          width: '20%',
           ...getColumnSearchProps('name'),
         },
         {
           title: 'Marca',
           dataIndex: 'branch',
           key: 'branch',
-          width: '20%',
+          width: '15%',
           filters: validBranch.map( b => {
             return {
               text: b.name,
@@ -142,7 +138,7 @@ export const TableConfigOil = () => {
           title: 'Tipo',
           dataIndex: 'type',
           key: 'type',
-          width: '20%',
+          width: '15%',
           filters: validOilType.map( t => {
             return {
               text: t.name,
@@ -157,7 +153,7 @@ export const TableConfigOil = () => {
           title: 'Viscosidad',
           dataIndex: 'viscosityGrade',
           key: 'viscosityGrade',
-          width: '20%',
+          width: '15%',
           filters: validViscosity.map( v => {
             return {
               text: v.name,
@@ -172,7 +168,7 @@ export const TableConfigOil = () => {
           title: 'Unidad',
           dataIndex: 'size',
           key: 'size',
-          width: '20%',
+          width: '15%',
           filters: validSize.map( s => {
             return {
               text: s.name,
@@ -184,9 +180,16 @@ export const TableConfigOil = () => {
           }
         },
         {
-          title: 'Cantidad',
-          dataIndex: 'quantity',
-          key: 'quantity',
+          title: 'Inventario',
+          dataIndex: 'inventory',
+          key: 'inventory',
+          width: '10%'
+        },
+        {
+          title: 'Precio',
+          dataIndex: 'sellPrice',
+          key: 'sellPrice',
+          width: '25%'
         },
       ];
     
@@ -194,14 +197,14 @@ export const TableConfigOil = () => {
     return (
         <Table 
             columns={columns} 
-            dataSource={products}  
+            dataSource={oils}  
             style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  // setActiveProduct(record)
-                  // openProductModal();
+                  setActiveOil(record)
+                  openModal();
                 }
               }
             }}

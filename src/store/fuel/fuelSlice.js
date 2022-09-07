@@ -32,10 +32,11 @@ export const fuelSlice = createSlice({
         onUpdateFuel: (state, { payload}) => {
             state.fuels = state.fuels.map( fuel => {
                 if ( fuel._id === payload._id ) {
-                    return payload;
+                    return setObjectKey(payload);
                 }
                 return fuel;
-            })
+            });
+            state.activeFuel = null;
         }
     }
 });
