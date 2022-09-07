@@ -1,33 +1,64 @@
 import React from 'react';
-import { Modal, Button, Form, Input, Select, Switch } from 'antd';
-import { validBranch, validFuel, validOctane, validOilType, validRoles, validSize, validViscosity } from '../../../data/menus';
-
-// import { useCategoryStore, useInventoryStore, useUiStore } from '../../../hooks';
+import { Modal, Button, Form } from 'antd';
+import { useUiStore, useOilStore } from '../../../hooks';
+import { OilForm } from './OilForm';
+import { validBranch, validOilType, validSize, validViscosity } from '../../../data/menus';
+import { useEffect } from 'react';
 
 export const AddOilModal = () => {
-    // const { isProductModalOpen, closeProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { startSavingProducts, activeProduct } = useInventoryStore();
+    const [form] = Form.useForm();
+    const { isModalOpen, closeModal } = useUiStore();
+    const { startSavingOil, activeOil, setActiveOil, startDeleteOil } = useOilStore();
 
-    const handleOk = ({ name, category, price, description }) => {
-        // if ( activeProduct ) {
-        //     startSavingProducts({ name, category, price, description, _id: activeProduct._id })
-        // } else {
-        //   startSavingProducts({ name, category, price, description })
-        // }
-        // closeProductModal();
+    const handleOk = ({ name, branch, type, viscosityGrade, size, inventory, sellPrice }) => { 
+      startSavingOil({ ...activeOil, name, branch, type, viscosityGrade, size, inventory, sellPrice })
+        closeModal();
     };
 
     const handleCancel = () => {
-      // closeProductModal();
+      setActiveOil(null);
+      closeModal();
     };
+
+    const handleDelete = () => {
+      startDeleteOil();
+      closeModal();
+    }
+
+    const setInitialValues = () => {
+      if ( activeOil ) {
+        form.setFieldsValue({
+          'name': activeOil.name,
+          'branch': activeOil.branch,
+          'type': activeOil.type,
+          'viscosityGrade': activeOil.viscosityGrade,
+          'size': activeOil.size,
+          'inventory': activeOil.inventory,
+          'sellPrice': activeOil.sellPrice
+        });
+      }else{
+        form.setFieldsValue({
+          'name': '',
+          'branch': validBranch[0].name,
+          'type': validOilType[0].name,
+          'viscosityGrade': validViscosity[0].name,
+          'size': validSize[0].name,
+          'inventory': '1',
+          'sellPrice': '0.00',
+        })
+      }
+    }
+
+    useEffect(() => {
+       setInitialValues();
+    }, [ activeOil ])
+    
 
     return (
       <>
         <Modal 
-            title="Nuevo Aceite" //Todo: si existe el plato
-            // visible={isProductModalOpen} 
-            // visible={true} 
+            title={ activeOil ? activeOil.name : 'Nuevo Aceite' }
+            visible={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[
@@ -36,6 +67,15 @@ export const AddOilModal = () => {
                   onClick={handleCancel}
               >
                 Cerrar
+              </Button>,
+              <Button
+                  danger
+                  type='primary'
+                  key="delete" 
+                  onClick={ handleDelete }
+                  disabled={ !activeOil }
+              >
+                Borrar
               </Button>,
               <Button
                   key="submit"
@@ -49,6 +89,7 @@ export const AddOilModal = () => {
         >
         <Form
             id="category-form"
+            form={ form }
             labelCol={{ span: 8 }}
             layout="horizontal"
             wrapperCol={{
@@ -56,140 +97,7 @@ export const AddOilModal = () => {
             }}
             onFinish={ handleOk }
         >
-            <Form.Item
-                label="Nombre"
-                name="name"
-                key="name"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="text"/>
-            </Form.Item>
-            <Form.Item
-              label="Marca"
-              name="branch"
-              key="branch"
-            >
-              {
-                validBranch && (
-                  <Select
-                    defaultValue={ validBranch[0].name }
-                  >
-                    {
-                      validBranch.map(b => (
-                        <Select.Option
-                          key={ b._id }
-                        >
-                          { b.name }
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            <Form.Item
-              label="Tipo"
-              name="type"
-              key="type"
-            >
-              {
-                validOilType && (
-                  <Select
-                    defaultValue={ validOilType[0].name }
-                  >
-                    {
-                      validOilType.map( v => (
-                        <Select.Option
-                          key={ v._id }
-                        >
-                          { v.name }
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            <Form.Item
-              label="Viscosidad"
-              name="viscosityGrade"
-              key="viscosityGrade"
-            >
-              {
-                validViscosity && (
-                  <Select
-                    defaultValue={ validViscosity[0].name }
-                  >
-                    {
-                      validViscosity.map( v => (
-                        <Select.Option
-                          key={ v._id }
-                        >
-                          { v.name }
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            <Form.Item
-              label="Unidad"
-              name="size"
-              key="size"
-            >
-              {
-                validSize && (
-                  <Select
-                    defaultValue={ validSize[0].name }
-                  >
-                    {
-                      validSize.map( v => (
-                        <Select.Option
-                          key={ v._id }
-                        >
-                          { v.name }
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            <Form.Item
-                label="Inventario"
-                name="inventory"
-                key="inventory"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="number"/>
-            </Form.Item>
-            
-  
-            {/* Todo: add image file if activeproduct */}
-            <Form.Item
-                label="Estado"
-                name="status"
-                key="status"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Switch checked onChange={()=> {}}/>
-            </Form.Item>
+           <OilForm />
         </Form>
         </Modal>
       </>
