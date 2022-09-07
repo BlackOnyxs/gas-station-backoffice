@@ -4,19 +4,15 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 
-// import { useUiStore } from '../../../hooks';
-// import { useCategoryStore, useInventoryStore } from '../../../hooks';
-const products = [];
-const roles = [];
+import { useProviderStore, useUiStore } from '../../../hooks';
 
 export const TableConfigProvider = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    // const { openProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { products, setActiveProduct } = useInventoryStore();
+    const { openProviderModal } = useUiStore();
+    const { providers, setActiveProvider } = useProviderStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -124,8 +120,8 @@ export const TableConfigProvider = () => {
         },
         {
           title: 'Telefono',
-          dataIndex: 'telefono',
-          key: 'telefono',
+          dataIndex: 'phone',
+          key: 'phone',
           width: '20%',
         },
         
@@ -135,14 +131,14 @@ export const TableConfigProvider = () => {
     return (
         <Table 
             columns={columns} 
-            dataSource={products}  
+            dataSource={ providers }  
             style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  // setActiveProduct(record)
-                  // openProductModal();
+                  setActiveProvider(record)
+                  openProviderModal();
                 }
               }
             }}

@@ -5,9 +5,6 @@ export const TurnFom = () => {
     const form = Form.useFormInstance();
     const format = 'HH:mm';
 
-    const handleStatusChange = () => {}
-
-
     return (
         <>
              <Form.Item

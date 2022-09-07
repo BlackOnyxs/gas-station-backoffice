@@ -4,10 +4,6 @@ import { validRoles } from '../../../data/menus';
 
 export const WorkerForm = () => {
     const form = Form.useFormInstance();
-
-    const handleCheked = () => {
-      
-    }
     return (
         <>
         <Form.Item
