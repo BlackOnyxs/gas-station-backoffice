@@ -204,10 +204,12 @@ export const siderOptions = [
     {
       _id: '1',
       name: 'Combustible',
+      key: 'fuels'
     },
     {
       _id: '2',
-      name: 'Oil',
+      name: 'Aceite',
+      key: 'oils'
     },
   ];
 

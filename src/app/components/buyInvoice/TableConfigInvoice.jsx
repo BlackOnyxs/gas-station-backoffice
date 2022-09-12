@@ -3,21 +3,18 @@ import React,  { useRef, useState }  from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, DatePicker } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { validFuel } from '../../../data/menus';
+import { validProductType } from '../../../data/menus';
 
-// import { useUiStore } from '../../../hooks';
-// import { useCategoryStore, useInventoryStore } from '../../../hooks';
-const products = [];
-const roles = [];
+import { useBuyInvoiceStore, useUiStore } from '../../../hooks';
+
 
 export const TableConfigInvoice = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    // const { openProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { products, setActiveProduct } = useInventoryStore();
+    const { openModal } = useUiStore();
+    const {  buyInvoices, setActiveBuyInvoice, startLoadingBuyInvoices } = useBuyInvoiceStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -30,8 +27,10 @@ export const TableConfigInvoice = () => {
       setSearchText('');
     };
 
-    const onChangeDate = () => {
-
+    const handleChange = (pagination, filters, sorter, extra) => {
+      // if ( filters[0] === 'Combustible') return;
+      console.log(filters)
+      startLoadingBuyInvoices(filters.product[0])
     }
 
     const getColumnSearchProps = (dataIndex) => ({
@@ -129,25 +128,26 @@ export const TableConfigInvoice = () => {
         },
         {
           title: 'Proveedor',
-          dataIndex: 'provider',
+          dataIndex: ['provider', 'name'],
           key: 'provider',
           width: '20%',
           ...getColumnSearchProps('provider'),
         },
         {
           title: 'Producto',
-          dataIndex: 'product',
+          dataIndex: ['product', 'name'],
           key: 'product',
           width: '20%',
-          filters: validFuel.map( f => {
+          filters: validProductType.map( f => {
             return {
               text: f.name,
-              value: f.name
+              value: f.key
             }
           }),
-          onFilter: ( value, record ) => {
-            //Todo: call api
-          }
+          // onFilterDropdownOpenChange: ( value, record ) => {
+          //   console.log({ value, record })
+          //   startLoadingBuyInvoices()
+          // }
         },
         {
           title: 'Cantidad',
@@ -157,10 +157,9 @@ export const TableConfigInvoice = () => {
         },
         {
           title: 'Fecha',
-          dataIndex: 'size',
-          key: 'size',
+          dataIndex: 'createdAt',
+          key: 'createdAt',
           width: '10%',
-          render: <DatePicker onChange={onChangeDate} />
         },
         {
           title: 'Total',
@@ -174,17 +173,18 @@ export const TableConfigInvoice = () => {
     return (
         <Table 
             columns={columns} 
-            dataSource={products}  
+            dataSource={ buyInvoices}  
             style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  // setActiveProduct(record)
-                  // openProductModal();
+                  setActiveBuyInvoice(record)
+                  openModal();
                 }
               }
             }}
+            onChange={ handleChange }
         />
     )
         

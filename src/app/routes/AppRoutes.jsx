@@ -1,5 +1,5 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
-import { BuyInvoicePage } from '../pages/BuyInvoicePage'
+import { BuyInvoicePage } from '../pages/BuyInvoicePage '
 import { DashBoardPage } from '../pages/DashBoardPage'
 import { FuelPage } from '../pages/FuelPage'
 import { OilPage } from '../pages/OilPage'

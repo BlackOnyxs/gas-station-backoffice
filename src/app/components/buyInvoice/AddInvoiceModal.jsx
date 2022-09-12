@@ -1,52 +1,79 @@
-import React from 'react';
-import { Modal, Button, Form, Input, Select, Switch, DatePicker } from 'antd';
-import { validProductType } from '../../../data/menus';
-import { FuelFormConfig } from '../sellInvoice/FuelFormConfig';
-import { OilFormConfig } from '../sellInvoice/OilFormConfig';
+import React, { useEffect } from 'react';
+import { Modal, Button, Form } from 'antd';
+import moment from 'moment';
 
-// import { useCategoryStore, useInventoryStore, useUiStore } from '../../../hooks';
+import { BuyInvoiceForm } from './BuyInvoiceForm';
+import { useBuyInvoiceStore, useProviderStore, useUiStore } from '../../../hooks';
 
-const activeProduct = {
-  _id: '123',
-  tipo: 'Oil'
-}
 
 export const AddInvoiceModal = () => {
-    // const { isProductModalOpen, closeProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { startSavingProducts, activeProduct } = useInventoryStore();
+    const [form] = Form.useForm();
+    const { isModalOpen, closeModal } = useUiStore();
+    const { startSavingBuyInvoice, activeBuyInvoice, startDeleteBuyInvoice } = useBuyInvoiceStore();
+    
 
-    const handleOk = ({ name, category, price, description }) => {
-        // if ( activeProduct ) {
-        //     startSavingProducts({ name, category, price, description, _id: activeProduct._id })
-        // } else {
-        //   startSavingProducts({ name, category, price, description })
-        // }
-        // closeProductModal();
+    const handleOk = ({ product, productType, quantity, total, provider, date }) => {
+      console.log(productType)
+      startSavingBuyInvoice({ product, productType, quantity, total, provider, date })
+      closeModal();
     };
 
-    const handleCancel = () => {
-      // closeProductModal();
+  const handleCancel = () => {
+      closeModal();
     };
 
-    const handleDateChange = () => {
+  const handleDelete = () => {
+    startDeleteBuyInvoice();
+  }
 
+  const setInitialValues = () => {
+    if ( activeBuyInvoice ) {
+      form.setFieldsValue({
+        'productType': activeBuyInvoice.productType,
+        'product': activeBuyInvoice.product.name,
+        'quantity': activeBuyInvoice.quantity,
+        'total': activeBuyInvoice.total,
+        'Provider': activeBuyInvoice.provider.name,
+        'date': moment(activeBuyInvoice.createdAt, 'YYYY/MM/DD')
+      })
+    }else{
+      form.setFieldsValue({
+        'productType': '',
+        'product': '',
+        'quantity': '',
+        'total': '',
+        'Provider': '',
+        'date': moment()
+      });
     }
+  }
+
+  useEffect(() => {
+    setInitialValues();
+  }, [])
 
     return (
       <>
         <Modal 
-            title="Nueva Venta" //Todo: si existe el plato
-            // visible={isProductModalOpen} 
-            visible={true} 
-            onOk={handleOk} 
-            onCancel={handleCancel}
+            title={ activeBuyInvoice ? activeBuyInvoice._id : 'Nueva Venta'}
+            visible={ isModalOpen } 
+            onOk={ handleOk } 
+            onCancel={ handleCancel }
             footer={[
               <Button 
                   key="back" 
-                  onClick={handleCancel}
+                  onClick={ handleCancel }
               >
                 Cerrar
+              </Button>,
+              <Button
+                  danger
+                  type='primary'
+                  key="delete" 
+                  onClick={ handleDelete }
+                  disabled={ !activeBuyInvoice }
+              >
+                Borrar
               </Button>,
               <Button
                   key="submit"
@@ -66,90 +93,9 @@ export const AddInvoiceModal = () => {
                 span: 16,
             }}
             onFinish={ handleOk }
+            form={ form }
         >
-            <Form.Item
-              label="Producto"
-              name="product"
-              key="product"
-            >
-              {
-                validProductType && (
-                  <Select
-                    defaultValue={ validProductType[0].name }
-                  >
-                    {
-                      validProductType.map( b => (
-                        <Select.Option
-                          key={ b._id }
-                        >
-                          { b.name }
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            {
-              (activeProduct.tipo === 'Combustible')
-                ? <FuelFormConfig /> 
-                : <OilFormConfig />
-            }
-            <Form.Item
-                label="Cantidad"
-                name="quantity"
-                key="quantity"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="number"/>
-            </Form.Item>
-            <Form.Item
-                label="Monto Total"
-                name="total"
-                key="total"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="number"/>
-            </Form.Item>
-            <Form.Item
-                label="Fecha"
-                name="date"
-                key="date"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <DatePicker onChange={handleDateChange} />
-            </Form.Item>
-            
-  
-            {/* Todo: add image file if activeproduct */}
-            <Form.Item
-                label="Estado"
-                name="status"
-                key="status"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Switch checked onChange={()=> {}}/>
-            </Form.Item>
+            <BuyInvoiceForm />
         </Form>
         </Modal>
       </>

@@ -1,23 +1,24 @@
 import React from 'react';
 import { Form, Select } from 'antd';
 import { validOilType, validSize, validViscosity } from '../../../data/menus';
+import { useOilStore } from '../../../hooks';
 
 
 export const OilFormConfig = () => {
+  const { oils } = useOilStore();
+
   return (
      <>
         <Form.Item
-            label="Tipo"
-            name="type"
-            key="type"
+            label="Aceite"
+            name="porductType"
+            key="porductType"
         > 
             {
-              validOilType && (
-                <Select
-                  defaultValue={ validOilType[0].name }
-                >
+              oils && (
+                <Select >
                   {
-                    validOilType.map( t => (
+                    oils.map( t => (
                       <Select.Option
                         key={ t._id }
                       >
@@ -29,52 +30,7 @@ export const OilFormConfig = () => {
               )
             }
         </Form.Item>
-        <Form.Item
-            label="Viscosidad"
-            name="viscosityGrade"
-            key="viscosityGrade"
-        > 
-            {
-              validViscosity && (
-                <Select
-                  defaultValue={ validViscosity[0].name }
-                >
-                  {
-                    validViscosity.map( o => (
-                      <Select.Option
-                        key={ o._id }
-                      >
-                        { o.name }
-                      </Select.Option>
-                    ))
-                  }
-                </Select>
-              )
-            }
-        </Form.Item>
-        <Form.Item
-            label="Unidad"
-            name="size"
-            key="size"
-        > 
-            {
-              validSize && (
-                <Select
-                  defaultValue={ validSize[0].name }
-                >
-                  {
-                    validSize.map( s => (
-                      <Select.Option
-                        key={ s._id }
-                      >
-                        { s.name }
-                      </Select.Option>
-                    ))
-                  }
-                </Select>
-              )
-            }
-        </Form.Item>
+        
     </>
   )
 }
