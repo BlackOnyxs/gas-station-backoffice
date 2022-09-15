@@ -4,13 +4,14 @@ import moment from 'moment';
 
 import { BuyInvoiceForm } from './BuyInvoiceForm';
 import { useBuyInvoiceStore, useProviderStore, useUiStore } from '../../../hooks';
+import { validProductType } from '../../../data/menus';
 
 
 export const AddInvoiceModal = () => {
     const [form] = Form.useForm();
     const { isModalOpen, closeModal } = useUiStore();
-    const { startSavingBuyInvoice, activeBuyInvoice, startDeleteBuyInvoice } = useBuyInvoiceStore();
-    
+    const { startSavingBuyInvoice, activeBuyInvoice, startDeleteBuyInvoice, products } = useBuyInvoiceStore();
+    const { providers } = useProviderStore();
 
     const handleOk = ({ product, productType, quantity, total, provider, date }) => {
       console.log(productType)
@@ -38,10 +39,12 @@ export const AddInvoiceModal = () => {
       })
     }else{
       form.setFieldsValue({
-        'productType': '',
+        'productType': validProductType[0].key,
         'product': '',
-        'quantity': '',
+        // 'product': products ? products[0].name : '',
+        'quantity': 1,
         'total': '',
+        // 'Provider': providers ? providers[0].name : '',
         'Provider': '',
         'date': moment()
       });
@@ -50,7 +53,7 @@ export const AddInvoiceModal = () => {
 
   useEffect(() => {
     setInitialValues();
-  }, [])
+  }, [products, providers])
 
     return (
       <>

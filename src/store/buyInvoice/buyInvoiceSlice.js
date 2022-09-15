@@ -24,8 +24,10 @@ export const buyInvoiceSlice = createSlice({
         },
         onLoadBuyInvoices: (state, { payload }) => {
             state.isLoadingBuyInvoice = false;
-            if ( payload[payload.length-1].productType !== state.buyInvoices[state.buyInvoices.length-1] ) {
-                state.buyInvoices = [];
+            if ( payload.length > 0 ) {
+                if ( payload[payload.length-1].productType !== state.buyInvoices[state.buyInvoices.length-1] ) {
+                    state.buyInvoices = [];
+                }
             }
             payload.forEach( (buyInvoice) => {
                 const exist = state.buyInvoices.some( dbBuyInvoice => dbBuyInvoice._id === buyInvoice._id );

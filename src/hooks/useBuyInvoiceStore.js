@@ -28,6 +28,9 @@ export const useBuyInvoiceStore = () => {
     }
 
     const startLoadingBuyInvoices = async( productType ) => {
+        if ( !productType ) {
+            productType = 'fuels';
+        }
         try {
             const { data } = await gasApi.get(`/buyinvoices?limit=10&productType=${ productType }`);
             dispatch( onLoadBuyInvoices( data.invoices ) );

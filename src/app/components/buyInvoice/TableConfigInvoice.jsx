@@ -1,4 +1,4 @@
-import React,  { useRef, useState }  from 'react';
+import React,  { useRef, useState, useEffect }  from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table, DatePicker } from 'antd';
@@ -12,6 +12,8 @@ export const TableConfigInvoice = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
+
+    const [type, setType] = useState(validProductType[0].key|| 'fuels')
     
     const { openModal } = useUiStore();
     const {  buyInvoices, setActiveBuyInvoice, startLoadingBuyInvoices } = useBuyInvoiceStore();
@@ -29,9 +31,13 @@ export const TableConfigInvoice = () => {
 
     const handleChange = (pagination, filters, sorter, extra) => {
       // if ( filters[0] === 'Combustible') return;
+      setType(filters.product[0])
       console.log(filters)
-      startLoadingBuyInvoices(filters.product[0])
     }
+
+    useEffect(()=> {
+      startLoadingBuyInvoices(type)
+    },[type])
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
