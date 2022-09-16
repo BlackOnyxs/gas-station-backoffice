@@ -7,34 +7,29 @@ import { useBuyInvoiceStore, useProviderStore } from '../../../hooks';
 
 export const BuyInvoiceForm = () => {
   const form = Form.useFormInstance();
-  const { startLoadingProducts, products, activeBuyInvoice } = useBuyInvoiceStore();
+  const { startLoadingProducts, products, activeBuyInvoice, activeProductType, setActiveProductType } = useBuyInvoiceStore();
   const { startLoadProviders, providers } = useProviderStore();
 
-  const [type, setType] = useState( (activeBuyInvoice) ? 
-  { 
-      _id: 1,
-      name: activeBuyInvoice.productType,
-      key: productType
-    
-  } : validProductType[0]);
+  // const [type, setType] = useState( (activeBuyInvoice) ? activeBuyInvoice.productType : activeProductType);
   
  const onLoadProduct = () => {
     if ( !activeBuyInvoice ) {
-      startLoadingProducts( type.key )
+      startLoadingProducts( activeProductType )
     }
  }
 
 
   useEffect( () => {
     onLoadProduct()
-  }, [type]);
+  }, [activeProductType]);
 
   useEffect(() => {
     startLoadProviders();
   },[])
 
   const handleTypeChange = (value, option) => {
-    setType( validProductType[option.key-1])
+    console.log(option)
+    setActiveProductType( option.value );
   }
 
   // const handleProductChange = (value) => {
@@ -54,7 +49,7 @@ export const BuyInvoiceForm = () => {
               {
                 validProductType && (
                   <Select 
-                    value={ type }
+                    value={ activeProductType }
                     onChange={ handleTypeChange }>
                     {
                       validProductType.map( b => (
@@ -71,7 +66,7 @@ export const BuyInvoiceForm = () => {
               }
             </Form.Item>
             <Form.Item
-            label={ type.name }
+            label="Producto"
             name="product"
             key="product"
         > 

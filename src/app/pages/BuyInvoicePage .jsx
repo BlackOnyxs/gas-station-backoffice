@@ -8,10 +8,10 @@ import { LoadingPage } from '../components/common/LoadingPage';
 
 export const BuyInvoicePage = () => {
   const { openModal } = useUiStore();
-  const { startLoadingBuyInvoices, isLoadingBuyInvoices } = useBuyInvoiceStore();
+  const { startLoadingBuyInvoices, isLoadingBuyInvoices, activeProductType } = useBuyInvoiceStore();
 
   useEffect(() => {
-    startLoadingBuyInvoices();
+    startLoadingBuyInvoices(activeProductType);
   },[]);
 
   return (

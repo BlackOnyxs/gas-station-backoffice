@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import gasApi from '../api/gasApi';
-import { onCreateBuyInvoice, onDeleteBuyInvoice, onLoadBuyInvoices, onSetActiveBuyInvoice, onSetProducts, onUpdateBuyInvoice } from '../store';
+import { onCreateBuyInvoice, onDeleteBuyInvoice, onLoadBuyInvoices, onSetActiveBuyInvoice, onSetActiveProductTye, onSetProducts, onUpdateBuyInvoice } from '../store';
 import { formatBuyInvoices } from '../helpers/formatBuyInvoices'
 
 
@@ -10,12 +10,17 @@ export const useBuyInvoiceStore = () => {
     const {
         isLoadingBuyInvoices,
         activeBuyInvoice,
+        activeProductType,
         buyInvoices,
         products,
     } = useSelector( state =>  state.buyInvoices );
 
     const setActiveBuyInvoice = ( fuel ) => {
         dispatch( onSetActiveBuyInvoice( fuel ) );
+    }
+
+    const setActiveProductType = ( productType ) => {
+        dispatch( onSetActiveProductTye( productType ) );
     }
 
     const startDeleteBuyInvoice = async() => {
@@ -29,7 +34,7 @@ export const useBuyInvoiceStore = () => {
 
     const startLoadingBuyInvoices = async( productType ) => {
         if ( !productType ) {
-            productType = 'fuels';
+            productType = 'fuels'
         }
         try {
             const { data } = await gasApi.get(`/buyinvoices?limit=10&productType=${ productType }`);
@@ -58,6 +63,7 @@ export const useBuyInvoiceStore = () => {
      }
 
      const startLoadingProducts = async( type ) => {
+        console.log(type)
         try {
             const { data } = await gasApi.get(`/${ type }`);
             dispatch( onSetProducts( formatBuyInvoices( data ) ) );
@@ -69,10 +75,12 @@ export const useBuyInvoiceStore = () => {
         //properties
         isLoadingBuyInvoices,
         activeBuyInvoice,
+        activeProductType,
         buyInvoices,
         products,
         //Methods
         setActiveBuyInvoice,
+        setActiveProductType,
         startDeleteBuyInvoice,
         startLoadingBuyInvoices,
         startSavingBuyInvoice,

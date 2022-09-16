@@ -12,11 +12,9 @@ export const TableConfigInvoice = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
-
-    const [type, setType] = useState(validProductType[0].key|| 'fuels')
     
     const { openModal } = useUiStore();
-    const {  buyInvoices, setActiveBuyInvoice, startLoadingBuyInvoices } = useBuyInvoiceStore();
+    const {  buyInvoices, setActiveBuyInvoice, startLoadingBuyInvoices, activeProductType, setActiveProductType} = useBuyInvoiceStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -31,13 +29,12 @@ export const TableConfigInvoice = () => {
 
     const handleChange = (pagination, filters, sorter, extra) => {
       // if ( filters[0] === 'Combustible') return;
-      setType(filters.product[0])
-      console.log(filters)
+      setActiveProductType(filters.product[0])
     }
 
     useEffect(()=> {
-      startLoadingBuyInvoices(type)
-    },[type])
+      startLoadingBuyInvoices( activeProductType );
+    },[activeProductType])
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (

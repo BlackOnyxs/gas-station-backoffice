@@ -8,11 +8,15 @@ export const buyInvoiceSlice = createSlice({
         buyInvoices: [],
         products: [],
         providers: [],
-        activeBuyIvoice: null
+        activeBuyIvoice: null,
+        activeProductType: 'fuels'
     },
     reducers: {
         onSetActiveBuyInvoice: (state, { payload }) => {
             state.activeBuyIvoice = payload;
+        },
+        onSetActiveProductTye: (state, { payload }) => {
+            state.activeProductType = payload;
         },
         onCreateBuyInvoice: (state, { payload }) => {
             state.buyInvoices.push( setObjectKey( payload ) );
@@ -53,6 +57,7 @@ export const buyInvoiceSlice = createSlice({
 
 export const { 
     onSetActiveBuyInvoice,
+    onSetActiveProductTye,
     onCreateBuyInvoice,
     onDeleteBuyInvoice,
     onLoadBuyInvoices,
