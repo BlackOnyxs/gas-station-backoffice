@@ -63,7 +63,6 @@ export const useBuyInvoiceStore = () => {
      }
 
      const startLoadingProducts = async( type ) => {
-        console.log(type)
         try {
             const { data } = await gasApi.get(`/${ type }`);
             dispatch( onSetProducts( formatBuyInvoices( data ) ) );

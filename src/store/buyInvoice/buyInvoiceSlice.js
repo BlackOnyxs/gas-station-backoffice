@@ -9,7 +9,7 @@ export const buyInvoiceSlice = createSlice({
         products: [],
         providers: [],
         activeBuyIvoice: null,
-        activeProductType: 'fuels'
+        activeProductType: ['fuels']
     },
     reducers: {
         onSetActiveBuyInvoice: (state, { payload }) => {
@@ -28,10 +28,8 @@ export const buyInvoiceSlice = createSlice({
         },
         onLoadBuyInvoices: (state, { payload }) => {
             state.isLoadingBuyInvoice = false;
-            if ( payload.length > 0 ) {
-                if ( payload[payload.length-1].productType !== state.buyInvoices[state.buyInvoices.length-1] ) {
-                    state.buyInvoices = [];
-                }
+            if( state.activeProductType.length === 1 ){
+                state.buyInvoices = []
             }
             payload.forEach( (buyInvoice) => {
                 const exist = state.buyInvoices.some( dbBuyInvoice => dbBuyInvoice._id === buyInvoice._id );

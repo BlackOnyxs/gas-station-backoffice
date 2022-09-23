@@ -28,7 +28,6 @@ export const BuyInvoiceForm = () => {
   },[])
 
   const handleTypeChange = (value, option) => {
-    console.log(option)
     setActiveProductType( option.value );
   }
 

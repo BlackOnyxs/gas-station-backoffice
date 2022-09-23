@@ -29,11 +29,15 @@ export const TableConfigInvoice = () => {
 
     const handleChange = (pagination, filters, sorter, extra) => {
       // if ( filters[0] === 'Combustible') return;
-      setActiveProductType(filters.product[0])
+      if ( filters.product ) {
+         setActiveProductType(filters.product);
+      }
+      // setActiveProductType(filters.product[0])
     }
 
     useEffect(()=> {
-      startLoadingBuyInvoices( activeProductType );
+      activeProductType.map( startLoadingBuyInvoices );
+      // startLoadingBuyInvoices( activeProductType );
     },[activeProductType])
 
     const getColumnSearchProps = (dataIndex) => ({
