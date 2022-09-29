@@ -5,19 +5,16 @@ import { Button, Input, Space, Table, DatePicker } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { validFuel } from '../../../data/menus';
 
-// import { useUiStore } from '../../../hooks';
-// import { useCategoryStore, useInventoryStore } from '../../../hooks';
-const products = [];
-const roles = [];
+import { useUiStore } from '../../../hooks';
+import { useSellInvoiceStore } from '../../../hooks/useSellInvoiceStore';
 
 export const TableConfigInvoice = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    // const { openProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { products, setActiveProduct } = useInventoryStore();
+    const { openModal } = useUiStore();
+    const { sellInvoices, setActiveSellInvoice } = useSellInvoiceStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -174,14 +171,14 @@ export const TableConfigInvoice = () => {
     return (
         <Table 
             columns={columns} 
-            dataSource={products}  
+            dataSource={ sellInvoices }  
             style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  // setActiveProduct(record)
-                  // openProductModal();
+                  setActiveSellInvoice(record)
+                  openModal();
                 }
               }
             }}
