@@ -1,20 +1,18 @@
-import React,  { useRef, useState, useEffect }  from 'react';
+import React,  { useRef, useState }  from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, DatePicker } from 'antd';
+import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { validProductType } from '../../../data/menus';
 
-import { useBuyInvoiceStore, useUiStore } from '../../../hooks';
+import { useClientStore, useUiStore } from '../../../hooks';
 
-
-export const TableConfigInvoice = () => {
+export const TableConfigClient = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
     const { openModal } = useUiStore();
-    const {  buyInvoices, setActiveBuyInvoice, startLoadingBuyInvoices, activeProductType, setActiveProductType} = useBuyInvoiceStore();
+    const { clients, setActiveClient } = useClientStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -25,21 +23,7 @@ export const TableConfigInvoice = () => {
     const handleReset = (clearFilters) => {
       clearFilters();
       setSearchText('');
-      // startLoadingBuyInvoices();
     };
-
-    const handleChange = (pagination, filters, sorter, extra) => {
-      // if ( filters[0] === 'Combustible') return;
-      if ( filters.product ) {
-         setActiveProductType(filters.product);
-      }
-      // setActiveProductType(filters.product[0])
-    }
-
-    useEffect(()=> {
-      activeProductType.map( startLoadingBuyInvoices );
-      // startLoadingBuyInvoices( activeProductType );
-    },[activeProductType])
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -128,71 +112,36 @@ export const TableConfigInvoice = () => {
 
     const columns = [
         {
-          title: 'Factura',
-          dataIndex: '_id',
-          key: '_id',
-          width: '25%',
-          ...getColumnSearchProps('_id'),
+          title: 'Nombre',
+          dataIndex: 'name',
+          key: 'name',
+          width: '30%',
+          ...getColumnSearchProps('name'),
         },
         {
-          title: 'Proveedor',
-          dataIndex: ['provider', 'name'],
-          key: 'provider',
-          width: '20%',
-          ...getColumnSearchProps('provider'),
-        },
-        {
-          title: 'Producto',
-          dataIndex: ['product', 'name'],
-          key: 'product',
-          width: '20%',
-          filters: validProductType.map( f => {
-            return {
-              text: f.name,
-              value: f.key
-            }
-          }),
-          // onFilterDropdownOpenChange: ( value, record ) => {
-          //   console.log({ value, record })
-          //   startLoadingBuyInvoices()
-          // }
-        },
-        {
-          title: 'Cantidad',
-          dataIndex: 'quantity',
-          key: 'quantity',
-          width: '10%',
-        },
-        {
-          title: 'Fecha',
-          dataIndex: 'createdAt',
-          key: 'createdAt',
-          width: '10%',
-        },
-        {
-          title: 'Total',
-          dataIndex: 'total',
-          key: 'total',
+          title: 'Telefono',
+          dataIndex: 'phone',
+          key: 'phone',
           width: '20%',
         },
+        
       ];
     
 
     return (
         <Table 
             columns={columns} 
-            dataSource={ buyInvoices}  
+            dataSource={ clients }  
             style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  setActiveBuyInvoice(record)
+                  setActiveClient(record)
                   openModal();
                 }
               }
             }}
-            onChange={ handleChange }
         />
     )
         

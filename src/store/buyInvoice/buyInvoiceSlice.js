@@ -16,7 +16,19 @@ export const buyInvoiceSlice = createSlice({
             state.activeBuyIvoice = payload;
         },
         onSetActiveProductTye: (state, { payload }) => {
-            state.activeProductType = payload;
+            console.log(payload)
+            if ( !Array.isArray(payload) || payload.length === 1){
+                state.activeProductType = [payload];
+                state.buyInvoices = []
+            } else {
+                payload.forEach( f => {
+                    const exits = state.activeProductType.some( e => e === f);
+                    if ( !exits ) {
+                        state.activeProductType.push(f);
+                    }
+                })
+            }
+            
         },
         onCreateBuyInvoice: (state, { payload }) => {
             state.buyInvoices.push( setObjectKey( payload ) );
@@ -28,9 +40,6 @@ export const buyInvoiceSlice = createSlice({
         },
         onLoadBuyInvoices: (state, { payload }) => {
             state.isLoadingBuyInvoice = false;
-            if( state.activeProductType.length === 1 ){
-                state.buyInvoices = []
-            }
             payload.forEach( (buyInvoice) => {
                 const exist = state.buyInvoices.some( dbBuyInvoice => dbBuyInvoice._id === buyInvoice._id );
                 if ( !exist ) {

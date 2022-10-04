@@ -126,14 +126,14 @@ export const TableConfigInvoice = () => {
         },
         {
           title: 'Despachador',
-          dataIndex: 'dispenser',
+          dataIndex: ['dispenser', 'name'],
           key: 'dispenser',
           width: '20%',
           ...getColumnSearchProps('dispenser'),
         },
         {
           title: 'Producto',
-          dataIndex: 'product',
+          dataIndex: ['product', 'name'],
           key: 'product',
           width: '20%',
           filters: validFuel.map( f => {
@@ -154,10 +154,10 @@ export const TableConfigInvoice = () => {
         },
         {
           title: 'Fecha',
-          dataIndex: 'size',
-          key: 'size',
+          dataIndex: 'createdAt',
+          key: 'createdAt',
           width: '10%',
-          render: <DatePicker onChange={onChangeDate} />
+          // render: <DatePicker onChange={onChangeDate} />
         },
         {
           title: 'Total',

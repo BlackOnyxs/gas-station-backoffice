@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { 
     authSlice,
     buyInvoiceSlice,
+    clientSlice,
     fuelSlice, 
     uiSlice, 
     oilSlice,
@@ -16,6 +17,7 @@ export const store = configureStore({
     reducer: {
         auth: authSlice.reducer,
         buyInvoices: buyInvoiceSlice.reducer,
+        clients: clientSlice.reducer,
         fuels: fuelSlice.reducer,
         oils: oilSlice.reducer,
         providers: providerSlice.reducer,

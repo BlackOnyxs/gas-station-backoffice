@@ -26,6 +26,7 @@ export const sellInvoiceSlice = createSlice({
             state.sellInvoices.filter( si => si._id !== payload._id )
         },
         onLoadSellInvoices: (state, {payload}) => {
+            state.isLoadingSellInvoices = false;
             payload.forEach( si => {
                 const exist = state.sellInvoices.some( dbSi => dbSi._id === si._id );
                 if ( !exist ) {
