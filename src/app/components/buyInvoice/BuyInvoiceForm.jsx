@@ -1,24 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { Form, Select, Input, DatePicker} from 'antd';
 
 import { validProductType } from '../../../data/menus';
-import { useBuyInvoiceStore, useProviderStore } from '../../../hooks';
+import { useBuyInvoiceStore, useInventoryStore, useProviderStore } from '../../../hooks';
 
 export const BuyInvoiceForm = () => {
   const form = Form.useFormInstance();
-  const { startLoadingProducts, products, activeBuyInvoice, activeProductType, setActiveProductType } = useBuyInvoiceStore();
+  const { activeBuyInvoice } = useBuyInvoiceStore();
   const { startLoadProviders, providers } = useProviderStore();
-
-  // const [type, setType] = useState( (activeBuyInvoice) ? activeBuyInvoice.productType : activeProductType);
+  const { activeProductType, products, startLoadingProducts, activeProduct, setActiveProduct, setActiveProductType } = useInventoryStore();
   
  const onLoadProduct = () => {
     if ( !activeBuyInvoice ) {
       startLoadingProducts( activeProductType )
     }
  }
-
-
+ 
   useEffect( () => {
     onLoadProduct()
   }, [activeProductType]);
@@ -29,15 +27,24 @@ export const BuyInvoiceForm = () => {
 
   const handleTypeChange = (value, option) => {
     setActiveProductType( option.value );
-    // console.log( option.value );
   }
 
-  // const handleProductChange = (value) => {
-  //   const currentProduct = products.map( p => p._id === value );
-  //   form.setFields({ total: currentProduct * form.getFieldValue('cantidad')})
-  // }
+  const handleTotal = ({ target }) => {
+    if ( !activeProduct ) return
+    let newTotal = Number(target.value) * Number(activeProduct.sellPrice);
+    if ( !Number.isNaN( newTotal ) ) {
+      form.setFieldsValue({ total: newTotal })
+    }
+    
+  }
 
-  const handleDateChange = () => {}
+  const handleProductChange = ( value ) => {
+       products.map( p => {
+        if ( p._id === value ) {
+         setActiveProduct( p );
+        }
+      });
+  }
 
   return (
         <>
@@ -72,9 +79,7 @@ export const BuyInvoiceForm = () => {
         > 
             {
               products && (
-                <Select 
-                // onChange={ handleProductChange }
-                >
+                <Select onChange={ handleProductChange }>
                   {
                     products.map( f => (
                       <Select.Option
@@ -100,7 +105,11 @@ export const BuyInvoiceForm = () => {
                     },
                   ]}
             >
-                <Input type="number"/>
+                <Input 
+                  type="number" 
+                  onChange={ handleTotal }
+                  min={ 0 }  
+                />
             </Form.Item>
             <Form.Item
                 label="Monto Total"
@@ -113,7 +122,7 @@ export const BuyInvoiceForm = () => {
                     },
                   ]}
             >
-                <Input type="number"/>
+                <Input type="number" min={ 0 }/>
             </Form.Item>
                   <Form.Item
                   label="Proveedor"
@@ -122,9 +131,7 @@ export const BuyInvoiceForm = () => {
               > 
                   {
                     providers && (
-                      <Select 
-                      // onChange={ handleProductChange }
-                      >
+                      <Select>
                         {
                           providers.map( p => (
                             <Select.Option
@@ -150,7 +157,7 @@ export const BuyInvoiceForm = () => {
                     },
                   ]}
             >
-                <DatePicker  locale={ locale } onChange={handleDateChange} />
+                <DatePicker locale={ locale } />
             </Form.Item>
             
   

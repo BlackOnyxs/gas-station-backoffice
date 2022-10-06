@@ -3,18 +3,18 @@ import { Modal, Button, Form } from 'antd';
 import moment from 'moment';
 
 import { BuyInvoiceForm } from './BuyInvoiceForm';
-import { useBuyInvoiceStore, useProviderStore, useUiStore } from '../../../hooks';
+import { useBuyInvoiceStore, useInventoryStore, useProviderStore, useUiStore } from '../../../hooks';
 
 
 export const AddInvoiceModal = () => {
     const [form] = Form.useForm();
     const { isModalOpen, closeModal } = useUiStore();
-    const { startSavingBuyInvoice, activeBuyInvoice, startDeleteBuyInvoice, products, activeProductType} = useBuyInvoiceStore();
+    const { startSavingBuyInvoice, activeBuyInvoice, startDeleteBuyInvoice, products } = useBuyInvoiceStore();
     const { providers } = useProviderStore();
+    const { activeProductType } = useInventoryStore();
 
-    const handleOk = ({ product, productType, quantity, total, provider, date }) => {
-      console.log(productType)
-      startSavingBuyInvoice({ product, productType, quantity, total, provider, date })
+    const handleOk = ({ product, quantity, total, provider, date }) => {
+      startSavingBuyInvoice({ product, productType: activeProductType, quantity, total, provider, date })
       closeModal();
     };
 
@@ -33,7 +33,7 @@ export const AddInvoiceModal = () => {
         'product': activeBuyInvoice.product.name,
         'quantity': activeBuyInvoice.quantity,
         'total': activeBuyInvoice.total,
-        'Provider': activeBuyInvoice.provider.name,
+        'provider': activeBuyInvoice.provider.name,
         'date': moment(activeBuyInvoice.createdAt, 'YYYY/MM/DD')
       })
     }else{
@@ -42,9 +42,9 @@ export const AddInvoiceModal = () => {
         'product': '',
         // 'product': products ? products[0].name : '',
         'quantity': 1,
-        'total': '',
+        'total': 0.00,
         // 'Provider': providers ? providers[0].name : '',
-        'Provider': '',
+        'provider': '',
         'date': moment()
       });
     }

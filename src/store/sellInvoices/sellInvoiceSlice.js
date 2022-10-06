@@ -6,17 +6,11 @@ export const sellInvoiceSlice = createSlice({
     initialState: {
         isLoadingSellInvoices: true,
         sellInvoices: [],
-        products: [],
-        clients: [],
         activeSellInvoice: null,
-        activeProductType: ['fuels']
     },
     reducers: {
         onSetActiveSellInvoice: (state, {payload}) => {
             state.activeSellInvoice = payload;
-        },
-        onSetActiveProductType: (state, {payload}) => {
-            state.activeProductType = payload;
         },
         onCreateSellInvoice: (state, {payload}) => {
             state.sellInvoices.push( setObjectKey( payload ) );
@@ -33,6 +27,9 @@ export const sellInvoiceSlice = createSlice({
                     state.sellInvoices.push( setObjectKey( si ))
                 }
             })
+        },
+        onResetSellInvoices: ( state ) => {
+            state.sellInvoices = [];
         },
         onUpdateSellInvoice: (state, {payload}) => {
             state.sellInvoices =  state.sellInvoices.map( si => {
@@ -51,5 +48,6 @@ export const {
     onCreateSellInvoice,
     onDeleteSellInvoice,
     onLoadSellInvoices,
+    onResetSellInvoices,
     onUpdateSellInvoice,
 } = sellInvoiceSlice.actions;

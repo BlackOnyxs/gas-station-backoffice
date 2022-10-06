@@ -1,11 +1,11 @@
-import React,  { useRef, useState }  from 'react';
+import React,  { useRef, useState, useEffect }  from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, DatePicker } from 'antd';
+import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { validFuel } from '../../../data/menus';
+import { validProductType } from '../../../data/menus';
 
-import { useUiStore } from '../../../hooks';
+import { useInventoryStore, useUiStore } from '../../../hooks';
 import { useSellInvoiceStore } from '../../../hooks/useSellInvoiceStore';
 
 export const TableConfigInvoice = () => {
@@ -14,7 +14,8 @@ export const TableConfigInvoice = () => {
     const searchInput = useRef(null);
     
     const { openModal } = useUiStore();
-    const { sellInvoices, setActiveSellInvoice } = useSellInvoiceStore();
+    const { sellInvoices, setActiveSellInvoice, startLoadingSellInvoices, resetSellInvoices } = useSellInvoiceStore();
+    const { activeProductType, setActiveProductType } = useInventoryStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -27,9 +28,18 @@ export const TableConfigInvoice = () => {
       setSearchText('');
     };
 
-    const onChangeDate = () => {
-
+    const handleChange = (pagination, filters, sorter, extra) => {
+      if ( filters.product ) {
+        if ( filters.product.length === 1 ) {
+          resetSellInvoices();
+        }
+        setActiveProductType(filters.product);
+      }
     }
+
+    useEffect(()=> {
+      activeProductType.map( startLoadingSellInvoices );
+    },[activeProductType])
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -136,15 +146,12 @@ export const TableConfigInvoice = () => {
           dataIndex: ['product', 'name'],
           key: 'product',
           width: '20%',
-          filters: validFuel.map( f => {
+          filters: validProductType.map( f => {
             return {
               text: f.name,
-              value: f.name
+              value: f.key
             }
           }),
-          onFilter: ( value, record ) => {
-            //Todo: call api
-          }
         },
         {
           title: 'Cantidad',
@@ -182,6 +189,7 @@ export const TableConfigInvoice = () => {
                 }
               }
             }}
+            onChange={ handleChange }
         />
     )
         

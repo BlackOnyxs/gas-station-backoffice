@@ -1,11 +1,11 @@
 import React,  { useRef, useState, useEffect }  from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, DatePicker } from 'antd';
+import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { validProductType } from '../../../data/menus';
 
-import { useBuyInvoiceStore, useUiStore } from '../../../hooks';
+import { useBuyInvoiceStore, useInventoryStore, useUiStore } from '../../../hooks';
 
 
 export const TableConfigInvoice = () => {
@@ -14,7 +14,8 @@ export const TableConfigInvoice = () => {
     const searchInput = useRef(null);
     
     const { openModal } = useUiStore();
-    const {  buyInvoices, setActiveBuyInvoice, startLoadingBuyInvoices, activeProductType, setActiveProductType} = useBuyInvoiceStore();
+    const { buyInvoices, setActiveBuyInvoice, startLoadingBuyInvoices, resetBuyInvoices } = useBuyInvoiceStore();
+    const { activeProductType, setActiveProductType } = useInventoryStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -29,16 +30,16 @@ export const TableConfigInvoice = () => {
     };
 
     const handleChange = (pagination, filters, sorter, extra) => {
-      // if ( filters[0] === 'Combustible') return;
       if ( filters.product ) {
-         setActiveProductType(filters.product);
+        if ( filters.product.length === 1 ) {
+          resetBuyInvoices();
+        }
+        setActiveProductType(filters.product);
       }
-      // setActiveProductType(filters.product[0])
     }
 
     useEffect(()=> {
       activeProductType.map( startLoadingBuyInvoices );
-      // startLoadingBuyInvoices( activeProductType );
     },[activeProductType])
 
     const getColumnSearchProps = (dataIndex) => ({
@@ -152,10 +153,6 @@ export const TableConfigInvoice = () => {
               value: f.key
             }
           }),
-          // onFilterDropdownOpenChange: ( value, record ) => {
-          //   console.log({ value, record })
-          //   startLoadingBuyInvoices()
-          // }
         },
         {
           title: 'Cantidad',

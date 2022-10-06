@@ -1,8 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import gasApi from '../api/gasApi';
-import { onCreateBuyInvoice, onDeleteBuyInvoice, onLoadBuyInvoices, onSetActiveBuyInvoice, onSetActiveProductTye, onSetProducts, onUpdateBuyInvoice } from '../store';
-import { formatBuyInvoices } from '../helpers/formatBuyInvoices'
-
+import { onCreateBuyInvoice, onDeleteBuyInvoice, onLoadBuyInvoices, onResetBuyInvoices, onSetActiveBuyInvoice, onUpdateBuyInvoice } from '../store';
 
 export const useBuyInvoiceStore = () => {
     const dispatch = useDispatch();
@@ -17,10 +15,6 @@ export const useBuyInvoiceStore = () => {
 
     const setActiveBuyInvoice = ( fuel ) => {
         dispatch( onSetActiveBuyInvoice( fuel ) );
-    }
-
-    const setActiveProductType = ( productType ) => {
-        dispatch( onSetActiveProductTye( productType ) );
     }
 
     const startDeleteBuyInvoice = async() => {
@@ -62,27 +56,21 @@ export const useBuyInvoiceStore = () => {
         }
      }
 
-     const startLoadingProducts = async( type ) => {
-        try {
-            const { data } = await gasApi.get(`/${ type }`);
-            dispatch( onSetProducts( formatBuyInvoices( data ) ) );
-        } catch (error) {
-            
-        }
+     const resetBuyInvoices = () => {
+        dispatch( onResetBuyInvoices() )
      }
+     
     return {
         //properties
         isLoadingBuyInvoices,
         activeBuyInvoice,
-        activeProductType,
         buyInvoices,
         products,
         //Methods
         setActiveBuyInvoice,
-        setActiveProductType,
         startDeleteBuyInvoice,
         startLoadingBuyInvoices,
         startSavingBuyInvoice,
-        startLoadingProducts,
+        resetBuyInvoices,
     }
 }

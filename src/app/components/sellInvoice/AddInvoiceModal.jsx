@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Button, Form } from 'antd';
+import moment from 'moment';
 
-
-import { useUiStore, useSellInvoiceStore } from '../../../hooks';
+import { useUiStore, useSellInvoiceStore, useInventoryStore, useClientStore } from '../../../hooks';
 import { SellInvoiceForm } from './SellInvoiceForm';
 
 export const AddInvoiceModal = () => {
     const [form] = Form.useForm();
     const { isModalOpen, closeModal } = useUiStore();
     const { startSavingSellInvoice, startLoadingSellInvoices, activeSellInvoice } = useSellInvoiceStore();
+    const { activeProductType, products } = useInventoryStore();
+    const { clients } = useClientStore();
 
-    const handleOk = ({ dispenser, product, productType, client, quantity, total }) => {
-      console.log({ dispenser, product, productType, client, quantity, total })
-        startSavingSellInvoice({ dispenser, product, productType, client, quantity, total, _id: activeSellInvoice?._id });
+    const handleOk = ({ dispenser, product, client, quantity, total }) => {
+        startSavingSellInvoice({ dispenser, product, productType: activeProductType, client, quantity, total, _id: activeSellInvoice?._id });
         closeModal();
     };
 
@@ -24,10 +25,40 @@ export const AddInvoiceModal = () => {
       startLoadingSellInvoices();
     }
 
+    const setInitialValues = () => {
+      if ( activeSellInvoice ) {
+        form.setFieldsValue({
+          'productType': activeSellInvoice.productType,
+          'product': activeSellInvoice.product.name,
+          'quantity': activeSellInvoice.quantity,
+          'total': activeSellInvoice.total,
+          'dispenser': activeSellInvoice.dispenser.name,
+          'client': activeSellInvoice.client.name,
+          'date': moment(activeSellInvoice.createdAt, 'YYYY/MM/DD')
+        })
+      }else{
+        form.setFieldsValue({
+          'productType': activeProductType,
+          'product': '',
+          // 'product': products ? products[0].name : '',
+          'quantity': 1,
+          'total': 0.00,
+          // 'Provider': providers ? providers[0].name : '',
+          'dispenser': '',
+          'client': '',
+          'date': moment()
+        });
+      }
+    }
+
+    useEffect(() => {
+      setInitialValues();
+    }, [products, clients ])
+
     return (
       <>
         <Modal 
-            title="Nueva Venta" //Todo: si existe el plato
+            title={ activeSellInvoice ? activeSellInvoice._id : 'Nueva Venta'}
             visible={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}

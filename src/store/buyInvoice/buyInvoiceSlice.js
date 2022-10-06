@@ -6,29 +6,11 @@ export const buyInvoiceSlice = createSlice({
     initialState: {
         isLoadingBuyInvoice: true,
         buyInvoices: [],
-        products: [],
-        providers: [],
         activeBuyIvoice: null,
-        activeProductType: ['fuels']
     },
     reducers: {
         onSetActiveBuyInvoice: (state, { payload }) => {
             state.activeBuyIvoice = payload;
-        },
-        onSetActiveProductTye: (state, { payload }) => {
-            console.log(payload)
-            if ( !Array.isArray(payload) || payload.length === 1){
-                state.activeProductType = [payload];
-                state.buyInvoices = []
-            } else {
-                payload.forEach( f => {
-                    const exits = state.activeProductType.some( e => e === f);
-                    if ( !exits ) {
-                        state.activeProductType.push(f);
-                    }
-                })
-            }
-            
         },
         onCreateBuyInvoice: (state, { payload }) => {
             state.buyInvoices.push( setObjectKey( payload ) );
@@ -47,6 +29,9 @@ export const buyInvoiceSlice = createSlice({
                 }
             });
         },
+        onResetBuyInvoices: ( state ) => {
+            state.buyInvoices = [];
+        },
         onUpdateBuyInvoice: (state, { payload}) => {
             state.buyInvoices = state.buyInvoices.map( buyInvoice => {
                 if ( buyInvoice._id === payload._id ) {
@@ -56,18 +41,15 @@ export const buyInvoiceSlice = createSlice({
             });
             state.activeBuyIvoice = null;
         },
-        onSetProducts: ( state, { payload } ) => {
-            state.products = payload;
-        }
+        
     }
 });
 
 export const { 
     onSetActiveBuyInvoice,
-    onSetActiveProductTye,
     onCreateBuyInvoice,
     onDeleteBuyInvoice,
     onLoadBuyInvoices,
     onUpdateBuyInvoice,
-    onSetProducts,
+    onResetBuyInvoices,
  } = buyInvoiceSlice.actions;

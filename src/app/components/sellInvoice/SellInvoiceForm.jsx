@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { Form, Select, Input, DatePicker} from 'antd';
 
 import { validProductType } from '../../../data/menus';
-import { useBuyInvoiceStore, useClientStore, useWorkersStore } from '../../../hooks';
+import { useClientStore, useInventoryStore, useSellInvoiceStore, useWorkersStore } from '../../../hooks';
 
 export const SellInvoiceForm = () => {
   const form = Form.useFormInstance();
-  const { startLoadingProducts, products, activeBuyInvoice, activeProductType, setActiveProductType } = useBuyInvoiceStore();
+  const { activeBuyInvoice } = useSellInvoiceStore();
+  const { activeProductType, startLoadingProducts, setActiveProductType, activeProduct, setActiveProduct, products } = useInventoryStore();
   const { startLoadClients, clients } = useClientStore();
   const { startLoadingWorkers, workers } = useWorkersStore();
 
-  // const [type, setType] = useState( (activeBuyInvoice) ? activeBuyInvoice.productType : activeProductType);
   
  const onLoadProduct = () => {
     if ( !activeBuyInvoice ) {
@@ -36,10 +36,21 @@ export const SellInvoiceForm = () => {
     setActiveProductType( option.value );
   }
 
-  // const handleProductChange = (value) => {
-  //   const currentProduct = products.map( p => p._id === value );
-  //   form.setFields({ total: currentProduct * form.getFieldValue('cantidad')})
-  // }
+  const handleTotal = ({ target }) => {
+    if ( !activeProduct ) return
+    let newTotal = Number(target.value) * Number(activeProduct.sellPrice);
+    if ( !Number.isNaN( newTotal ) ) {
+      form.setFieldsValue({ total: newTotal })
+    }
+  }
+
+  const handleProductChange = ( value ) => {
+    products.map( p => {
+     if ( p._id === value ) {
+      setActiveProduct( p );
+     }
+   });
+}
 
   const handleDateChange = () => {}
 
@@ -76,9 +87,7 @@ export const SellInvoiceForm = () => {
         > 
             {
               products && (
-                <Select 
-                // onChange={ handleProductChange }
-                >
+                <Select onChange={ handleProductChange }>
                   {
                     products.map( f => (
                       <Select.Option
@@ -104,7 +113,11 @@ export const SellInvoiceForm = () => {
                     },
                   ]}
             >
-                <Input type="number"/>
+                <Input 
+                  type="number" 
+                  onChange={ handleTotal }
+                  min={ 0 }  
+                />
             </Form.Item>
             <Form.Item
                 label="Monto Total"
@@ -117,7 +130,7 @@ export const SellInvoiceForm = () => {
                     },
                   ]}
             >
-                <Input type="number"/>
+                <Input  min={ 0 }/>
             </Form.Item>
             <Form.Item
                 label="Despachador"
@@ -126,9 +139,7 @@ export const SellInvoiceForm = () => {
               > 
                   {
                     workers && (
-                      <Select 
-                      // onChange={ handleProductChange }
-                      >
+                      <Select>
                         {
                           workers.map( w => w.role === 'DISPENSER_ROLE' && (
                                 <Select.Option
@@ -150,9 +161,7 @@ export const SellInvoiceForm = () => {
               > 
                   {
                     clients && (
-                      <Select 
-                      // onChange={ handleProductChange }
-                      >
+                      <Select>
                         {
                           clients.map( p => (
                             <Select.Option
@@ -178,7 +187,7 @@ export const SellInvoiceForm = () => {
                     },
                   ]}
             >
-                <DatePicker  locale={ locale } onChange={handleDateChange} />
+                <DatePicker locale={ locale } onChange={handleDateChange} />
             </Form.Item>
             
   
