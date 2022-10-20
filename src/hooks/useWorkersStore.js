@@ -26,6 +26,7 @@ export const useWorkersStore = () => {
         try {
             const { data } = await gasApi.get('/users?limit=10');
             dispatch( onLoadWorkers( data.users ) );
+            // console.log(data.users)
             //TODO: pagination
         } catch (error) {
             console.log(error.response.data.msg)

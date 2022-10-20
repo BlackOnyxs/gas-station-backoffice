@@ -8,13 +8,12 @@ export const useBuyInvoiceStore = () => {
     const {
         isLoadingBuyInvoices,
         activeBuyInvoice,
-        activeProductType,
         buyInvoices,
         products,
     } = useSelector( state =>  state.buyInvoices );
 
-    const setActiveBuyInvoice = ( fuel ) => {
-        dispatch( onSetActiveBuyInvoice( fuel ) );
+    const setActiveBuyInvoice = ( invoice ) => {
+        dispatch( onSetActiveBuyInvoice( invoice ) );
     }
 
     const startDeleteBuyInvoice = async() => {
@@ -39,10 +38,12 @@ export const useBuyInvoiceStore = () => {
     }
 
      const startSavingBuyInvoice = async( buyInvoice ) => {
+        console.log(buyInvoice)
         if ( buyInvoice._id ) {
             try {
                 const { data } =  await gasApi.put(`/buyinvoices/${ buyInvoice._id }`, buyInvoice );
                 dispatch( onUpdateBuyInvoice( data ) );
+                console.log(data)
             } catch (error) {
                 console.log(error)
             }

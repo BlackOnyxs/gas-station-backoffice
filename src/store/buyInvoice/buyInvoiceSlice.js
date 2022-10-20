@@ -6,19 +6,19 @@ export const buyInvoiceSlice = createSlice({
     initialState: {
         isLoadingBuyInvoice: true,
         buyInvoices: [],
-        activeBuyIvoice: null,
+        activeBuyInvoice: null,
     },
     reducers: {
         onSetActiveBuyInvoice: (state, { payload }) => {
-            state.activeBuyIvoice = payload;
+            state.activeBuyInvoice = payload;
         },
         onCreateBuyInvoice: (state, { payload }) => {
             state.buyInvoices.push( setObjectKey( payload ) );
-            state.activeBuyIvoice = null;
+            state.activeBuyInvoice = null;
         },
         onDeleteBuyInvoice: (state) => {
-            state.buyInvoices = state.buyInvoices.filter( b => b._id !== state.activeBuyIvoice._id );
-            state.activeBuyIvoice = null;
+            state.buyInvoices = state.buyInvoices.filter( b => b._id !== state.activeBuyInvoice._id );
+            state.activeBuyInvoice = null;
         },
         onLoadBuyInvoices: (state, { payload }) => {
             state.isLoadingBuyInvoice = false;
@@ -39,7 +39,7 @@ export const buyInvoiceSlice = createSlice({
                 }
                 return buyInvoice;
             });
-            state.activeBuyIvoice = null;
+            state.activeBuyInvoice = null;
         },
         
     }

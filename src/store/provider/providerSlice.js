@@ -6,19 +6,19 @@ export const providerSlice = createSlice({
     initialState: {
         isLoadingProviders: true,
         providers: [],
-        acitveProvider: null
+        activeProvider: null
     },
     reducers: {
         onSetActiveProvider: (state, { payload }) => {
-            state.acitveProvider = payload
+            state.activeProvider = payload
         },
         onCreateProvider: (state, { payload }) => {
             state.providers.push( setObjectKey( payload ) );
-            state.acitveProvider = null
+            state.activeProvider = null
         },
         onDeleteProvider: (state) => {
-            state.providers = state.providers.filter( p => p._id !== state.acitveProvider._id );
-            state.acitveProvider = null
+            state.providers = state.providers.filter( p => p._id !== state.activeProvider._id );
+            state.activeProvider = null
         },
         onLoadProviders: (state, { payload }) => {
             state.isLoadingProviders = false;

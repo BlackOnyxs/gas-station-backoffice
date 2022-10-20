@@ -3,12 +3,13 @@ import locale from 'antd/es/date-picker/locale/es_ES';
 import { Form, Select, Input, DatePicker} from 'antd';
 
 import { validProductType } from '../../../data/menus';
-import { useBuyInvoiceStore, useInventoryStore, useProviderStore } from '../../../hooks';
+import { useBuyInvoiceStore, useInventoryStore, useProviderStore, useWorkersStore } from '../../../hooks';
 
 export const BuyInvoiceForm = () => {
   const form = Form.useFormInstance();
   const { activeBuyInvoice } = useBuyInvoiceStore();
-  const { startLoadProviders, providers } = useProviderStore();
+  const { startLoadProviders, providers, setActiveProvider} = useProviderStore();
+  const { workers, startLoadingWorkers, setActiveWorker } = useWorkersStore();
   const { activeProductType, products, startLoadingProducts, activeProduct, setActiveProduct, setActiveProductType } = useInventoryStore();
   
  const onLoadProduct = () => {
@@ -25,6 +26,10 @@ export const BuyInvoiceForm = () => {
     startLoadProviders();
   },[])
 
+  useEffect(() => {
+    startLoadingWorkers();
+  },[])
+
   const handleTypeChange = (value, option) => {
     setActiveProductType( option.value );
   }
@@ -38,12 +43,28 @@ export const BuyInvoiceForm = () => {
     
   }
 
+  const handleManager = ( manager ) => {
+    workers.map( m => {
+      if ( m.uid === manager ) {
+        setActiveWorker( m )
+      }
+    })
+  }
+
   const handleProductChange = ( value ) => {
        products.map( p => {
         if ( p._id === value ) {
          setActiveProduct( p );
         }
       });
+  }
+
+  const handleProviderChange = ( provider ) => {
+    providers.map( p => {
+      if ( p._id === provider ) {
+        setActiveProvider( p );
+      }
+    })
   }
 
   return (
@@ -94,6 +115,28 @@ export const BuyInvoiceForm = () => {
               )
             }
         </Form.Item>
+        <Form.Item
+                label="Administrador"
+                name="manager"
+                key="manager"
+              > 
+                  {
+                    workers && (
+                      <Select onChange={ handleManager }>
+                        {
+                          workers.map( w => w.role === 'ADMIN_ROLE' && (
+                                <Select.Option
+                                  key={ w.uid }
+                                  value={ w.uid }
+                                >
+                                  { w.name }
+                                </Select.Option>
+                              ))             
+                        }
+                      </Select>
+                    )
+                  }
+            </Form.Item>
             <Form.Item
                 label="Cantidad"
                 name="quantity"
@@ -131,7 +174,7 @@ export const BuyInvoiceForm = () => {
               > 
                   {
                     providers && (
-                      <Select>
+                      <Select onChange={ handleProviderChange }>
                         {
                           providers.map( p => (
                             <Select.Option
