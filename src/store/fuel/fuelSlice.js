@@ -29,7 +29,7 @@ export const fuelSlice = createSlice({
                 }
             });
         },
-        onUpdateFuel: (state, { payload}) => {
+        onUpdateFuel: (state, { payload }) => {
             state.fuels = state.fuels.map( fuel => {
                 if ( fuel._id === payload._id ) {
                     return setObjectKey(payload);

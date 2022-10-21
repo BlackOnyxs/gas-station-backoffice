@@ -10,8 +10,8 @@ export const AddOilModal = () => {
     const { isModalOpen, closeModal } = useUiStore();
     const { startSavingOil, activeOil, setActiveOil, startDeleteOil } = useOilStore();
 
-    const handleOk = ({ name, branch, type, viscosityGrade, size, inventory, sellPrice }) => { 
-      startSavingOil({ ...activeOil, name, branch, type, viscosityGrade, size, inventory, sellPrice })
+    const handleOk = ({ name, branch, type, viscosityGrade, size, inventory, price }) => { 
+      startSavingOil({ ...activeOil, name, branch, type, viscosityGrade, size, inventory, price })
         closeModal();
     };
 
@@ -34,7 +34,7 @@ export const AddOilModal = () => {
           'viscosityGrade': activeOil.viscosityGrade,
           'size': activeOil.size,
           'inventory': activeOil.inventory,
-          'sellPrice': activeOil.sellPrice
+          'price': activeOil.price
         });
       }else{
         form.setFieldsValue({
@@ -44,7 +44,7 @@ export const AddOilModal = () => {
           'viscosityGrade': validViscosity[0].name,
           'size': validSize[0].name,
           'inventory': '1',
-          'sellPrice': '0.00',
+          'price': '0.00',
         })
       }
     }

@@ -25,6 +25,7 @@ export const schedulaSlice = createSlice({
             state.isLoadingSchedule = false;
             payload.forEach( schedule => {
                 const exist = state.schedule.some( dbSchedule => dbSchedule._id === schedule._id );
+                // console.log(formatSchedule( schedule ))
                 if ( !exist ) {
                     state.schedule.push( setObjectKey( formatSchedule( schedule ) ) );
                 }

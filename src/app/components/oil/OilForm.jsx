@@ -106,8 +106,11 @@ export const OilForm = () => {
         </Form.Item>
         <Form.Item
             label="Precio"
-            name="sellPrice"
-            key="sellPrice"
+            name="price"
+            key="price"
+            // label="Precio"
+            // name="sellPrice"
+            // key="sellPrice"
             rules={[
                 {
                   required: true,

@@ -39,7 +39,8 @@ export const useTurnsStore = () => {
         if ( turn._id ) {
             try {
                 const { data } = await gasApi.put(`/turns/${ turn._id }`, turn);
-                dispatch( onUpdateTurn( data ))
+                dispatch( onUpdateTurn( data ) )
+                console.log( data )
             } catch (error) {
                 console.log(error)
             }

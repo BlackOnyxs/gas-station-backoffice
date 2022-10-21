@@ -5,6 +5,7 @@ export const setObjectKey = (obj = {}) => {
     }else {
         obj.key = obj.uid;
     }
+    console.log(obj)
     
     return obj;
 }

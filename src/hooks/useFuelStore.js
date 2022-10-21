@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import gasApi from '../api/gasApi';
+import { validOctane } from '../data/menus';
 import { onCreateFuel, onDeleteFuel, onLoadFuels, onSetActiveFuel, onUpdateFuel } from '../store';
 
 
@@ -35,6 +36,12 @@ export const useFuelStore = () => {
     }
 
      const startSavingFuel = async( fuel ) => {
+        console.log(fuel)
+        validOctane.map( o => {
+            if ( o._id === fuel.octane ) {
+              fuel.octane = o.value
+            }
+        })
         if ( fuel._id ) {
             try {
                 const { data } =  await gasApi.put(`/fuels/${ fuel._id }`, fuel );
@@ -45,8 +52,8 @@ export const useFuelStore = () => {
         } else {
             try {
                 const { data } = await gasApi.post('/fuels', fuel);
-                dispatch( onCreateFuel( data ) ); 
-                console.log(data);
+                dispatch( onCreateFuel( data.fuel ) ); 
+                console.log(data)
             } catch (error) {
                 console.log(error)
             }

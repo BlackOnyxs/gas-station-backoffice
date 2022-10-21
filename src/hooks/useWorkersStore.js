@@ -29,13 +29,14 @@ export const useWorkersStore = () => {
             // console.log(data.users)
             //TODO: pagination
         } catch (error) {
-            console.log(error.response.data.msg)
+            console.log(error)
         }
     }
 
     const startSavingWorker = async( worker ) => {
         if ( worker.uid ) {
             try {
+                console.log(worker)
                 const { data } = await gasApi.put(`/users/${ worker.uid }`, worker);
                 dispatch( onUpdateWorker( data ) );
             } catch (error) {

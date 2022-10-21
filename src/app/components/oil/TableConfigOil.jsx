@@ -187,8 +187,10 @@ export const TableConfigOil = () => {
         },
         {
           title: 'Precio',
-          dataIndex: 'sellPrice',
-          key: 'sellPrice',
+          dataIndex: 'price',
+          key: 'price',
+          // dataIndex: 'sellPrice',
+          // key: 'sellPrice',
           width: '25%'
         },
       ];

@@ -10,8 +10,8 @@ export const AddFuelModal = () => {
     const { isModalOpen, closeModal } = useUiStore();
     const { startSavingFuel, startDeleteFuel, activeFuel } = useFuelStore();
 
-    const handleOk = ({ name, type, sellPrice, octane, inventory }) => {
-        startSavingFuel({ ...activeFuel, name, type, sellPrice, octane, inventory })
+    const handleOk = ({ name, type, sellPrice, inventory, octane }) => {
+        startSavingFuel({ ...activeFuel, name, type, sellPrice, inventory, octane })
         closeModal();
     };
 
@@ -21,7 +21,7 @@ export const AddFuelModal = () => {
 
     const setInitialValues = () => {
       if ( activeFuel ) {
-        console.log({ activeFuel })
+        // console.log({ activeFuel })
         form.setFieldsValue({
           'name': activeFuel.name,
           'sellPrice': activeFuel.sellPrice,

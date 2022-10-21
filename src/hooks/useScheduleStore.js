@@ -1,4 +1,3 @@
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import gasApi from '../api/gasApi';
 import { onCreateSchedule, onDeleteSchedule, onLoadSchedule, onSetActiveSchedule, onUpdateSchedule } from '../store';
@@ -13,8 +12,11 @@ export const useScheduleStore = () => {
     }
 
     const startDeleteSchedule = async( schedule ) => {
+        console.log(schedule)
         try {
-            await gasApi.delete( `/schedule/${ schedule._id }`);
+            // const { data } = await gasApi.delete( `/schedule/${ schedule._id }`);
+            const { data } = await gasApi.post( `/schedule/delete`, schedule);
+            console.log(data)
             dispatch( onDeleteSchedule( schedule ) );
         } catch (error) {
             console.log(error)
@@ -25,12 +27,14 @@ export const useScheduleStore = () => {
         try {
             const { data } = await gasApi.get('/schedule?limit=10');
             dispatch( onLoadSchedule( data.schedule ) );
+            console.log(data.schedule)
         } catch (error) {
             console.log(error)
         }
     }
 
     const startSavingSchedule = async( schedule ) => {
+        console.log(schedule)
         if ( schedule._id ) {
             try {
                 const { data } = await gasApi.put(`/schedule/${ schedule._id }`, schedule);
@@ -42,6 +46,7 @@ export const useScheduleStore = () => {
             try {
                 const { data } = await gasApi.post('/schedule', schedule);
                 dispatch( onCreateSchedule( data ) );
+                console.log(data)
             } catch (error) {
                 console.log(error)
             }

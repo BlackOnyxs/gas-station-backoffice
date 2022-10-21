@@ -45,7 +45,7 @@ export const useOilStore = () => {
         } else {
             try {
                 const { data } = await gasApi.post('/oils', oil);
-                dispatch( onCreateOil( data ) ); 
+                dispatch( onCreateOil( data.oil ) ); 
             } catch (error) {
                 console.log(error)
             }
