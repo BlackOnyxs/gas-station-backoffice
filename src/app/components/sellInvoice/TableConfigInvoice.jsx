@@ -1,23 +1,22 @@
-import React,  { useRef, useState }  from 'react';
+import React,  { useRef, useState, useEffect }  from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, DatePicker } from 'antd';
+import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { validFuel } from '../../../data/menus';
+import moment from 'moment';
 
-// import { useUiStore } from '../../../hooks';
-// import { useCategoryStore, useInventoryStore } from '../../../hooks';
-const products = [];
-const roles = [];
+import { validProductType } from '../../../data/menus';
+import { useInventoryStore, useUiStore } from '../../../hooks';
+import { useSellInvoiceStore } from '../../../hooks/useSellInvoiceStore';
 
 export const TableConfigInvoice = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
-    // const { openProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { products, setActiveProduct } = useInventoryStore();
+    const { openModal } = useUiStore();
+    const { sellInvoices, setActiveSellInvoice, startLoadingSellInvoices, resetSellInvoices } = useSellInvoiceStore();
+    const { activeProductType, setActiveProductType } = useInventoryStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -30,9 +29,18 @@ export const TableConfigInvoice = () => {
       setSearchText('');
     };
 
-    const onChangeDate = () => {
-
+    const handleChange = (pagination, filters, sorter, extra) => {
+      if ( filters.product ) {
+        if ( filters.product.length === 1 ) {
+          resetSellInvoices();
+        }
+        setActiveProductType(filters.product);
+      }
     }
+
+    useEffect(()=> {
+      activeProductType.map( startLoadingSellInvoices );
+    },[activeProductType])
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -129,25 +137,22 @@ export const TableConfigInvoice = () => {
         },
         {
           title: 'Despachador',
-          dataIndex: 'dispenser',
+          dataIndex: ['dispenser', 'name'],
           key: 'dispenser',
           width: '20%',
           ...getColumnSearchProps('dispenser'),
         },
         {
           title: 'Producto',
-          dataIndex: 'product',
+          dataIndex: ['product', 'name'],
           key: 'product',
           width: '20%',
-          filters: validFuel.map( f => {
+          filters: validProductType.map( f => {
             return {
               text: f.name,
-              value: f.name
+              value: f.key
             }
           }),
-          onFilter: ( value, record ) => {
-            //Todo: call api
-          }
         },
         {
           title: 'Cantidad',
@@ -157,10 +162,10 @@ export const TableConfigInvoice = () => {
         },
         {
           title: 'Fecha',
-          dataIndex: 'size',
-          key: 'size',
+          dataIndex: 'createdAt',
+          key: 'createdAt',
           width: '10%',
-          render: <DatePicker onChange={onChangeDate} />
+          render: (d) => (moment(d).format('YYYY/MM/DD'))
         },
         {
           title: 'Total',
@@ -174,17 +179,18 @@ export const TableConfigInvoice = () => {
     return (
         <Table 
             columns={columns} 
-            dataSource={products}  
+            dataSource={ sellInvoices }  
             style={{ height: 'calc( 100vh - 160px )'}}
             pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  // setActiveProduct(record)
-                  // openProductModal();
+                  setActiveSellInvoice(record)
+                  openModal();
                 }
               }
             }}
+            onChange={ handleChange }
         />
     )
         

@@ -1,44 +1,83 @@
-import React from 'react';
-import { Modal, Button, Form, Input, Select, Switch, DatePicker } from 'antd';
-import { validProductType } from '../../../data/menus';
-import { FuelFormConfig } from './FuelFormConfig';
-import { OilFormConfig } from './OilFormConfig';
+import React, { useEffect } from 'react';
+import { Modal, Button, Form } from 'antd';
+import moment from 'moment';
 
-// import { useCategoryStore, useInventoryStore, useUiStore } from '../../../hooks';
-
-const activeProduct = {
-  _id: '123',
-  tipo: 'Oil'
-}
+import { useUiStore, useSellInvoiceStore, useInventoryStore, useClientStore, useWorkersStore } from '../../../hooks';
+import { SellInvoiceForm } from './SellInvoiceForm';
 
 export const AddInvoiceModal = () => {
-    // const { isProductModalOpen, closeProductModal } = useUiStore();
-    // const { categories } = useCategoryStore();
-    // const { startSavingProducts, activeProduct } = useInventoryStore();
+    const [form] = Form.useForm();
+    const { isModalOpen, closeModal } = useUiStore();
+    const { setActiveClient, activeClient } = useClientStore();
+    const { startSavingSellInvoice, activeSellInvoice, setActiveSellInvoice, startDeletingSellInvoice } = useSellInvoiceStore();
+    const { activeProductType, products, setActiveProduct, activeProduct } = useInventoryStore();
+    const { setActiveWorker, activeWorker } = useWorkersStore();
+    const { clients } = useClientStore();
 
-    const handleOk = ({ name, category, price, description }) => {
-        // if ( activeProduct ) {
-        //     startSavingProducts({ name, category, price, description, _id: activeProduct._id })
-        // } else {
-        //   startSavingProducts({ name, category, price, description })
-        // }
-        // closeProductModal();
+    const handleOk = ({ dispenser, product, client, quantity, total, date }) => {
+        startSavingSellInvoice({ 
+          dispenser: activeWorker?.uid, 
+          product: activeProduct?._id, 
+          productType: activeProductType, 
+          client: activeClient?._id, 
+          quantity, 
+          total,
+          price: activeProduct?.sellPrice, 
+          _id: activeSellInvoice?._id,
+          date
+        });
+        closeModal();
+        setActiveSellInvoice(null);
     };
 
     const handleCancel = () => {
-      // closeProductModal();
+      closeModal();
+      setActiveSellInvoice(null);
     };
 
-    const handleDateChange = () => {
-
+    const handleDelete = () => {
+      startDeletingSellInvoice(activeProductType[0]);
+      closeModal();
     }
+
+    const setInitialValues = () => {
+      if ( activeSellInvoice ) {
+        setActiveClient( activeSellInvoice.client );
+        setActiveProduct( activeSellInvoice.product );
+        setActiveWorker( activeSellInvoice.dispenser );
+        form.setFieldsValue({
+          'productType': activeSellInvoice.product.productType,
+          'product': activeSellInvoice.product.name,
+          'quantity': activeSellInvoice.quantity,
+          'total': activeSellInvoice.total,
+          'dispenser': activeSellInvoice.dispenser.name,
+          'client': activeSellInvoice.client.name,
+          'date': moment(activeSellInvoice.date, 'YYYY/MM/DD')
+        })
+      }else{
+        form.setFieldsValue({
+          'productType': activeProductType,
+          'product': '',
+          // 'product': products ? products[0].name : '',
+          'quantity': 1,
+          'total': 0.00,
+          // 'Provider': providers ? providers[0].name : '',
+          'dispenser': '',
+          'client': '',
+          'date': moment()
+        });
+      }
+    }
+
+    useEffect(() => {
+      setInitialValues();
+    }, [products, clients ])
 
     return (
       <>
         <Modal 
-            title="Nueva Venta" //Todo: si existe el plato
-            // visible={isProductModalOpen} 
-            // visible={true} 
+            title={ activeSellInvoice ? activeSellInvoice._id : 'Nueva Venta'}
+            visible={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[
@@ -47,6 +86,15 @@ export const AddInvoiceModal = () => {
                   onClick={handleCancel}
               >
                 Cerrar
+              </Button>,
+               <Button
+                  danger
+                  type='primary'
+                  key="delete" 
+                  onClick={ handleDelete }
+                  disabled={ !activeSellInvoice }
+              >
+                Borrar
               </Button>,
               <Button
                   key="submit"
@@ -60,6 +108,7 @@ export const AddInvoiceModal = () => {
         >
         <Form
             id="category-form"
+            form={ form }
             labelCol={{ span: 8 }}
             layout="horizontal"
             wrapperCol={{
@@ -67,89 +116,7 @@ export const AddInvoiceModal = () => {
             }}
             onFinish={ handleOk }
         >
-            <Form.Item
-              label="Producto"
-              name="product"
-              key="product"
-            >
-              {
-                validProductType && (
-                  <Select
-                    defaultValue={ validProductType[0].name }
-                  >
-                    {
-                      validProductType.map( b => (
-                        <Select.Option
-                          key={ b._id }
-                        >
-                          { b.name }
-                        </Select.Option>
-                      ))
-                    }
-                  </Select>
-                )
-              }
-            </Form.Item>
-            {
-              (activeProduct.tipo === 'Combustible')
-                ? <FuelFormConfig /> 
-                : <OilFormConfig />
-            }
-            <Form.Item
-                label="Cantidad"
-                name="quantity"
-                key="quantity"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="number"/>
-            </Form.Item>
-            <Form.Item
-                label="Monto Total"
-                name="total"
-                key="total"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Input type="number"/>
-            </Form.Item>
-            <Form.Item
-                label="Fecha"
-                name="date"
-                key="date"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <DatePicker onChange={handleDateChange} />
-            </Form.Item>
-            
-  
-            {/* Todo: add image file if activeproduct */}
-            <Form.Item
-                label="Estado"
-                name="status"
-                key="status"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                <Switch checked onChange={()=> {}}/>
-            </Form.Item>
+           <SellInvoiceForm />
         </Form>
         </Modal>
       </>

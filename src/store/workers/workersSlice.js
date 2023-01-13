@@ -6,7 +6,8 @@ export const WorkersSlice = createSlice({
     initialState: {
         isLoadingWorkers: true,
         workers: [],
-        activeWorker: null
+        activeWorker: null, 
+        errorMessage: undefined
     },
     reducers: {
         onSetActiveWorker: (state, { payload }) => {
@@ -39,6 +40,12 @@ export const WorkersSlice = createSlice({
                 }
                 return worker;
             });
+        },
+        onWorkerError: (state, {payload}) => {
+            state.errorMessage = payload;
+        },
+        onClearWorkerErrorMessage: ( state ) => {
+            state.errorMessage = undefined;
         }
     }
 });
@@ -49,4 +56,6 @@ export const {
     onDeleteWorker,
     onLoadWorkers,
     onUpdateWorker,
+    onWorkerError,
+    onClearWorkerErrorMessage,
 } = WorkersSlice.actions;

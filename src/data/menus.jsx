@@ -12,7 +12,8 @@ import {
   ShopOutlined, 
   ShoppingCartOutlined, 
   UsergroupDeleteOutlined, 
-  UserOutlined 
+  UserOutlined,
+  UserSwitchOutlined,
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
@@ -103,6 +104,11 @@ export const siderOptions = [
       key: '11',
       icon: <PartitionOutlined />,
       label: <Link to="/proveedores">Proveedores</Link>,
+    },
+    {
+      key: '13',
+      icon: <UserSwitchOutlined />,
+      label: <Link to="/clientes">Clientes</Link>,
     },
   ];
 
@@ -204,10 +210,12 @@ export const siderOptions = [
     {
       _id: '1',
       name: 'Combustible',
+      key: 'fuels'
     },
     {
       _id: '2',
-      name: 'Oil',
+      name: 'Aceite',
+      key: 'oils'
     },
   ];
 

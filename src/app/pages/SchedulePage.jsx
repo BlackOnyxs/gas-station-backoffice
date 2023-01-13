@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar  }  from 'react-big-calendar';
+import { Calendar }  from 'react-big-calendar';
+import Swal from 'sweetalert2';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -15,7 +16,7 @@ export const SchedulePage = () => {
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month')
 
     const { openModal } = useUiStore();
-    const { isLoadingSchedule, starLoadingSchedule, schedule, setActiveSchedule } = useScheduleStore();
+    const { isLoadingSchedule, starLoadingSchedule, schedule, setActiveSchedule, errorMessage, clearErrorMessage } = useScheduleStore();
     const { startLoadingWorkers } = useWorkersStore();
     const { startLoadingTurns  } = useTurnsStore();
 
@@ -30,6 +31,18 @@ export const SchedulePage = () => {
     useEffect(() => {
       startLoadingTurns();
     }, []);
+
+    useEffect(() => {
+      if ( errorMessage !== undefined ) {
+        Swal.fire({
+          title: 'Error', 
+          text: errorMessage, 
+          icon: 'error',
+        }).then((result) => {
+          clearErrorMessage();
+        });
+      }
+    }, [errorMessage])
 
     const eventStyleGetter = ( event, start, end, isSelected ) => {
       const style = {

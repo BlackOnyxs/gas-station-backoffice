@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Row, Col, Button} from 'antd';
-import { TableConfigProvider } from '../components/provider/TableConfigProvider';
-import { AddProviderModal } from '../components/provider/AddProviderModal';
-import { useProviderStore, useUiStore } from '../../hooks';
-import { LoadingPage } from '../components/common/LoadingPage';
-import { useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-export const ProviderPage = () => {
-    const { isLoadingProviders, startLoadProviders, errorMessage, clearErrorMessage } = useProviderStore();
+import { useClientStore, useUiStore } from '../../hooks';
+import { LoadingPage } from '../components/common/LoadingPage';
+import { TableConfigClient } from '../components/Client/TableConfigClient';
+import { AddClientModal } from '../components/Client/AddClientModal';
+
+
+export const ClientPage = () => {
+    const { isLoadingClients, startLoadClients, errorMessage, clearErrorMessage } = useClientStore();
     const { openModal } = useUiStore();
     
     useEffect(() => {
-      startLoadProviders();
+      startLoadClients();
     },[]);
 
     useEffect(() => {
@@ -30,7 +31,7 @@ export const ProviderPage = () => {
     return (
         <>
         {
-          ( isLoadingProviders )
+          ( isLoadingClients )
             ? <LoadingPage />
             : (
               <>
@@ -44,12 +45,12 @@ export const ProviderPage = () => {
                     }}
                     onClick={ () => openModal()  }
                   >
-                      Agregar Proveedor
+                      Agregar Cliente
                   </Button>
                 </Col>
               </Row>
-              <TableConfigProvider />
-              <AddProviderModal />
+              <TableConfigClient />
+              <AddClientModal />
             </>
              
             )

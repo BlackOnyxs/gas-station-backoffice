@@ -6,19 +6,20 @@ export const providerSlice = createSlice({
     initialState: {
         isLoadingProviders: true,
         providers: [],
-        acitveProvider: null
+        activeProvider: null,
+        errorMessage: undefined,
     },
     reducers: {
         onSetActiveProvider: (state, { payload }) => {
-            state.acitveProvider = payload
+            state.activeProvider = payload
         },
         onCreateProvider: (state, { payload }) => {
             state.providers.push( setObjectKey( payload ) );
-            state.acitveProvider = null
+            state.activeProvider = null
         },
         onDeleteProvider: (state) => {
-            state.providers = state.providers.filter( p => p._id !== state.acitveProvider._id );
-            state.acitveProvider = null
+            state.providers = state.providers.filter( p => p._id !== state.activeProvider._id );
+            state.activeProvider = null
         },
         onLoadProviders: (state, { payload }) => {
             state.isLoadingProviders = false;
@@ -32,10 +33,16 @@ export const providerSlice = createSlice({
         onUpdateProvider: (state, { payload }) => {
             state.providers = state.providers.map( provider => {
                 if ( provider._id === payload._id ) {
-                    return payload;
+                    return setObjectKey(payload);
                 }
                 return provider;
             })
+        },
+        onProviderError: (state, {payload}) => {
+            state.errorMessage = payload;
+        },
+        onClearProviderErrorMessage: ( state ) => {
+            state.errorMessage = undefined;
         }
     }
 });
@@ -46,4 +53,6 @@ export const {
     onDeleteProvider,
     onLoadProviders,
     onUpdateProvider,
+    onProviderError,
+    onClearProviderErrorMessage,
  } = providerSlice.actions;

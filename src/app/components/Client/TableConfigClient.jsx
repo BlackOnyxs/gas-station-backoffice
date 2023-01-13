@@ -1,22 +1,18 @@
-import React,  { useRef, useState, useEffect }  from 'react';
+import React,  { useRef, useState }  from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { validProductType } from '../../../data/menus';
-import moment from 'moment'
 
-import { useBuyInvoiceStore, useInventoryStore, useUiStore } from '../../../hooks';
+import { useClientStore, useUiStore } from '../../../hooks';
 
-
-export const TableConfigInvoice = () => {
+export const TableConfigClient = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     
     const { openModal } = useUiStore();
-    const { buyInvoices, setActiveBuyInvoice, startLoadingBuyInvoices, resetBuyInvoices } = useBuyInvoiceStore();
-    const { activeProductType, setActiveProductType } = useInventoryStore();
+    const { clients, setActiveClient } = useClientStore();
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -27,21 +23,7 @@ export const TableConfigInvoice = () => {
     const handleReset = (clearFilters) => {
       clearFilters();
       setSearchText('');
-      // startLoadingBuyInvoices();
     };
-
-    const handleChange = (pagination, filters, sorter, extra) => {
-      if ( filters.product ) {
-        if ( filters.product.length === 1 ) {
-          resetBuyInvoices();
-        }
-        setActiveProductType(filters.product);
-      }
-    }
-
-    useEffect(()=> {
-      activeProductType.map( startLoadingBuyInvoices );
-    },[activeProductType])
 
     const getColumnSearchProps = (dataIndex) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -130,68 +112,42 @@ export const TableConfigInvoice = () => {
 
     const columns = [
         {
-          title: 'Factura',
-          dataIndex: '_id',
-          key: '_id',
-          width: '25%',
-          ...getColumnSearchProps('_id'),
+          title: 'Nombre',
+          dataIndex: 'name',
+          key: 'name',
+          width: '30%',
+          ...getColumnSearchProps('name'),
         },
         {
-          title: 'Proveedor',
-          dataIndex: ['provider', 'name'],
-          key: 'provider',
-          width: '20%',
-          ...getColumnSearchProps('provider'),
-        },
-        {
-          title: 'Producto',
-          dataIndex: ['product', 'name'],
-          key: 'product',
-          width: '20%',
-          filters: validProductType.map( f => {
-            return {
-              text: f.name,
-              value: f.key
-            }
-          }),
-        },
-        {
-          title: 'Cantidad',
-          dataIndex: 'quantity',
-          key: 'quantity',
-          width: '10%',
-        },
-        {
-          title: 'Fecha',
-          dataIndex: 'date',
-          key: 'date',
-          width: '10%',
-          render: (d) => (moment(d).format('YYYY/MM/DD'))
-        },
-        {
-          title: 'Total',
-          dataIndex: 'total',
-          key: 'total',
+          title: 'Telefono',
+          dataIndex: 'phone',
+          key: 'phone',
           width: '20%',
         },
+        {
+          title: 'Correo',
+          dataIndex: 'email',
+          key: 'email',
+          width: '20%',
+        },
+        
       ];
     
 
     return (
         <Table 
             columns={columns} 
-            dataSource={ buyInvoices}  
+            dataSource={ clients }  
             style={{ height: 'calc( 100vh - 160px )'}}
-            pagination={ 7 }
+            pagination={ 20 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {
-                  setActiveBuyInvoice(record)
+                  setActiveClient(record)
                   openModal();
                 }
               }
             }}
-            onChange={ handleChange }
         />
     )
         

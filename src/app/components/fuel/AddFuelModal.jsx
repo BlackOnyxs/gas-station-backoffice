@@ -8,20 +8,21 @@ import { validFuel, validOctane } from '../../../data/menus';
 export const AddFuelModal = () => {
     const [form] = Form.useForm();
     const { isModalOpen, closeModal } = useUiStore();
-    const { startSavingFuel, startDeleteFuel, activeFuel } = useFuelStore();
+    const { startSavingFuel, startDeleteFuel, activeFuel, setActiveFuel } = useFuelStore();
 
-    const handleOk = ({ name, type, sellPrice, octane, inventory }) => {
-        startSavingFuel({ ...activeFuel, name, type, sellPrice, octane, inventory })
+    const handleOk = ({ name, type, sellPrice, inventory, octane }) => {
+        startSavingFuel({ ...activeFuel, name, type, sellPrice, inventory, octane })
         closeModal();
     };
 
     const handleCancel = () => {
+      setActiveFuel(null);
       closeModal();
     };
 
     const setInitialValues = () => {
       if ( activeFuel ) {
-        console.log({ activeFuel })
+        // console.log({ activeFuel })
         form.setFieldsValue({
           'name': activeFuel.name,
           'sellPrice': activeFuel.sellPrice,

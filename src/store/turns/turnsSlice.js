@@ -6,7 +6,8 @@ export const turnsSlice = createSlice({
     initialState: {
         isLoadingTurns: true,
         turns: [],
-        activeTurn: null
+        activeTurn: null,
+        errorMessage: undefined,
     },
     reducers: {
         onSetActiveTurn: (state, { payload }) => {
@@ -38,6 +39,12 @@ export const turnsSlice = createSlice({
                 }
                 return turn;
             })
+        },
+        onTurnError: (state, {payload}) => {
+            state.errorMessage = payload;
+        },
+        onClearTurnErrorMessage: ( state ) => {
+            state.errorMessage = undefined;
         }
     }
 });
@@ -48,4 +55,6 @@ export const {
     onDeleteTurn,
     onLoadTurns,
     onUpdateTurn,
+    onTurnError,
+    onClearTurnErrorMessage,
  } = turnsSlice.actions;

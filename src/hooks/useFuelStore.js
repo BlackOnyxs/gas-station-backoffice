@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import gasApi from '../api/gasApi';
-import { onCreateFuel, onDeleteFuel, onLoadFuels, onSetActiveFuel, onUpdateFuel } from '../store';
+import { validOctane } from '../data/menus';
+import { onClearFuelErrorMessage, onCreateFuel, onDeleteFuel, onFuelError, onLoadFuels, onSetActiveFuel, onUpdateFuel } from '../store';
 
 
 export const useFuelStore = () => {
@@ -10,7 +11,12 @@ export const useFuelStore = () => {
         isLoadingFuels,
         activeFuel,
         fuels,
+        errorMessage,
     } = useSelector( state =>  state.fuels );
+
+    const clearErrorMessage = () => {
+        dispatch( onClearFuelErrorMessage() )
+    }
 
     const setActiveFuel = ( fuel ) => {
         dispatch( onSetActiveFuel( fuel ) );
@@ -22,6 +28,7 @@ export const useFuelStore = () => {
             dispatch( onDeleteFuel() ); 
         } catch (error) {
             console.log(error)
+            dispatch( onFuelError(error.response.data.msg) )
         }
     }
 
@@ -31,24 +38,33 @@ export const useFuelStore = () => {
             dispatch( onLoadFuels( data.fuels ) );
         } catch (error) {
             console.log(error)
+            dispatch( onFuelError(error.response.data.msg) )
         }
     }
 
      const startSavingFuel = async( fuel ) => {
+        console.log(fuel)
+        validOctane.map( o => {
+            if ( o._id === fuel.octane ) {
+              fuel.octane = o.value
+            }
+        })
         if ( fuel._id ) {
             try {
                 const { data } =  await gasApi.put(`/fuels/${ fuel._id }`, fuel );
                 dispatch( onUpdateFuel( data ) );
             } catch (error) {
                 console.log(error)
+                dispatch( onFuelError(error.response.data.msg) )
             }
         } else {
             try {
                 const { data } = await gasApi.post('/fuels', fuel);
-                dispatch( onCreateFuel( data ) ); 
-                console.log(data);
+                dispatch( onCreateFuel( data.fuel ) ); 
+                console.log(data)
             } catch (error) {
                 console.log(error)
+                dispatch( onFuelError(error.response.data.msg) )
             }
         }
      } 
@@ -58,7 +74,9 @@ export const useFuelStore = () => {
         isLoadingFuels,
         activeFuel,
         fuels,
+        errorMessage,
         //Methods
+        clearErrorMessage,
         setActiveFuel,
         startDeleteFuel,
         startLoadingFuel,

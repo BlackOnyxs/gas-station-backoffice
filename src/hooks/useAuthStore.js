@@ -32,7 +32,7 @@ export const useAuthStore = () => {
         if ( !token ) return dispatch( onLogout() );
 
         try {
-            const { data } = await gasApi.get('/auth/renew');  
+            const { data } = await gasApi.get('/auth/renew'); 
             localStorage.setItem('token', data.token);
             dispatch( onLogin({ name: data.name, uid: data.uid }) );
         } catch (error) {

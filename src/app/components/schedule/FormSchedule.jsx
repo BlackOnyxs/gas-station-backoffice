@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Select, Switch, Tag, DatePicker } from 'antd';
+import { Form, Select, Tag, DatePicker, Input } from 'antd';
 import locale from 'antd/es/date-picker/locale/es_ES';
 
 import { useTurnsStore, useWorkersStore } from '../../../hooks';
@@ -7,11 +7,25 @@ import { LoadingPage } from '../common/LoadingPage';
 
 export const FormSchedule = () => {
     const form = Form.useFormInstance();
-    const { workers, isLoadingWorkers } = useWorkersStore();
-    const { turns, isLoadingTurns } = useTurnsStore();
-
-    const handleDateChange = (date)=> {}
+    const { workers, isLoadingWorkers, setActiveWorker} = useWorkersStore();
+    const { turns, isLoadingTurns,  setActiveTurn } = useTurnsStore();
   
+    const handleActiveWorker = ( worker ) => {
+      workers.map( w => {
+        if ( w.uid === worker ) {
+          setActiveWorker( w )
+        }
+      });
+    }
+
+    const handleActiveTurn = ( turn ) => {
+      turns.map( t => {
+        if ( t._id === turn ) {
+          setActiveTurn( t )
+        }
+      });
+    }
+
     return (
         <>
             <>
@@ -32,38 +46,58 @@ export const FormSchedule = () => {
               >
                 {
                   workers && (
-                    <Select>
+                    
+                    <Select onChange={ handleActiveWorker }>
                       {
-                        workers.map( d => (
-                          <Select.Option
-                            key={ d.uid }
-                          >
-                           { d.name }
-                          </Select.Option>
-                        ))
+                        workers.map( d => {
+                          if ( d.role === 'DISPENSER_ROLE') {
+                            return (
+                              <Select.Option
+                              key={ d.uid }
+                              value={ d.uid }
+                            >
+                                { d.name }
+                              </Select.Option>
+                            )
+                          }
+                        })
                       }
                     </Select>
                   )
                 }
               </Form.Item>
               <Form.Item
-                  label="Turno"
-                  name="turn"
-                  key="turn"
-                  rules={[
-                      {
-                        required: true,
-                        message: 'Campo reuqerido',
-                      },
-                    ]}
+                label="Monto"
+                name="total"
+                key="total"
+                rules={[
+                    {
+                      required: true,
+                      message: 'Campo reuqerido',
+                    },
+                  ]}
+            >
+                <Input  min={ 0 }/>
+            </Form.Item>
+            <Form.Item
+                label="Turno"
+                name="turn"
+                key="turn"
+                rules={[
+                    {
+                      required: true,
+                      message: 'Campo reuqerido',
+                    },
+                ]}
               >
                 {
                   turns && (
-                    <Select>
+                    <Select onChange={ handleActiveTurn }>
                       {
                         turns.map( t => (
                           <Select.Option
                             key={ t._id }
+                            value={ t._id }
                           >
                             <a>Inicio: <Tag color="cyan">{t.startTime}</Tag> Fin: <Tag color="magenta">{t.endTime}</Tag></a>
                           </Select.Option>
@@ -84,7 +118,7 @@ export const FormSchedule = () => {
                       },
                     ]}
               >
-                  <DatePicker  locale={ locale } onChange={handleDateChange} />
+                  <DatePicker  locale={ locale } />
               </Form.Item>
               
               </>

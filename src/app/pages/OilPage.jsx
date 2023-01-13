@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { Row, Col, Button} from 'antd';
+import Swal from 'sweetalert2';
+
 import { AddOilModal } from '../components/oil/AddOilModal';
 import { TableConfigOil } from '../components/oil/TableConfigOil';
 import { useUiStore } from '../../hooks/useUiStore';
@@ -8,11 +10,23 @@ import { LoadingPage } from '../components/common/LoadingPage';
 export const OilPage = () => {
 
     const { openModal } = useUiStore();
-    const { isLoadingOils, startLoadingOils } = useOilStore();
+    const { isLoadingOils, startLoadingOils, errorMessage, clearErrorMessage } = useOilStore();
 
     useEffect(() => {
       startLoadingOils();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+      if ( errorMessage !== undefined ) {
+        Swal.fire({
+          title: 'Error', 
+          text: errorMessage, 
+          icon: 'error',
+        }).then((result) => {
+          clearErrorMessage();
+        });
+      }
+    }, [errorMessage])
     
     return (
         <>

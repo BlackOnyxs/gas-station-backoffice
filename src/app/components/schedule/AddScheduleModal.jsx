@@ -10,30 +10,47 @@ import { FormSchedule } from './FormSchedule';
 export const AddScheduleModal = () => {
     const [form] = Form.useForm();
     const { isModalOpen, closeModal } = useUiStore();
-    const { startSavingSchedule, activeSchedule, startDeleteSchedule } = useScheduleStore();
-    const { turns } = useTurnsStore();
-    const { workers } = useWorkersStore();
+    const { startSavingSchedule, activeSchedule, startDeleteSchedule, setActiveSchedule } = useScheduleStore();
+    const { turns, activeTurn, setActiveTurn } = useTurnsStore();
+    const { workers, activeWorker, setActiveWorker } = useWorkersStore();
 
-    const handleOk = ({ dispenser, turn, date, status }) => {
-        startSavingSchedule({...activeSchedule, dispenser, turn, date, status })
+    const handleOk = ({ date, total }) => {
+        startSavingSchedule({
+          ...activeSchedule, 
+          dispenser: activeWorker.uid , 
+          turn: activeTurn._id, 
+          date, 
+          total,
+          oldDispenser: activeSchedule?.dispenser.uid,
+          oldTurn: activeSchedule?.turn._id,
+          oldDate: activeSchedule?.date,
+        })
         closeModal();
     };
 
     const handleCancel = () => {
       closeModal();
+      setActiveSchedule( null );
+      setActiveTurn(null);
+      setActiveWorker(null);
     };
 
    const setInitialValues = () => {
       if ( activeSchedule ) {
+        setActiveWorker( activeSchedule.dispenser );
+        setActiveTurn( activeSchedule.turn );
         form.setFieldsValue({
           'dispenser': activeSchedule.dispenser.name,
-          'turn': activeSchedule.turn,
+          'total': activeSchedule.total,
+          'turn': `${activeSchedule.turn.startTime} - ${activeSchedule.turn.endTime}`,
           'date': moment(activeSchedule.date, 'YYYY/MM/DD'),
         })        
       } else {
+        setActiveTurn( turns[0] )
+        setActiveWorker( workers[0] )
         form.setFieldsValue({
-          'dispenser': workers,
-          'turn': turns,
+          'dispenser': workers[0],
+          'turn': turns ? `${turns[0]?.startTime} - ${turns[0]?.endTime}` : '',
           'date': moment()
         })          
       }
@@ -41,10 +58,11 @@ export const AddScheduleModal = () => {
 
    useEffect(() => {
      setInitialValues();
-   }, [activeSchedule]);
+   }, [activeSchedule, turns]);
 
    const handleDelete = () => {
-      startDeleteSchedule(activeSchedule);
+      // startDeleteSchedule(activeSchedule);
+      startDeleteSchedule({ dispenser: activeWorker.uid, turn: activeTurn._id, date: activeSchedule.date});
       closeModal();
    }
    

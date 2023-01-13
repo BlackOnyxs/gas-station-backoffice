@@ -7,7 +7,8 @@ export const schedulaSlice = createSlice({
     initialState: {
         isLoadingSchedule: true,
         schedule: [],
-        activeSchedule: null
+        activeSchedule: null,
+        errorMessage: undefined,
     },
     reducers: {
         onSetActiveSchedule: (state, { payload }) => {
@@ -25,6 +26,7 @@ export const schedulaSlice = createSlice({
             state.isLoadingSchedule = false;
             payload.forEach( schedule => {
                 const exist = state.schedule.some( dbSchedule => dbSchedule._id === schedule._id );
+                // console.log(formatSchedule( schedule ))
                 if ( !exist ) {
                     state.schedule.push( setObjectKey( formatSchedule( schedule ) ) );
                 }
@@ -37,6 +39,12 @@ export const schedulaSlice = createSlice({
                 }
                 return schedule;
             });
+        },
+        onScheduleError: (state, {payload}) => {
+            state.errorMessage = payload;
+        },
+        onClearScheduleErrorMessage: ( state ) => {
+            state.errorMessage = undefined;
         }
     }
 });
@@ -47,4 +55,6 @@ export const {
     onDeleteSchedule,
     onLoadSchedule,
     onUpdateSchedule,
+    onScheduleError,
+    onClearScheduleErrorMessage,
  } = schedulaSlice.actions;

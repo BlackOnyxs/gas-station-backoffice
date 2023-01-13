@@ -1,9 +1,19 @@
-import React from 'react';
-import { Form, Input, Select, Switch } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Select } from 'antd';
 import { validRoles } from '../../../data/menus';
 
 export const WorkerForm = () => {
     const form = Form.useFormInstance();
+    const [role, setRole] = useState('');
+
+    // useEffect(() => {
+    // }, [role])
+    
+
+    const handleRole = ( value ) => {
+      setRole(value)
+    }
+
     return (
         <>
         <Form.Item
@@ -13,7 +23,7 @@ export const WorkerForm = () => {
             rules={[
                 {
                   required: true,
-                  message: 'Campo reuqerido',
+                  message: 'Campo requerido',
                 },
               ]}
         >
@@ -26,7 +36,7 @@ export const WorkerForm = () => {
             rules={[
                 {
                   required: true,
-                  message: 'Campo reuqerido',
+                  message: 'Campo requerido',
                 },
               ]}
         >
@@ -39,7 +49,7 @@ export const WorkerForm = () => {
             rules={[
                 {
                   required: true,
-                  message: 'Campo reuqerido',
+                  message: 'Campo requerido',
                 },
               ]}
         >
@@ -52,7 +62,7 @@ export const WorkerForm = () => {
             // rules={[
             //     {
             //       required: A,
-            //       message: 'Campo reuqerido',
+            //       message: 'Campo requerido',
             //     },
             //   ]}
         >
@@ -65,7 +75,7 @@ export const WorkerForm = () => {
             rules={[
                 {
                   required: true,
-                  message: 'Campo reuqerido',
+                  message: 'Campo requerido',
                 },
               ]}
         >
@@ -76,18 +86,39 @@ export const WorkerForm = () => {
           name="role"
           key="role"
         >
-            <Select>
+            <Select
+              onChange={ handleRole }
+            >
               {
                 validRoles.map( c => (
                   <Select.Option
                     key={ c.value }
+                    value={ c.value }
                   >
                     { c.label }
                   </Select.Option>
                 ))
             }
+            
             </Select>
         </Form.Item>
+        {
+          (role === 'DISPENSER_ROLE') && (
+            <Form.Item
+              label="Salario"
+              name="salary"
+              key="salary"
+              rules={[
+                  {
+                    required: true,
+                    message: 'Campo requerido',
+                  },
+              ]}
+            >
+                <Input  type="number" min={0} />
+            </Form.Item>
+        )
+        }
         </>
   )
 }

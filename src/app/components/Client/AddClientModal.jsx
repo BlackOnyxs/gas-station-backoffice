@@ -1,53 +1,55 @@
 import React, { useEffect } from 'react';
 import { Modal, Button, Form } from 'antd';
-import { ProviderForm } from './ProviderForm';
+import { ClientForm } from './ClientForm';
 
-import { useProviderStore, useUiStore } from '../../../hooks';
+import { useClientStore, useUiStore } from '../../../hooks';
 
-export const AddProviderModal = () => {
+export const AddClientModal = () => {
   const [form] = Form.useForm();
     const { isModalOpen , closeModal } = useUiStore();
-    const { startSavingProvider, startDeleteProvider, activeProvider, setActiveProvider } = useProviderStore();
+    const { startSavingClient, startDeleteClient, activeClient, setActiveClient } = useClientStore();
 
-    const handleOk = ({ name, phone }) => {
-        startSavingProvider({...activeProvider, name, phone})
+    const handleOk = ({ name, phone, email }) => {
+        startSavingClient({...activeClient, name, phone, email})
         closeModal();
     };
 
     const handleCancel = () => {
-      setActiveProvider(null);
+      setActiveClient(null);
       closeModal();
     };
 
     const handleDelete = () => {
-      startDeleteProvider()
+      startDeleteClient()
       closeModal();
     }
 
     const setInitialValues = () => {
-      if ( activeProvider ) {
+      if ( activeClient ) {
         console.log('true')
         form.setFieldsValue({
-          name: activeProvider.name,
-          phone: activeProvider.phone
+          name: activeClient.name,
+          phone: activeClient.phone,
+          email: activeClient.email,
         });
       } else {
         console.log('false')
         form.setFieldsValue({
           name: '',
-          phone: ''
+          phone: '',
+          email: '',
         })
       }
     }
 
     useEffect(() => {
       setInitialValues();
-    },[ activeProvider ]);
+    },[ activeClient ]);
 
     return (
       <>
         <Modal 
-            title={ activeProvider ? activeProvider.name : 'Nuevo Proveedor'}  
+            title={ activeClient ? activeClient.name : 'Nuevo Client'}  
             visible={ isModalOpen } 
             onOk={ handleOk } 
             onCancel={ handleCancel }
@@ -63,7 +65,7 @@ export const AddProviderModal = () => {
                   type='primary'
                   key="delete" 
                   onClick={ handleDelete }
-                  disabled={ !activeProvider }
+                  disabled={ !activeClient }
               >
                 Borrar
               </Button>,
@@ -87,7 +89,7 @@ export const AddProviderModal = () => {
             }}
             onFinish={ handleOk }
         >
-          <ProviderForm />
+          <ClientForm />
         </Form>
         </Modal>
       </>

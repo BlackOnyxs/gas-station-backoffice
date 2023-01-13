@@ -6,7 +6,8 @@ export const oilSlice = createSlice({
     initialState: {
         isLoadingOils: false,
         oils: [],
-        activeOil: null
+        activeOil: null,
+        errorMessage: undefined,
     },
     reducers: {
         onSetActiveOil: (state, { payload }) => {
@@ -37,6 +38,12 @@ export const oilSlice = createSlice({
                 return Oil;
             });
             state.activeOil = null;
+        },
+        onOilError: (state, {payload}) => {
+            state.errorMessage = payload;
+        },
+        onClearOilErrorMessage: ( state ) => {
+            state.errorMessage = undefined;
         }
     }
 });
@@ -47,4 +54,6 @@ export const {
     onDeleteOil,
     onLoadOils,
     onUpdateOil,
+    onOilError,
+    onClearOilErrorMessage,
  } = oilSlice.actions;

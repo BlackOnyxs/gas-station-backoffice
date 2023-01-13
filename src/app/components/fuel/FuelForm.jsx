@@ -1,7 +1,5 @@
 import React from 'react';
 import { Form, Input, Select } from 'antd';
-
-
 import { validFuel, validOctane } from '../../../data/menus';
 
 export const FuelForm = () => {
@@ -55,6 +53,7 @@ export const FuelForm = () => {
                       validOctane.map( o => (
                         <Select.Option
                           key={ o._id }
+                          value={ o._id }
                         >
                           { o.label }
                         </Select.Option>
@@ -81,14 +80,14 @@ export const FuelForm = () => {
                 label="Inventario"
                 name="inventory"
                 key="inventory"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
+                // rules={[
+                //     {
+                //       required: true,
+                //       message: 'Campo reuqerido',
+                //     },
+                //   ]}
             >
-                <Input type="number"/>
+                <Input type="number" disabled />
             </Form.Item>
         </>
     )
