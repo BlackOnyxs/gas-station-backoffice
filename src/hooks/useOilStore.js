@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import gasApi from '../api/gasApi';
-import { onCreateOil, onDeleteOil, onLoadOils, onSetActiveOil, onUpdateOil } from '../store';
+import { onClearOilErrorMessage, onCreateOil, onDeleteOil, onLoadOils, onOilError, onSetActiveOil, onUpdateOil } from '../store';
 
 
 export const useOilStore = () => {
@@ -10,7 +10,12 @@ export const useOilStore = () => {
         isLoadingOils,
         activeOil,
         oils,
+        errorMessage
     } = useSelector( state =>  state.oils );
+
+    const clearErrorMessage = () => {
+        dispatch( onClearOilErrorMessage() )
+    }
 
     const setActiveOil = ( fuel ) => {
         dispatch( onSetActiveOil( fuel ) );
@@ -22,6 +27,7 @@ export const useOilStore = () => {
             dispatch( onDeleteOil() ); 
         } catch (error) {
             console.log(error)
+            dispatch( onOilError(error.response.data.msg) )
         }
     }
 
@@ -31,6 +37,7 @@ export const useOilStore = () => {
             dispatch( onLoadOils( data.oils ) );
         } catch (error) {
             console.log(error)
+            dispatch( onOilError(error.response.data.msg) )
         }
     }
 
@@ -41,6 +48,7 @@ export const useOilStore = () => {
                 dispatch( onUpdateOil( data ) );
             } catch (error) {
                 console.log(error)
+                dispatch( onOilError(error.response.data.msg) )
             }
         } else {
             try {
@@ -48,6 +56,7 @@ export const useOilStore = () => {
                 dispatch( onCreateOil( data.oil ) ); 
             } catch (error) {
                 console.log(error)
+                dispatch( onOilError(error.response.data.msg) )
             }
         }
      } 
@@ -57,10 +66,12 @@ export const useOilStore = () => {
         isLoadingOils,
         activeOil,
         oils,
+        errorMessage,
         //Methods
         setActiveOil,
         startDeleteOil,
         startLoadingOils,
         startSavingOil,
+        clearErrorMessage
     }
 }

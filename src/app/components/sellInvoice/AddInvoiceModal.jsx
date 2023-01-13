@@ -2,39 +2,57 @@ import React, { useEffect } from 'react';
 import { Modal, Button, Form } from 'antd';
 import moment from 'moment';
 
-import { useUiStore, useSellInvoiceStore, useInventoryStore, useClientStore } from '../../../hooks';
+import { useUiStore, useSellInvoiceStore, useInventoryStore, useClientStore, useWorkersStore } from '../../../hooks';
 import { SellInvoiceForm } from './SellInvoiceForm';
 
 export const AddInvoiceModal = () => {
     const [form] = Form.useForm();
     const { isModalOpen, closeModal } = useUiStore();
-    const { startSavingSellInvoice, startLoadingSellInvoices, activeSellInvoice } = useSellInvoiceStore();
-    const { activeProductType, products } = useInventoryStore();
+    const { setActiveClient, activeClient } = useClientStore();
+    const { startSavingSellInvoice, activeSellInvoice, setActiveSellInvoice, startDeletingSellInvoice } = useSellInvoiceStore();
+    const { activeProductType, products, setActiveProduct, activeProduct } = useInventoryStore();
+    const { setActiveWorker, activeWorker } = useWorkersStore();
     const { clients } = useClientStore();
 
-    const handleOk = ({ dispenser, product, client, quantity, total }) => {
-        startSavingSellInvoice({ dispenser, product, productType: activeProductType, client, quantity, total, _id: activeSellInvoice?._id });
+    const handleOk = ({ dispenser, product, client, quantity, total, date }) => {
+        startSavingSellInvoice({ 
+          dispenser: activeWorker?.uid, 
+          product: activeProduct?._id, 
+          productType: activeProductType, 
+          client: activeClient?._id, 
+          quantity, 
+          total,
+          price: activeProduct?.sellPrice, 
+          _id: activeSellInvoice?._id,
+          date
+        });
         closeModal();
+        setActiveSellInvoice(null);
     };
 
     const handleCancel = () => {
       closeModal();
+      setActiveSellInvoice(null);
     };
 
     const handleDelete = () => {
-      startLoadingSellInvoices();
+      startDeletingSellInvoice(activeProductType[0]);
+      closeModal();
     }
 
     const setInitialValues = () => {
       if ( activeSellInvoice ) {
+        setActiveClient( activeSellInvoice.client );
+        setActiveProduct( activeSellInvoice.product );
+        setActiveWorker( activeSellInvoice.dispenser );
         form.setFieldsValue({
-          'productType': activeSellInvoice.productType,
+          'productType': activeSellInvoice.product.productType,
           'product': activeSellInvoice.product.name,
           'quantity': activeSellInvoice.quantity,
           'total': activeSellInvoice.total,
           'dispenser': activeSellInvoice.dispenser.name,
           'client': activeSellInvoice.client.name,
-          'date': moment(activeSellInvoice.createdAt, 'YYYY/MM/DD')
+          'date': moment(activeSellInvoice.date, 'YYYY/MM/DD')
         })
       }else{
         form.setFieldsValue({

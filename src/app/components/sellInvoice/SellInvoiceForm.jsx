@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { Form, Select, Input, DatePicker} from 'antd';
 
-import { validProductType } from '../../../data/menus';
+import { validProductType, validRoles } from '../../../data/menus';
 import { useClientStore, useInventoryStore, useSellInvoiceStore, useWorkersStore } from '../../../hooks';
 
 export const SellInvoiceForm = () => {
   const form = Form.useFormInstance();
   const { activeBuyInvoice } = useSellInvoiceStore();
   const { activeProductType, startLoadingProducts, setActiveProductType, activeProduct, setActiveProduct, products } = useInventoryStore();
-  const { startLoadClients, clients } = useClientStore();
-  const { startLoadingWorkers, workers } = useWorkersStore();
+  const { startLoadClients, clients, setActiveClient } = useClientStore();
+  const { startLoadingWorkers, workers, setActiveWorker } = useWorkersStore();
 
   
  const onLoadProduct = () => {
@@ -18,7 +18,6 @@ export const SellInvoiceForm = () => {
       startLoadingProducts( activeProductType )
     }
  }
-
 
   useEffect( () => {
     onLoadProduct()
@@ -29,7 +28,7 @@ export const SellInvoiceForm = () => {
   },[]);
 
   useEffect(() => {
-    startLoadingWorkers();
+    startLoadingWorkers(validRoles[1].value);
   },[]);
 
   const handleTypeChange = (value, option) => {
@@ -50,7 +49,23 @@ export const SellInvoiceForm = () => {
       setActiveProduct( p );
      }
    });
-}
+  } 
+
+   const handleDispenserChange = ( value ) => {
+    workers.map( w => {
+      if ( w.uid === value ) {
+       setActiveWorker( w );
+      }
+    });
+  }
+
+   const handleClientChange = ( value ) => {
+    clients.map( c => {
+      if ( c._id === value ) {
+        setActiveClient( c );
+      }
+    });
+  }
 
   const handleDateChange = () => {}
 
@@ -139,9 +154,9 @@ export const SellInvoiceForm = () => {
               > 
                   {
                     workers && (
-                      <Select>
+                      <Select onChange={ handleDispenserChange }>
                         {
-                          workers.map( w => w.role === 'DISPENSER_ROLE' && (
+                          workers.map( w  => (
                                 <Select.Option
                                   key={ w.uid }
                                   value={ w.uid }
@@ -161,7 +176,7 @@ export const SellInvoiceForm = () => {
               > 
                   {
                     clients && (
-                      <Select>
+                      <Select onChange={handleClientChange}>
                         {
                           clients.map( p => (
                             <Select.Option

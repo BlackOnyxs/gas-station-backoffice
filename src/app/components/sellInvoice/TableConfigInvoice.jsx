@@ -3,8 +3,9 @@ import React,  { useRef, useState, useEffect }  from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { validProductType } from '../../../data/menus';
+import moment from 'moment';
 
+import { validProductType } from '../../../data/menus';
 import { useInventoryStore, useUiStore } from '../../../hooks';
 import { useSellInvoiceStore } from '../../../hooks/useSellInvoiceStore';
 
@@ -164,7 +165,7 @@ export const TableConfigInvoice = () => {
           dataIndex: 'createdAt',
           key: 'createdAt',
           width: '10%',
-          // render: <DatePicker onChange={onChangeDate} />
+          render: (d) => (moment(d).format('YYYY/MM/DD'))
         },
         {
           title: 'Total',

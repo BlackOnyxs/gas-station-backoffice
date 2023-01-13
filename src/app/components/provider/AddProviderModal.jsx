@@ -7,7 +7,7 @@ import { useProviderStore, useUiStore } from '../../../hooks';
 export const AddProviderModal = () => {
   const [form] = Form.useForm();
     const { isModalOpen , closeModal } = useUiStore();
-    const { startSavingProvider, startDeleteProvide, activeProvider, setActiveProvider } = useProviderStore();
+    const { startSavingProvider, startDeleteProvider, activeProvider, setActiveProvider } = useProviderStore();
 
     const handleOk = ({ name, phone }) => {
         startSavingProvider({...activeProvider, name, phone})
@@ -20,7 +20,7 @@ export const AddProviderModal = () => {
     };
 
     const handleDelete = () => {
-      startDeleteProvide()
+      startDeleteProvider()
       closeModal();
     }
 

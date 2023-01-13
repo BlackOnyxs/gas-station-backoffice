@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import gasApi from '../api/gasApi';
-import { onCreateBuyInvoice, onDeleteBuyInvoice, onLoadBuyInvoices, onResetBuyInvoices, onSetActiveBuyInvoice, onUpdateBuyInvoice } from '../store';
+import { onBuyInvoiceError, onClearBuyInvoiceErrorMessage, onCreateBuyInvoice, onDeleteBuyInvoice, onLoadBuyInvoices, onResetBuyInvoices, onSetActiveBuyInvoice, onUpdateBuyInvoice } from '../store';
 
 export const useBuyInvoiceStore = () => {
     const dispatch = useDispatch();
@@ -10,18 +10,24 @@ export const useBuyInvoiceStore = () => {
         activeBuyInvoice,
         buyInvoices,
         products,
+        errorMessage,
     } = useSelector( state =>  state.buyInvoices );
+
+    const clearErrorMessage = () => {
+        dispatch( onClearBuyInvoiceErrorMessage() ) 
+    }
 
     const setActiveBuyInvoice = ( invoice ) => {
         dispatch( onSetActiveBuyInvoice( invoice ) );
     }
 
-    const startDeleteBuyInvoice = async() => {
+    const startDeleteBuyInvoice = async( productType ) => {
         try {
-            await gasApi.delete(`/buyinvoices/${ activeBuyInvoice._id }`);
+            await gasApi.delete(`/buyinvoice/${ activeBuyInvoice._id }?productType=${productType}`);
             dispatch( onDeleteBuyInvoice() ); 
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            dispatch( onBuyInvoiceError(error.response.data.msg) );
         }
     }
 
@@ -30,29 +36,34 @@ export const useBuyInvoiceStore = () => {
             productType = 'fuels'
         }
         try {
-            const { data } = await gasApi.get(`/buyinvoices?limit=10&productType=${ productType }`);
+            const { data } = await gasApi.get(`/buyinvoice?limit=7&productType=${ productType }`);
+            console.log(data)
             dispatch( onLoadBuyInvoices( data.invoices ) );
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            dispatch( onBuyInvoiceError(error.response.data.msg) );
         }
     }
 
      const startSavingBuyInvoice = async( buyInvoice ) => {
-        console.log(buyInvoice)
+        console.log({'beforeSent': buyInvoice})
         if ( buyInvoice._id ) {
             try {
-                const { data } =  await gasApi.put(`/buyinvoices/${ buyInvoice._id }`, buyInvoice );
-                dispatch( onUpdateBuyInvoice( data ) );
+                const { data } = await gasApi.put(`/buyinvoice/${ buyInvoice._id }`, buyInvoice );
+                dispatch( onUpdateBuyInvoice( data.invoice ) );
                 console.log(data)
             } catch (error) {
-                console.log(error)
+                console.log(error);
+                dispatch( onBuyInvoiceError(error.response.data.msg) );
             }
         } else {
             try {
-                const { data } = await gasApi.post('/buyinvoices', buyInvoice);
-                dispatch( onCreateBuyInvoice( data.buyInvoice ) ); 
+                const { data } = await gasApi.post('/buyinvoice', buyInvoice);
+                dispatch( onCreateBuyInvoice( data.invoice ) ); 
+                console.log(data)
             } catch (error) {
-                console.log(error)
+                console.log(error);
+                dispatch( onBuyInvoiceError(error.response.data.msg) );
             }
         }
      }
@@ -67,7 +78,9 @@ export const useBuyInvoiceStore = () => {
         activeBuyInvoice,
         buyInvoices,
         products,
+        errorMessage,
         //Methods
+        clearErrorMessage,
         setActiveBuyInvoice,
         startDeleteBuyInvoice,
         startLoadingBuyInvoices,

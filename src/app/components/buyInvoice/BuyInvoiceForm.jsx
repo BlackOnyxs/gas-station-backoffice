@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import locale from 'antd/es/date-picker/locale/es_ES';
 import { Form, Select, Input, DatePicker} from 'antd';
 
@@ -7,6 +7,7 @@ import { useBuyInvoiceStore, useInventoryStore, useProviderStore, useWorkersStor
 
 export const BuyInvoiceForm = () => {
   const form = Form.useFormInstance();
+  // const [total, setTotal] = useState({ price, quantity})
   const { activeBuyInvoice } = useBuyInvoiceStore();
   const { startLoadProviders, providers, setActiveProvider} = useProviderStore();
   const { workers, startLoadingWorkers, setActiveWorker } = useWorkersStore();
@@ -30,18 +31,29 @@ export const BuyInvoiceForm = () => {
     startLoadingWorkers();
   },[])
 
+
+  // useEffect(() => {
+  //   handlePrice();
+  // }, [activeProduct]);
+
   const handleTypeChange = (value, option) => {
     setActiveProductType( option.value );
   }
 
   const handleTotal = ({ target }) => {
     if ( !activeProduct ) return
+    // console.log(target.value)
     let newTotal = Number(target.value) * Number(activeProduct.sellPrice);
+    console.log(newTotal)
     if ( !Number.isNaN( newTotal ) ) {
       form.setFieldsValue({ total: newTotal })
     }
-    
   }
+
+  // const handlePrice = () => {
+  //   if ( !activeProduct ) return
+  //   form.setFieldsValue({ price: activeProduct.price  })
+  // }
 
   const handleManager = ( manager ) => {
     workers.map( m => {
@@ -116,31 +128,58 @@ export const BuyInvoiceForm = () => {
             }
         </Form.Item>
         <Form.Item
-                label="Administrador"
-                name="manager"
-                key="manager"
-              > 
+          label="Administrador"
+          name="manager"
+          key="manager"
+        > 
+            {
+              workers && (
+                <Select onChange={ handleManager }>
                   {
-                    workers && (
-                      <Select onChange={ handleManager }>
-                        {
-                          workers.map( w => w.role === 'ADMIN_ROLE' && (
-                                <Select.Option
-                                  key={ w.uid }
-                                  value={ w.uid }
-                                >
-                                  { w.name }
-                                </Select.Option>
-                              ))             
-                        }
-                      </Select>
-                    )
+                    workers.map( w => w.role === 'ADMIN_ROLE' && (
+                          <Select.Option
+                            key={ w.uid }
+                            value={ w.uid }
+                          >
+                            { w.name }
+                          </Select.Option>
+                        ))             
                   }
+                </Select>
+              )
+            }
+        </Form.Item>
+        <Form.Item
+            label="Cantidad"
+            name="quantity"
+            key="quantity"
+            rules={[
+                {
+                  required: true,
+                  message: 'Campo reuqerido',
+                },
+              ]}
+        >
+            <Input 
+              type="number" 
+              onChange={  handleTotal }
+              min={ 0 }  
+              //  => {
+              //   setTotal( (old) => {
+              //     // console.log(old)
+              //     return {
+              //       ...old,
+              //       quantity: Number(target.value)
+              //     }
+              //   })
+              //  ()
+              // } }
+            />
             </Form.Item>
-            <Form.Item
-                label="Cantidad"
-                name="quantity"
-                key="quantity"
+            {/* <Form.Item
+                label="Precio"
+                name="price"
+                key="price"
                 rules={[
                     {
                       required: true,
@@ -148,12 +187,25 @@ export const BuyInvoiceForm = () => {
                     },
                   ]}
             >
-                <Input 
+                {/* <Input 
                   type="number" 
-                  onChange={ handleTotal }
-                  min={ 0 }  
-                />
-            </Form.Item>
+                  min={ 0 } 
+                  onChange={ ({ target }) => {
+                    setTotal( (old) => {
+                      // console.log({'e':target.value})
+                      console.log(old)
+                      return {
+                        ...old,
+                        price: Number(target.value)
+                      }
+                    })
+                    
+                    handleTotal()
+                  }}
+                /> 
+                <Input type="number" min={ 0 } disabled/>
+            </Form.Item> 
+            */}
             <Form.Item
                 label="Monto Total"
                 name="total"
@@ -165,7 +217,7 @@ export const BuyInvoiceForm = () => {
                     },
                   ]}
             >
-                <Input type="number" min={ 0 }/>
+                <Input type="" min={ 0 }/>
             </Form.Item>
                   <Form.Item
                   label="Proveedor"

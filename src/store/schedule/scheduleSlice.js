@@ -7,7 +7,8 @@ export const schedulaSlice = createSlice({
     initialState: {
         isLoadingSchedule: true,
         schedule: [],
-        activeSchedule: null
+        activeSchedule: null,
+        errorMessage: undefined,
     },
     reducers: {
         onSetActiveSchedule: (state, { payload }) => {
@@ -38,6 +39,12 @@ export const schedulaSlice = createSlice({
                 }
                 return schedule;
             });
+        },
+        onScheduleError: (state, {payload}) => {
+            state.errorMessage = payload;
+        },
+        onClearScheduleErrorMessage: ( state ) => {
+            state.errorMessage = undefined;
         }
     }
 });
@@ -48,4 +55,6 @@ export const {
     onDeleteSchedule,
     onLoadSchedule,
     onUpdateSchedule,
+    onScheduleError,
+    onClearScheduleErrorMessage,
  } = schedulaSlice.actions;

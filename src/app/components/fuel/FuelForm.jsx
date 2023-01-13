@@ -80,14 +80,14 @@ export const FuelForm = () => {
                 label="Inventario"
                 name="inventory"
                 key="inventory"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
+                // rules={[
+                //     {
+                //       required: true,
+                //       message: 'Campo reuqerido',
+                //     },
+                //   ]}
             >
-                <Input type="number"/>
+                <Input type="number" disabled />
             </Form.Item>
         </>
     )

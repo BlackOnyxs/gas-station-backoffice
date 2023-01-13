@@ -7,6 +7,7 @@ export const buyInvoiceSlice = createSlice({
         isLoadingBuyInvoice: true,
         buyInvoices: [],
         activeBuyInvoice: null,
+        errorMessage: undefined,
     },
     reducers: {
         onSetActiveBuyInvoice: (state, { payload }) => {
@@ -41,6 +42,12 @@ export const buyInvoiceSlice = createSlice({
             });
             state.activeBuyInvoice = null;
         },
+        onBuyInvoiceError: (state, {payload}) => {
+            state.errorMessage = payload;
+        },
+        onClearBuyInvoiceErrorMessage: ( state ) => {
+            state.errorMessage = undefined;
+        }
         
     }
 });
@@ -52,4 +59,6 @@ export const {
     onLoadBuyInvoices,
     onUpdateBuyInvoice,
     onResetBuyInvoices,
+    onBuyInvoiceError,
+    onClearBuyInvoiceErrorMessage,
  } = buyInvoiceSlice.actions;

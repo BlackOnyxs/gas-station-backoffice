@@ -11,21 +11,24 @@ export const AddInvoiceModal = () => {
     const { isModalOpen, closeModal } = useUiStore();
     const { startSavingBuyInvoice, activeBuyInvoice, startDeleteBuyInvoice, setActiveBuyInvoice } = useBuyInvoiceStore();
     const { providers, setActiveProvider, activeProvider } = useProviderStore();
-    const { activeProductType, setActiveProduct, activeProduct } = useInventoryStore();
+    const { activeProductType, setActiveProduct, activeProduct, products } = useInventoryStore();
     const { setActiveWorker, activeWorker } = useWorkersStore();
+
     const handleOk = ({ quantity, total, date }) => {
       
       startSavingBuyInvoice({ 
         _id: activeBuyInvoice?._id ,
         product: activeProduct._id, 
         productType: activeProductType, 
-        manager: activeWorker.uid,
+        manager: activeWorker._id,
         quantity, 
+        price: activeProduct.sellPrice,
         total, 
         provider: activeProvider._id, 
         date 
       })
       closeModal();
+      setActiveBuyInvoice(null)
     };
 
   const handleCancel = () => {
@@ -33,23 +36,31 @@ export const AddInvoiceModal = () => {
       setActiveBuyInvoice(null)
   };
 
+  // const handleACtive = () => {
+  //   const activeP = products.find( p => p.)
+  // }
+
   const handleDelete = () => {
-    startDeleteBuyInvoice();
+    startDeleteBuyInvoice(activeProductType[0]);
+    closeModal();
+    // setActiveBuyInvoice(null)
   }
 
   const setInitialValues = () => {
     if ( activeBuyInvoice ) {
+      console.log({'active':activeBuyInvoice.product})
       setActiveProvider( activeBuyInvoice.provider );
       setActiveProduct( activeBuyInvoice.product );
-      setActiveWorker( activeBuyInvoice.manager );
+      setActiveWorker( activeBuyInvoice.updatedBy );
       form.setFieldsValue({
-        'productType': activeBuyInvoice.productType,
+        'productType': activeBuyInvoice.product.productType,
         'product': activeBuyInvoice.product.name,
         'quantity': activeBuyInvoice.quantity,
+        'price': activeBuyInvoice.product.sellPrice,
         'total': activeBuyInvoice.total,
-        'manager': activeBuyInvoice.manager.name,
+        'manager': activeBuyInvoice.updatedBy.name,
         'provider': activeBuyInvoice.provider.name,
-        'date': moment(activeBuyInvoice.createdAt, 'YYYY/MM/DD')
+        'date': moment(activeBuyInvoice.date, 'YYYY/MM/DD')
       })
     }else{
       console.log('nop')

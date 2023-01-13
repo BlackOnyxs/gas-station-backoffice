@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import gasApi from '../api/gasApi';
-import { onCreateSellInvoice, onDeleteSellInvoice, onLoadSellInvoices, onResetSellInvoices, onSetActiveProductType, onSetActiveSellInvoice, onUpdateSellInvoice } from '../store/sellInvoices/sellInvoiceSlice';
+import { onClearSellInvoiceErrorMessage, onCreateSellInvoice, onDeleteSellInvoice, onLoadSellInvoices, onResetSellInvoices, onSellInvoiceError, onSetActiveProductType, onSetActiveSellInvoice, onUpdateSellInvoice } from '../store/sellInvoices/sellInvoiceSlice';
 
 export const useSellInvoiceStore = () => {
 
@@ -8,47 +8,59 @@ export const useSellInvoiceStore = () => {
     const {
         isLoadingSellInvoices,
         activeSellInvoice,
-        sellInvoices
+        sellInvoices,
+        errorMessage,
     } = useSelector( state => state.sellInvoices );
+
+    const clearErrorMessage = () => {
+        dispatch( onClearSellInvoiceErrorMessage() );
+    }
 
     const setActiveSellInvoice = ( sellInvoice ) => {
         dispatch( onSetActiveSellInvoice( sellInvoice ) )
     }
 
-    const startDeletingSellInvoice = async() => {
+    const startDeletingSellInvoice = async( productType ) => {
         try {
-            await gasApi.delete(`/sellinvoices/${ activeSellInvoice._id }`);
-            dispatch( onDeleteSellInvoice( activeSellInvoice ) ); 
+            await gasApi.delete(`/sellinvoice/${ activeSellInvoice._id }?productType=${productType}`);
+            dispatch( onDeleteSellInvoice() ); 
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            dispatch( onSellInvoiceError(error.response.data.msg) )
         }
     }
 
     const startLoadingSellInvoices = async( productType ) => {
+        if ( !productType ) {
+            productType = 'fuels'
+        }
         try {
-            const { data } = await gasApi.get(`/sellinvoices?productType=${productType}`);
+            const { data } = await gasApi.get(`/sellinvoice?productType=${productType}`);
             dispatch( onLoadSellInvoices( data.invoices ) )
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            dispatch( onSellInvoiceError(error.response.data.msg) );
         }
     }
 
     const startSavingSellInvoice = async( sellInvoice ) => {
-        if ( sellInvoices._id ) {
+        console.log({'Update': sellInvoice})
+        if ( sellInvoice._id ) {
             try {
-                const { data } = await gasApi.put(`/sellinvoices/${sellInvoices._id}`, sellInvoice)
+                const { data } = await gasApi.put(`/sellinvoice/${sellInvoice._id}`, sellInvoice)
                 console.log(data)
-                // dispatch( onUpdateSellInvoice( data ) )
+                dispatch( onUpdateSellInvoice( data.invoice ) )
             } catch (error) {
-                console.log(error)
+                console.log(error);
+                dispatch( onSellInvoiceError(error.response.data.msg) );
             }
         }else{
             try {
-                
-                const { data } = await gasApi.post('/sellinvoices', sellInvoice );
-                dispatch( onCreateSellInvoice( data.sellInvoice ) )
+                const { data } = await gasApi.post('/sellinvoice/mobile', sellInvoice );
+                dispatch( onCreateSellInvoice( data.invoice ) )
             } catch (error) {
-                console.log(error)
+                console.log(error);
+                dispatch( onSellInvoiceError(error.response.data.msg) );
             }
         }
     }
@@ -61,7 +73,9 @@ export const useSellInvoiceStore = () => {
         isLoadingSellInvoices,
         activeSellInvoice,
         sellInvoices,
+        errorMessage,
         //methods
+        clearErrorMessage,
         setActiveSellInvoice,
         startDeletingSellInvoice,
         startLoadingSellInvoices,

@@ -6,7 +6,8 @@ export const clientSlice = createSlice({
     initialState: {
         isLoadingClients: true,
         clients: [],
-        activeClient: null
+        activeClient: null,
+        errorMessage: undefined,
     },
     reducers: {
         onSetActiveClient: (state, { payload }) => {
@@ -32,10 +33,16 @@ export const clientSlice = createSlice({
         onUpdateClient: (state, { payload }) => {
             state.clients = state.clients.map( client => {
                 if ( client._id === payload._id ) {
-                    return payload;
+                    return setObjectKey(payload);
                 }
                 return client;
             });
+        },
+        onClientError: (state, {payload}) => {
+            state.errorMessage = payload;
+        },
+        onClearClientErrorMessage: ( state ) => {
+            state.errorMessage = undefined;
         }
     }
 });
@@ -46,4 +53,6 @@ export const {
     onDeleteClient,
     onLoadClients,
     onUpdateClient,
+    onClientError,
+    onClearClientErrorMessage,
  } = clientSlice.actions;

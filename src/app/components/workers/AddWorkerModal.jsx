@@ -9,8 +9,8 @@ export const AddWorkerModal = () => {
     const { isModalOpen, closeModal } = useUiStore();
     const { startSavingWorker, activeWorker, startDeleteWorker, setActiveWorker} = useWorkersStore();
 
-    const handleOk = ({ name, cip, phone, email, role, password}) => {
-      startSavingWorker({...activeWorker, name, cip, phone, email, password, role});   
+    const handleOk = ({ name, cip, phone, email, role, password, salary}) => {
+      startSavingWorker({...activeWorker, name, cip, phone, email, password, role, salary});   
       closeModal();
     };
 

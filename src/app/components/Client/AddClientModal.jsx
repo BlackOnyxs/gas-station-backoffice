@@ -9,8 +9,8 @@ export const AddClientModal = () => {
     const { isModalOpen , closeModal } = useUiStore();
     const { startSavingClient, startDeleteClient, activeClient, setActiveClient } = useClientStore();
 
-    const handleOk = ({ name, phone }) => {
-        startSavingClient({...activeClient, name, phone})
+    const handleOk = ({ name, phone, email }) => {
+        startSavingClient({...activeClient, name, phone, email})
         closeModal();
     };
 
@@ -29,13 +29,15 @@ export const AddClientModal = () => {
         console.log('true')
         form.setFieldsValue({
           name: activeClient.name,
-          phone: activeClient.phone
+          phone: activeClient.phone,
+          email: activeClient.email,
         });
       } else {
         console.log('false')
         form.setFieldsValue({
           name: '',
-          phone: ''
+          phone: '',
+          email: '',
         })
       }
     }

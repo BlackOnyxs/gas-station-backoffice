@@ -1,21 +1,33 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
+import Swal from 'sweetalert2';
 import { Row, Col, Button} from 'antd';
+
 import { TableConfig } from '../components/workers/TableConfig';
 import { AddWorkerModal } from '../components/workers/AddWorkerModal';
-import { useWorkersStore } from '../../hooks/useWorkersStore';
+import {  } from '../../hooks/useWorkersStore';
 import { LoadingPage } from '../components/common/LoadingPage';
-import { useUiStore } from '../../hooks';
-import { useEffect } from 'react';
+import { useUiStore, useWorkersStore } from '../../hooks';
 
 export const WorkersPage = () => {
 
   const { openModal } = useUiStore();
-  const { isLoadingWorkers, startLoadingWorkers  } = useWorkersStore();
+  const { isLoadingWorkers, startLoadingWorkers, errorMessage, clearErrorMessage } = useWorkersStore();
 
   useEffect(() => {
     startLoadingWorkers()
   }, [])
+
+  useEffect(() => {
+    if ( errorMessage !== undefined ) {
+      Swal.fire({
+        title: 'Error', 
+        text: errorMessage, 
+        icon: 'error',
+      }).then((result) => {
+        clearErrorMessage();
+      });
+    }
+  }, [errorMessage])
   
     return (
       <>

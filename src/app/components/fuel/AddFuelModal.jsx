@@ -8,7 +8,7 @@ import { validFuel, validOctane } from '../../../data/menus';
 export const AddFuelModal = () => {
     const [form] = Form.useForm();
     const { isModalOpen, closeModal } = useUiStore();
-    const { startSavingFuel, startDeleteFuel, activeFuel } = useFuelStore();
+    const { startSavingFuel, startDeleteFuel, activeFuel, setActiveFuel } = useFuelStore();
 
     const handleOk = ({ name, type, sellPrice, inventory, octane }) => {
         startSavingFuel({ ...activeFuel, name, type, sellPrice, inventory, octane })
@@ -16,6 +16,7 @@ export const AddFuelModal = () => {
     };
 
     const handleCancel = () => {
+      setActiveFuel(null);
       closeModal();
     };
 

@@ -124,14 +124,9 @@ export const OilForm = () => {
             label="Inventario"
             name="inventory"
             key="inventory"
-            rules={[
-                {
-                  required: true,
-                  message: 'Campo requerido',
-                },
-              ]}
+            
         >
-            <Input type="number"/>
+            <Input type="number" disabled />
         </Form.Item>
            
 

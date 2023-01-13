@@ -124,6 +124,12 @@ export const TableConfigClient = () => {
           key: 'phone',
           width: '20%',
         },
+        {
+          title: 'Correo',
+          dataIndex: 'email',
+          key: 'email',
+          width: '20%',
+        },
         
       ];
     

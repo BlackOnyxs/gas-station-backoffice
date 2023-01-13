@@ -7,6 +7,7 @@ export const sellInvoiceSlice = createSlice({
         isLoadingSellInvoices: true,
         sellInvoices: [],
         activeSellInvoice: null,
+        errorMessage: undefined,
     },
     reducers: {
         onSetActiveSellInvoice: (state, {payload}) => {
@@ -16,8 +17,9 @@ export const sellInvoiceSlice = createSlice({
             state.sellInvoices.push( setObjectKey( payload ) );
             state.activeSellInvoice = null;
         },
-        onDeleteSellInvoice: (state, {payload}) => {
-            state.sellInvoices.filter( si => si._id !== payload._id )
+        onDeleteSellInvoice: (state) => {
+            state.sellInvoices.filter( si => si._id !== state.activeSellInvoice._id );
+            state.activeSellInvoice = null
         },
         onLoadSellInvoices: (state, {payload}) => {
             state.isLoadingSellInvoices = false;
@@ -36,8 +38,15 @@ export const sellInvoiceSlice = createSlice({
                 if ( si._id === payload._id ) {
                     return setObjectKey( payload )
                 };
-                state.activeSellInvoice = null;
-            })
+                return si; 
+            });
+            state.activeSellInvoice = null;
+        },
+        onSellInvoiceError: (state, {payload}) => {
+            state.errorMessage = payload;
+        },
+        onClearSellInvoiceErrorMessage: ( state ) => {
+            state.errorMessage = undefined;
         }
     }
 });
@@ -50,4 +59,6 @@ export const {
     onLoadSellInvoices,
     onResetSellInvoices,
     onUpdateSellInvoice,
+    onSellInvoiceError,
+    onClearSellInvoiceErrorMessage,
 } = sellInvoiceSlice.actions;

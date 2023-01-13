@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Row, Col, Button} from 'antd';
+import Swal from 'sweetalert2';
 
 import { useClientStore, useUiStore } from '../../hooks';
 import { LoadingPage } from '../components/common/LoadingPage';
@@ -8,11 +9,24 @@ import { AddClientModal } from '../components/Client/AddClientModal';
 
 
 export const ClientPage = () => {
-    const { isLoadingClients, startLoadClients } = useClientStore();
+    const { isLoadingClients, startLoadClients, errorMessage, clearErrorMessage } = useClientStore();
     const { openModal } = useUiStore();
+    
     useEffect(() => {
       startLoadClients();
     },[]);
+
+    useEffect(() => {
+      if ( errorMessage !== undefined ) {
+        Swal.fire({
+          title: 'Error', 
+          text: errorMessage, 
+          icon: 'error',
+        }).then((result) => {
+          clearErrorMessage();
+        });
+      }
+    }, [errorMessage])
 
     return (
         <>

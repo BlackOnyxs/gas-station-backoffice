@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Row, Col, Button} from 'antd';
+import Swal from 'sweetalert2';
 
 import { TableConfigInvoice } from '../components/sellInvoice/TableConfigInvoice';
 import { AddInvoiceModal } from '../components/sellInvoice/AddInvoiceModal';
@@ -8,12 +9,24 @@ import { LoadingPage } from '../components/common/LoadingPage';
 import { useUiStore } from '../../hooks';
 
 export const SellInvoicePage = () => {
-  const { isLoadingSellInvoices, startLoadingSellInvoices } = useSellInvoiceStore();
+  const { isLoadingSellInvoices, startLoadingSellInvoices, errorMessage, clearErrorMessage } = useSellInvoiceStore();
   const { openModal } = useUiStore();
 
   useEffect(() => {
     startLoadingSellInvoices()
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if ( errorMessage !== undefined ) {
+      Swal.fire({
+        title: 'Error', 
+        text: errorMessage, 
+        icon: 'error',
+      }).then((result) => {
+        clearErrorMessage();
+      });
+    }
+  }, [errorMessage])
   
     return (
         <>

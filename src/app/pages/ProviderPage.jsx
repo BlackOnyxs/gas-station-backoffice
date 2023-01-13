@@ -5,13 +5,27 @@ import { AddProviderModal } from '../components/provider/AddProviderModal';
 import { useProviderStore, useUiStore } from '../../hooks';
 import { LoadingPage } from '../components/common/LoadingPage';
 import { useEffect } from 'react';
+import Swal from 'sweetalert2';
 
 export const ProviderPage = () => {
-    const { isLoadingProviders, startLoadProviders } = useProviderStore();
+    const { isLoadingProviders, startLoadProviders, errorMessage, clearErrorMessage } = useProviderStore();
     const { openModal } = useUiStore();
+    
     useEffect(() => {
       startLoadProviders();
     },[]);
+
+    useEffect(() => {
+      if ( errorMessage !== undefined ) {
+        Swal.fire({
+          title: 'Error', 
+          text: errorMessage, 
+          icon: 'error',
+        }).then((result) => {
+          clearErrorMessage();
+        });
+      }
+    }, [errorMessage])
 
     return (
         <>

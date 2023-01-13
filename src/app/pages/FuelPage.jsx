@@ -1,5 +1,7 @@
 import React from 'react';
 import { Row, Col, Button} from 'antd';
+import Swal from 'sweetalert2';
+
 import { TableConfigFuel } from '../components/fuel/TableConfigFuel';
 import { AddFuelModal } from '../components/fuel/AddFuelModal';
 import { useFuelStore, useUiStore } from '../../hooks';
@@ -8,11 +10,23 @@ import { useEffect } from 'react';
 
 export const FuelPage = () => {
     const { openModal } = useUiStore();
-    const { isLoadingFuels, startLoadingFuel } = useFuelStore();
+    const { isLoadingFuels, startLoadingFuel, errorMessage, clearErrorMessage } = useFuelStore();
 
     useEffect(() => {
       startLoadingFuel();
-    }, [])
+    }, []);
+
+    useEffect(() => {
+      if ( errorMessage !== undefined ) {
+        Swal.fire({
+          title: 'Error', 
+          text: errorMessage, 
+          icon: 'error',
+        }).then((result) => {
+          clearErrorMessage();
+        });
+      }
+    }, [errorMessage])
     
     return (
         <>

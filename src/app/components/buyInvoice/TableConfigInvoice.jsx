@@ -4,6 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { validProductType } from '../../../data/menus';
+import moment from 'moment'
 
 import { useBuyInvoiceStore, useInventoryStore, useUiStore } from '../../../hooks';
 
@@ -162,9 +163,10 @@ export const TableConfigInvoice = () => {
         },
         {
           title: 'Fecha',
-          dataIndex: 'createdAt',
-          key: 'createdAt',
+          dataIndex: 'date',
+          key: 'date',
           width: '10%',
+          render: (d) => (moment(d).format('YYYY/MM/DD'))
         },
         {
           title: 'Total',
@@ -180,7 +182,7 @@ export const TableConfigInvoice = () => {
             columns={columns} 
             dataSource={ buyInvoices}  
             style={{ height: 'calc( 100vh - 160px )'}}
-            pagination={ 20 }
+            pagination={ 7 }
             onRow={ (record, rowIndex) => {
               return {
                 onDoubleClick: event => {

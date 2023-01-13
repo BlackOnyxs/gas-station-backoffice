@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import gasApi from '../api/gasApi';
-import { onCreateClient, onDeleteClient, onLoadClients, onSetActiveClient, onUpdateClient } from '../store';
+import { onClearClientErrorMessage, onClientError, onCreateClient, onDeleteClient, onLoadClients, onSetActiveClient, onUpdateClient } from '../store';
 
 export const useClientStore = () => {
     const dispatch = useDispatch();
@@ -8,7 +8,12 @@ export const useClientStore = () => {
         isLoadingClients,
         clients,
         activeClient,
+        errorMessage,
     } = useSelector( state => state.clients );
+
+    const clearErrorMessage = () => {
+        dispatch( onClearClientErrorMessage() )
+    }
 
     const setActiveClient = ( client ) => {
         dispatch( onSetActiveClient( client ) );
@@ -20,6 +25,7 @@ export const useClientStore = () => {
             dispatch( onDeleteClient( activeClient ) );
         } catch (error) {
             console.log(error)
+            dispatch( onClientError(error.response.data.msg) );
         }
     }
 
@@ -28,26 +34,29 @@ export const useClientStore = () => {
             const { data } = await gasApi.get('/clients?limit=10');
             dispatch( onLoadClients( data.clients ) );
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            dispatch( onClientError(error.response.data.msg) );
         }
     }
 
     const startSavingClient = async( client ) => {
         if ( client._id ) {
             try {
-                const { data } = await gasApi.put(`/clients/${ client._id }`);
+                const { data } = await gasApi.put(`/clients/${ client._id }`, client);
                 console.log(data);
-            // dispatch( onUpdateClient( data ) );
+                dispatch( onUpdateClient( data ) );
             } catch (error) {
-                console.log(error)
+                console.log(error);
+                dispatch( onClientError(error.response.data.msg) );
             }
         } else {
             try {
-                const { data } = await gasApi.post('/clients');
+                const { data } = await gasApi.post('/clients', client);
                 console.log(data);
-                // dispatch( onCreateClient( data ) );
+                dispatch( onCreateClient( data ) );
             } catch (error) {
-                console.log(error)
+                console.log(error);
+                dispatch( onClientError(error.response.data.msg) );
             }
         }
     }
@@ -57,7 +66,9 @@ export const useClientStore = () => {
         isLoadingClients,
         clients,
         activeClient,
+        errorMessage,
         //Methods
+        clearErrorMessage,
         setActiveClient,
         startDeleteClient,
         startLoadClients,

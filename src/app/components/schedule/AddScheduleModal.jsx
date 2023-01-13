@@ -15,7 +15,16 @@ export const AddScheduleModal = () => {
     const { workers, activeWorker, setActiveWorker } = useWorkersStore();
 
     const handleOk = ({ date, total }) => {
-        startSavingSchedule({...activeSchedule, dispenser: activeWorker.uid , turn: activeTurn._id, date, total })
+        startSavingSchedule({
+          ...activeSchedule, 
+          dispenser: activeWorker.uid , 
+          turn: activeTurn._id, 
+          date, 
+          total,
+          oldDispenser: activeSchedule?.dispenser.uid,
+          oldTurn: activeSchedule?.turn._id,
+          oldDate: activeSchedule?.date,
+        })
         closeModal();
     };
 
@@ -37,6 +46,8 @@ export const AddScheduleModal = () => {
           'date': moment(activeSchedule.date, 'YYYY/MM/DD'),
         })        
       } else {
+        setActiveTurn( turns[0] )
+        setActiveWorker( workers[0] )
         form.setFieldsValue({
           'dispenser': workers[0],
           'turn': turns ? `${turns[0]?.startTime} - ${turns[0]?.endTime}` : '',

@@ -11,7 +11,7 @@ import {
     sellInvoiceSlice,
     schedulaSlice, 
     turnsSlice, 
-    WorkersSlice, 
+    WorkersSlice
 } from './';
 
 export const store = configureStore({

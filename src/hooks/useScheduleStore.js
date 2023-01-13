@@ -1,11 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux'
 import gasApi from '../api/gasApi';
-import { onCreateSchedule, onDeleteSchedule, onLoadSchedule, onSetActiveSchedule, onUpdateSchedule } from '../store';
+import { onClearScheduleErrorMessage, onCreateSchedule, onDeleteSchedule, onLoadSchedule, onScheduleError, onSetActiveSchedule, onUpdateSchedule } from '../store';
 
 export const useScheduleStore = () => {
     const dispatch = useDispatch();
 
-    const { isLoadingSchedule, activeSchedule, schedule } = useSelector( state => state.schedule );
+    const { isLoadingSchedule, activeSchedule, schedule, errorMessage } = useSelector( state => state.schedule );
+
+    const clearErrorMessage = () => {
+        dispatch( onClearScheduleErrorMessage() );
+    }
 
     const setActiveSchedule = ( schedule ) => {
         dispatch( onSetActiveSchedule( schedule ) );
@@ -15,11 +19,12 @@ export const useScheduleStore = () => {
         console.log(schedule)
         try {
             // const { data } = await gasApi.delete( `/schedule/${ schedule._id }`);
-            const { data } = await gasApi.post( `/schedule/delete`, schedule);
-            console.log(data)
+            await gasApi.post( `/schedule/delete`, schedule);
+            // console.log(data)
             dispatch( onDeleteSchedule( schedule ) );
         } catch (error) {
             console.log(error)
+            dispatch( onScheduleError(error.response.data.msg) )
         }
     }
 
@@ -27,9 +32,10 @@ export const useScheduleStore = () => {
         try {
             const { data } = await gasApi.get('/schedule?limit=10');
             dispatch( onLoadSchedule( data.schedule ) );
-            console.log(data.schedule)
+            // console.log(data.schedule)
         } catch (error) {
             console.log(error)
+            dispatch( onScheduleError(error.response.data.msg) )
         }
     }
 
@@ -41,6 +47,7 @@ export const useScheduleStore = () => {
                 dispatch( onUpdateSchedule( data ) );
             } catch (error) {
                 console.log(error)
+                dispatch( onScheduleError(error.response.data.msg) )
             }
         } else {
             try {
@@ -49,6 +56,7 @@ export const useScheduleStore = () => {
                 console.log(data)
             } catch (error) {
                 console.log(error)
+                dispatch( onScheduleError(error.response.data.msg) )
             }
         }
     }
@@ -58,10 +66,12 @@ export const useScheduleStore = () => {
         activeSchedule,
         isLoadingSchedule,
         schedule, 
+        errorMessage,
         //Methods
         setActiveSchedule,
         startDeleteSchedule,
         starLoadingSchedule,
         startSavingSchedule,
+        clearErrorMessage,
     }
 }

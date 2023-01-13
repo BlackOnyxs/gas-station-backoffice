@@ -31,6 +31,19 @@ export const ClientForm = () => {
       >
           <Input type="tel"/>
       </Form.Item>
+      <Form.Item
+          label="Correo"
+          name="email"
+          key="email"
+          rules={[
+              {
+                required: true,
+                message: 'Campo reuqerido',
+              },
+            ]}
+      >
+          <Input type="email"/>
+      </Form.Item>
       </>
     )
 }   
