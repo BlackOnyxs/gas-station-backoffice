@@ -7,6 +7,7 @@ export * from './useOilStore';
 export * from './useProviderStore';
 export * from './useScheduleStore';
 export * from './useSellInvoiceStore';
+export * from './useSocket';
 export * from './useTurnsStore';
 export * from './useUiStore';
 export * from './useWorkersStore';

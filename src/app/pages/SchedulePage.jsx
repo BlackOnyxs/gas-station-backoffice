@@ -32,6 +32,8 @@ export const SchedulePage = () => {
       startLoadingTurns();
     }, []);
 
+   
+
     useEffect(() => {
       if ( errorMessage !== undefined ) {
         Swal.fire({

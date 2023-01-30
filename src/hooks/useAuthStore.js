@@ -16,8 +16,9 @@ export const useAuthStore = () => {
         dispatch( onChecking() );
         try {
              const { data } = await gasApi.post('/auth', { email, password });
-             localStorage.setItem('token', data.token );
-             dispatch( onLogin({ name: data.name, uid: data.uid }) );
+             const { token, user:{ name, uid }} = data;
+             localStorage.setItem('token', token );
+             dispatch( onLogin({ name, uid }) );
         } catch (error) {
             console.log(error)
             dispatch( onLogout('Credenciales incorrectas.') );
@@ -33,8 +34,9 @@ export const useAuthStore = () => {
 
         try {
             const { data } = await gasApi.get('/auth/renew'); 
-            localStorage.setItem('token', data.token);
-            dispatch( onLogin({ name: data.name, uid: data.uid }) );
+            const { token, user:{ name, uid }} = data;
+             localStorage.setItem('token', token );
+             dispatch( onLogin({ name, uid }) );
         } catch (error) {
             localStorage.clear();
             dispatch( onLogout() );

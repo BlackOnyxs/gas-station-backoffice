@@ -50,6 +50,7 @@ export const AddScheduleModal = () => {
         setActiveWorker( workers[0] )
         form.setFieldsValue({
           'dispenser': workers[0],
+          'total': 0,
           'turn': turns ? `${turns[0]?.startTime} - ${turns[0]?.endTime}` : '',
           'date': moment()
         })          

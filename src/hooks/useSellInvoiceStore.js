@@ -57,6 +57,7 @@ export const useSellInvoiceStore = () => {
         }else{
             try {
                 const { data } = await gasApi.post('/sellinvoice/mobile', sellInvoice );
+                console.log(data)
                 dispatch( onCreateSellInvoice( data.invoice ) )
             } catch (error) {
                 console.log(error);

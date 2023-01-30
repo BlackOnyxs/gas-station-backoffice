@@ -30,7 +30,7 @@ export const useScheduleStore = () => {
 
     const starLoadingSchedule = async() => {
         try {
-            const { data } = await gasApi.get('/schedule?limit=10');
+            const { data } = await gasApi.get('/schedule?limit=30');
             dispatch( onLoadSchedule( data.schedule ) );
             // console.log(data.schedule)
         } catch (error) {
