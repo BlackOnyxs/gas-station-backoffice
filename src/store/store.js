@@ -10,6 +10,7 @@ import {
     providerSlice, 
     sellInvoiceSlice,
     schedulaSlice, 
+    socketsSlice,
     turnsSlice, 
     WorkersSlice
 } from './';
@@ -26,6 +27,7 @@ export const store = configureStore({
         schedule: schedulaSlice.reducer,
         turns: turnsSlice.reducer,
         sellInvoices: sellInvoiceSlice.reducer,
+        sockets: socketsSlice.reducer,
         ui: uiSlice.reducer,
         workers: WorkersSlice.reducer,
     },
