@@ -43,7 +43,6 @@ export const useFuelStore = () => {
     }
 
      const startSavingFuel = async( fuel ) => {
-        console.log(fuel)
         validOctane.map( o => {
             if ( o._id === fuel.octane ) {
               fuel.octane = o.value
