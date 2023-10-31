@@ -75,7 +75,7 @@ export const AddTurnModal = () => {
                   key="submit"
                   htmlType='submit'
                   form='category-form'
-                  style={{ backgroundColor: '#74cc26', color: 'white' }}    
+                  style={{ backgroundColor: '#FFA500', color: 'white' }}    
               >
                 Guardar
               </Button>,
