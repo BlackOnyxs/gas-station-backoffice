@@ -63,7 +63,7 @@ export const useBuyInvoiceStore = () => {
                 console.log(data)
             } catch (error) {
                 console.log(error);
-                dispatch( onBuyInvoiceError(error.response.data.msg) );
+                dispatch( onBuyInvoiceError( error.response.data.msg ) );
             }
         }
      }

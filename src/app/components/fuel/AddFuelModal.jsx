@@ -55,7 +55,7 @@ export const AddFuelModal = () => {
       <>
         <Modal 
             title={ activeFuel ? activeFuel.name : 'Nuevo Combustible' } 
-            visible={isModalOpen} 
+            open={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[

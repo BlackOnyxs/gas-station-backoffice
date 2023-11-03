@@ -127,7 +127,7 @@ export const TableConfigInvoice = () => {
           ),
       });
 
-    const columns = [
+      const columns = [
         {
           title: 'Factura',
           dataIndex: '_id',
@@ -147,12 +147,10 @@ export const TableConfigInvoice = () => {
           dataIndex: ['product', 'name'],
           key: 'product',
           width: '20%',
-          filters: validProductType.map( f => {
-            return {
-              text: f.name,
-              value: f.key
-            }
-          }),
+          filters: validProductType.map((f) => ({
+            text: f.name,
+            value: f.key,
+          })),
         },
         {
           title: 'Cantidad',
@@ -162,10 +160,12 @@ export const TableConfigInvoice = () => {
         },
         {
           title: 'Fecha',
-          dataIndex: 'createdAt',
-          key: 'createdAt',
+          dataIndex: 'date',
+          key: 'date',
           width: '10%',
-          render: (d) => (moment(d).format('YYYY/MM/DD'))
+          onCell: (record) => ({
+            onClick: () => moment(record.date, 'DD-MM-yyyy HH:mm:ss'),
+          }),
         },
         {
           title: 'Total',

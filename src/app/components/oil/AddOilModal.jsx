@@ -58,7 +58,7 @@ export const AddOilModal = () => {
       <>
         <Modal 
             title={ activeOil ? activeOil.name : 'Nuevo Aceite' }
-            visible={isModalOpen} 
+            open={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[

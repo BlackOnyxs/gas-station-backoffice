@@ -1,6 +1,7 @@
 export * from './useAuthStore';
 export * from './useBuyInvoiceStore';
 export * from './useClientStore';
+export * from './useDashboardStore';
 export * from './useFuelStore';
 export * from './useInventoryStore';
 export * from './useOilStore';
@@ -8,6 +9,7 @@ export * from './useProviderStore';
 export * from './useScheduleStore';
 export * from './useSellInvoiceStore';
 export * from './useSocket';
+export * from './useSocketInvoice';
 export * from './useTurnsStore';
 export * from './useUiStore';
 export * from './useWorkersStore';

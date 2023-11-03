@@ -72,7 +72,7 @@ export const AddScheduleModal = () => {
       <>
         <Modal 
             title={ activeSchedule ? activeSchedule._id : 'Nuevo Horario'}
-            visible={ isModalOpen } 
+            open={ isModalOpen } 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[

@@ -11,12 +11,11 @@ export const AddInvoiceModal = () => {
     const { setActiveClient, activeClient } = useClientStore();
     const { startSavingSellInvoice, activeSellInvoice, setActiveSellInvoice, startDeletingSellInvoice } = useSellInvoiceStore();
     const { activeProductType, products, setActiveProduct, activeProduct } = useInventoryStore();
-    const { setActiveWorker, activeWorker } = useWorkersStore();
+    
     const { clients } = useClientStore();
 
     const handleOk = ({ dispenser, product, client, quantity, total, date }) => {
         startSavingSellInvoice({ 
-          dispenser: activeWorker?.uid, 
           product: activeProduct?._id, 
           productType: activeProductType, 
           client: activeClient?._id, 
@@ -30,21 +29,20 @@ export const AddInvoiceModal = () => {
         setActiveSellInvoice(null);
     };
 
-    const handleCancel = () => {
-      closeModal();
-      setActiveSellInvoice(null);
-    };
-
     const handleDelete = () => {
       startDeletingSellInvoice(activeProductType[0]);
       closeModal();
     }
 
+    const handleCancel = () => {
+      closeModal();
+      setActiveSellInvoice(null);
+    };
+    
     const setInitialValues = () => {
-      if ( activeSellInvoice ) {
-        setActiveClient( activeSellInvoice.client );
-        setActiveProduct( activeSellInvoice.product );
-        setActiveWorker( activeSellInvoice.dispenser );
+      if (activeSellInvoice) {
+        setActiveClient(activeSellInvoice.client);
+        setActiveProduct(activeSellInvoice.product);
         form.setFieldsValue({
           'productType': activeSellInvoice.product.productType,
           'product': activeSellInvoice.product.name,
@@ -52,32 +50,33 @@ export const AddInvoiceModal = () => {
           'total': activeSellInvoice.total,
           'dispenser': activeSellInvoice.dispenser.name,
           'client': activeSellInvoice.client.name,
-          'date': moment(activeSellInvoice.date, 'YYYY/MM/DD')
-        })
-      }else{
+          'date': moment(activeSellInvoice.date, 'DD-MM-yyyy HH:mm:ss')
+        });
+      } else {
         form.setFieldsValue({
           'productType': activeProductType,
           'product': '',
-          // 'product': products ? products[0].name : '',
           'quantity': 1,
           'total': 0.00,
-          // 'Provider': providers ? providers[0].name : '',
           'dispenser': '',
           'client': '',
           'date': moment()
         });
       }
-    }
+    };
+    
 
     useEffect(() => {
       setInitialValues();
-    }, [products, clients ])
+    }, [products, clients, activeSellInvoice ])
+
+    
 
     return (
       <>
         <Modal 
             title={ activeSellInvoice ? activeSellInvoice._id : 'Nueva Venta'}
-            visible={isModalOpen} 
+            open={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[
