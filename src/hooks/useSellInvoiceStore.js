@@ -36,6 +36,7 @@ export const useSellInvoiceStore = () => {
         }
         try {
             const { data } = await gasApi.get(`/sellinvoice?productType=${productType}`);
+            console.log(data.invoices)
             dispatch( onLoadSellInvoices( data.invoices ) )
         } catch (error) {
             console.log(error);

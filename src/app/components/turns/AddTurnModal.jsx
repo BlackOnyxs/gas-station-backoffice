@@ -52,7 +52,7 @@ export const AddTurnModal = () => {
       <>
         <Modal 
             title={ activeTurn ? `Turno ${ activeTurn.startTime } - ${ activeTurn.endTime}`: 'Nuevo Turno' } //Todo: si existe el plato
-            visible={isModalOpen} 
+            open={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             footer={[
@@ -75,7 +75,7 @@ export const AddTurnModal = () => {
                   key="submit"
                   htmlType='submit'
                   form='category-form'
-                  style={{ backgroundColor: '#74cc26', color: 'white' }}    
+                  style={{ backgroundColor: '#FFA500', color: 'white' }}    
               >
                 Guardar
               </Button>,

@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { setObjectKey } from "../../helpers";
+import { createSlice } from '@reduxjs/toolkit';
+import { setObjectKey } from '../../helpers';
 
 export const sellInvoiceSlice = createSlice({
     name: 'sellInvoice',
@@ -18,8 +18,8 @@ export const sellInvoiceSlice = createSlice({
             state.activeSellInvoice = null;
         },
         onDeleteSellInvoice: (state) => {
-            state.sellInvoices.filter( si => si._id !== state.activeSellInvoice._id );
-            state.activeSellInvoice = null
+            state.sellInvoices = state.sellInvoices.filter(si => si._id !== state.activeSellInvoice._id);
+            state.activeSellInvoice = null;
         },
         onLoadSellInvoices: (state, {payload}) => {
             state.isLoadingSellInvoices = false;

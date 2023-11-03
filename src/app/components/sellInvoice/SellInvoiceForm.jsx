@@ -75,12 +75,15 @@ export const SellInvoiceForm = () => {
             label="Tipo de Producto"
             name="productType"
             key="productType"
+            
             >
               {
                 validProductType && (
                   <Select 
                     value={ activeProductType }
-                    onChange={ handleTypeChange }>
+                    onChange={ handleTypeChange }
+                    disabled
+                    >
                     {
                       validProductType.map( b => (
                         <Select.Option
@@ -102,7 +105,7 @@ export const SellInvoiceForm = () => {
         > 
             {
               products && (
-                <Select onChange={ handleProductChange }>
+                <Select onChange={ handleProductChange } disabled >
                   {
                     products.map( f => (
                       <Select.Option
@@ -152,22 +155,7 @@ export const SellInvoiceForm = () => {
                 name="dispenser"
                 key="dispenser"
               > 
-                  {
-                    workers && (
-                      <Select onChange={ handleDispenserChange }>
-                        {
-                          workers.map( w  => (
-                                <Select.Option
-                                  key={ w.uid }
-                                  value={ w.uid }
-                                >
-                                  { w.name }
-                                </Select.Option>
-                              ))             
-                        }
-                      </Select>
-                    )
-                  }
+                  <Input  disabled={true} />
             </Form.Item>
             <Form.Item
                 label="Cliente"
@@ -202,7 +190,7 @@ export const SellInvoiceForm = () => {
                     },
                   ]}
             >
-                <DatePicker locale={ locale } onChange={handleDateChange} />
+                <DatePicker locale={ locale } onChange={handleDateChange} format={'DD-MM-yyyy HH:mm:ss'} />
             </Form.Item>
             
   

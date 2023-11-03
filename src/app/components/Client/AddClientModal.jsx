@@ -50,7 +50,7 @@ export const AddClientModal = () => {
       <>
         <Modal 
             title={ activeClient ? activeClient.name : 'Nuevo Client'}  
-            visible={ isModalOpen } 
+            ope={ isModalOpen } 
             onOk={ handleOk } 
             onCancel={ handleCancel }
             footer={[

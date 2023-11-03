@@ -57,7 +57,7 @@ export const AddWorkerModal = () => {
       <>
         <Modal 
             title={ (activeWorker) ? activeWorker.name : 'Nuevo Colaborador'} //Todo: si existe el plato
-            visible={isModalOpen} 
+            open={isModalOpen} 
             onOk={handleOk} 
             onCancel={handleCancel}
             destroyOnClose={ true }

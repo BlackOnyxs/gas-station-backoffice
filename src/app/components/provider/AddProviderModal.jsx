@@ -48,7 +48,7 @@ export const AddProviderModal = () => {
       <>
         <Modal 
             title={ activeProvider ? activeProvider.name : 'Nuevo Proveedor'}  
-            visible={ isModalOpen } 
+            open={ isModalOpen } 
             onOk={ handleOk } 
             onCancel={ handleCancel }
             footer={[

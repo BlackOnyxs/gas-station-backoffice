@@ -37,16 +37,16 @@ export const SellInvoicePage = () => {
               <>
               <Row>
                 <Col span={ 24 } style={{ marginBottom: 15, textAlign: 'end'}}>
-                  <Button
+                  {/* <Button
                     type="primary"
                     style={{
-                      backgroundColor: '#74cc26',
+                      backgroundColor: '#FFA500',
                       borderColor: 'white',
                     }}
                     onClick={ () => openModal()  }
                   >
                       Agregar Venta
-                  </Button>
+                  </Button> */}
                 </Col>
               </Row>
               <TableConfigInvoice />

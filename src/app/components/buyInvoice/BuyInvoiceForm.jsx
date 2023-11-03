@@ -32,28 +32,17 @@ export const BuyInvoiceForm = () => {
   },[])
 
 
-  // useEffect(() => {
-  //   handlePrice();
-  // }, [activeProduct]);
-
   const handleTypeChange = (value, option) => {
     setActiveProductType( option.value );
   }
 
   const handleTotal = ({ target }) => {
     if ( !activeProduct ) return
-    // console.log(target.value)
     let newTotal = Number(target.value) * Number(activeProduct.sellPrice);
-    console.log(newTotal)
     if ( !Number.isNaN( newTotal ) ) {
       form.setFieldsValue({ total: newTotal })
     }
   }
-
-  // const handlePrice = () => {
-  //   if ( !activeProduct ) return
-  //   form.setFieldsValue({ price: activeProduct.price  })
-  // }
 
   const handleManager = ( manager ) => {
     workers.map( m => {
@@ -163,49 +152,10 @@ export const BuyInvoiceForm = () => {
             <Input 
               type="number" 
               onChange={  handleTotal }
-              min={ 0 }  
-              //  => {
-              //   setTotal( (old) => {
-              //     // console.log(old)
-              //     return {
-              //       ...old,
-              //       quantity: Number(target.value)
-              //     }
-              //   })
-              //  ()
-              // } }
+              min={ 0 }                
             />
             </Form.Item>
-            {/* <Form.Item
-                label="Precio"
-                name="price"
-                key="price"
-                rules={[
-                    {
-                      required: true,
-                      message: 'Campo reuqerido',
-                    },
-                  ]}
-            >
-                {/* <Input 
-                  type="number" 
-                  min={ 0 } 
-                  onChange={ ({ target }) => {
-                    setTotal( (old) => {
-                      // console.log({'e':target.value})
-                      console.log(old)
-                      return {
-                        ...old,
-                        price: Number(target.value)
-                      }
-                    })
-                    
-                    handleTotal()
-                  }}
-                /> 
-                <Input type="number" min={ 0 } disabled/>
-            </Form.Item> 
-            */}
+            
             <Form.Item
                 label="Monto Total"
                 name="total"
@@ -251,8 +201,8 @@ export const BuyInvoiceForm = () => {
                       message: 'Campo reuqerido',
                     },
                   ]}
-            >
-                <DatePicker locale={ locale } />
+            > 
+                <DatePicker locale={ locale } format={'DD-MM-yyyy hh:mm:ss'} />
             </Form.Item>
             
   

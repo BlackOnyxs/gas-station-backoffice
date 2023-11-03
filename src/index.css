@@ -50,3 +50,45 @@ code {
   width: 70px;
   height: 70px;
 }
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #FFA500;
+  border-color: transparent;
+}
+
+/* Menu */
+
+.ant-menu-vertical .ant-menu-item::after, .ant-menu-vertical-left .ant-menu-item::after, .ant-menu-vertical-right .ant-menu-item::after, .ant-menu-inline .ant-menu-item::after {
+  border-right: 3px solid #FFA500
+}
+
+/* SubMenu */
+.ant-menu-light .ant-menu-submenu-active .ant-menu-submenu-title:hover, .ant-menu-submenu:hover > .ant-menu-submenu-title > .ant-menu-submenu-arrow {
+  color:#FFA500
+}
+.ant-menu-submenu-selected {
+  color:#FFA500
+}
+.ant-menu-light .ant-menu-item:hover, .ant-menu-light .ant-menu-item-active {
+  color:#FFA500
+}
+
+
+/* Submenu item */
+.ant-menu-item-selected a,  .ant-menu-item-selected a:hover {
+  color: white;  
+}
+
+.ant-menu-item a:hover {
+  color: #FFA500;
+}
+
+.ant-menu.ant-menu-light  .ant-menu-item-selected {
+  background-color: #FFD700;
+  color: white; 
+  transition: background-color 0.3s; 
+}
+.ant-menu.ant-menu-light  .ant-menu-item-selected:hover,   .ant-menu.ant-menu-light  .ant-menu-item-selected a:hover{
+  color: white
+}
+

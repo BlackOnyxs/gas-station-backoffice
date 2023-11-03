@@ -1,5 +1,5 @@
 import { DownOutlined } from '@ant-design/icons';
-import { Layout, Menu, Space, Dropdown  } from 'antd';
+import { Layout, Menu, Space, Dropdown, Image  } from 'antd';
 import React, { useEffect } from 'react'
 import { Route, Routes, Navigate } from 'react-router-dom'
 import { AppRoutes } from '../app/routes/AppRoutes'
@@ -39,27 +39,36 @@ export const Router = () => {
   }
 
   return (
-    <Layout style={{ height: '100vh'}}>
-      <Sider hidden={ !user.uid }>
+    <Layout style={{ height: '100vh' }}>
+      <Sider 
+        style={{
+          backgroundColor: 'white',
+          borderRight: '1px solid #f0f0f0'
+        }}
+        hidden={ !user.uid }>
         <div className="logo">
-            {/* <Image
+            <Image
               width={ 200 } 
-              src="https://res.cloudinary.com/dyjsa002n/image/upload/v1656882232/logo_v80z7s.png"
-            /> */}
+              src="/src/assets/banner.png"
+              preview={ false }
+            />
         </div>
         <Menu
-          theme="dark"
           mode="inline"
           defaultSelectedKeys={['1']}
           items={ siderOptions }
         />
       </Sider>
-    <Layout className="site-layout">
-      <Header 
+    <Layout 
+      className="site-layout"
+      style={{ backgroundColor: 'white'}}
+    >
+      {/* <Header 
          hidden={ !user.uid }
         className="site-layout-background" 
         style={{
-            textAlign: 'end'
+            textAlign: 'end',
+            backgroundColor: 'white',
         }}>
            <Dropdown overlay={ (
             <Menu 
@@ -74,7 +83,7 @@ export const Router = () => {
                 </Space>
               </a>
            </Dropdown>
-      </Header>
+      </Header> */}
       <Content
         className="site-layout-background"
         style={{

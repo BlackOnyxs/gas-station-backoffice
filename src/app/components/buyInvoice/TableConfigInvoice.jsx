@@ -166,8 +166,10 @@ export const TableConfigInvoice = () => {
           dataIndex: 'date',
           key: 'date',
           width: '10%',
-          render: (d) => (moment(d).format('YYYY/MM/DD'))
-        },
+          onCell: (record) => ({
+            onClick: () => moment(record.date, 'DD-MM-yyyy HH:mm:ss'),
+          }),
+        },        
         {
           title: 'Total',
           dataIndex: 'total',

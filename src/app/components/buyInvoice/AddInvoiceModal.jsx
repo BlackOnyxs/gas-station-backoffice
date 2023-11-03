@@ -25,7 +25,7 @@ export const AddInvoiceModal = () => {
         price: activeProduct.sellPrice,
         total, 
         provider: activeProvider._id, 
-        date 
+        date: moment(date, 'YYYY-MM-DD hh:mm:ss')._i
       })
       closeModal();
       setActiveBuyInvoice(null)
@@ -36,19 +36,14 @@ export const AddInvoiceModal = () => {
       setActiveBuyInvoice(null)
   };
 
-  // const handleACtive = () => {
-  //   const activeP = products.find( p => p.)
-  // }
 
   const handleDelete = () => {
     startDeleteBuyInvoice(activeProductType[0]);
     closeModal();
-    // setActiveBuyInvoice(null)
   }
 
   const setInitialValues = () => {
     if ( activeBuyInvoice ) {
-      console.log({'active':activeBuyInvoice.product})
       setActiveProvider( activeBuyInvoice.provider );
       setActiveProduct( activeBuyInvoice.product );
       setActiveWorker( activeBuyInvoice.updatedBy );
@@ -60,7 +55,7 @@ export const AddInvoiceModal = () => {
         'total': activeBuyInvoice.total,
         'manager': activeBuyInvoice.updatedBy.name,
         'provider': activeBuyInvoice.provider.name,
-        'date': moment(activeBuyInvoice.date, 'YYYY/MM/DD')
+        'date': moment(activeBuyInvoice.date, 'DD-MM-yyyy HH:mm:ss')
       })
     }else{
       console.log('nop')
@@ -85,7 +80,7 @@ export const AddInvoiceModal = () => {
       <>
         <Modal 
             title={ activeBuyInvoice ? activeBuyInvoice._id : 'Nueva Venta'}
-            visible={ isModalOpen } 
+            open={ isModalOpen } 
             onOk={ handleOk } 
             onCancel={ handleCancel }
             footer={[
