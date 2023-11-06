@@ -5,7 +5,7 @@ export const CalendarEventBox = ({ event }) => {
     return (
       <>
         <strong>{ dispenser.name }</strong>
-        <strong> - { turn.startTime } - { turn.endTime }</strong>
+        <strong> - { turn.start } - { turn.end }</strong>
       </>
     )
 }

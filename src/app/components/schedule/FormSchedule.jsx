@@ -118,7 +118,7 @@ export const FormSchedule = () => {
                       },
                     ]}
               >
-                  <DatePicker  locale={ locale } />
+                  <DatePicker  locale={ locale } format={'DD-MM-yyyy'}/>
               </Form.Item>
               
               </>

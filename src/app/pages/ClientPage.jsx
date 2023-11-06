@@ -40,7 +40,7 @@ export const ClientPage = () => {
                   <Button
                     type="primary"
                     style={{
-                      backgroundColor: '#74cc26',
+                      backgroundColor: '#FFA500',
                       borderColor: 'white',
                     }}
                     onClick={ () => openModal()  }
