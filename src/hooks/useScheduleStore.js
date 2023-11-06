@@ -29,10 +29,11 @@ export const useScheduleStore = () => {
     }
 
     const starLoadingSchedule = async() => {
+        
         try {
             const { data } = await gasApi.get('/schedule?limit=30');
             dispatch( onLoadSchedule( data.schedule ) );
-            // console.log(data.schedule)
+            console.log(data.schedule)
         } catch (error) {
             console.log(error)
             dispatch( onScheduleError(error.response.data.msg) )
@@ -40,7 +41,6 @@ export const useScheduleStore = () => {
     }
 
     const startSavingSchedule = async( schedule ) => {
-        console.log(schedule)
         if ( schedule._id ) {
             try {
                 const { data } = await gasApi.put(`/schedule/${ schedule._id }`, schedule);
@@ -53,7 +53,6 @@ export const useScheduleStore = () => {
             try {
                 const { data } = await gasApi.post('/schedule', schedule);
                 dispatch( onCreateSchedule( data ) );
-                console.log(data)
             } catch (error) {
                 console.log(error)
                 dispatch( onScheduleError(error.response.data.msg) )

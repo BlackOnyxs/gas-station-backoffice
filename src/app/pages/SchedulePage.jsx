@@ -61,8 +61,8 @@ export const SchedulePage = () => {
     }
 
     const onDoubleClick = ( event ) => {
-      setActiveSchedule( event );
       console.log(event)
+      setActiveSchedule( event );
       openModal();
     }
 

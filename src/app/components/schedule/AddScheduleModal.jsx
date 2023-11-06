@@ -19,11 +19,11 @@ export const AddScheduleModal = () => {
           ...activeSchedule, 
           dispenser: activeWorker.uid , 
           turn: activeTurn._id, 
-          date, 
+          date: moment(date).format('DD-MM-yyyy'), 
           total,
           oldDispenser: activeSchedule?.dispenser.uid,
           oldTurn: activeSchedule?.turn._id,
-          oldDate: activeSchedule?.date,
+          oldDate: moment(activeSchedule?.date).format('DD-MM-yyyy') ,
         })
         closeModal();
     };
@@ -42,8 +42,8 @@ export const AddScheduleModal = () => {
         form.setFieldsValue({
           'dispenser': activeSchedule.dispenser.name,
           'total': activeSchedule.total,
-          'turn': `${activeSchedule.turn.startTime} - ${activeSchedule.turn.endTime}`,
-          'date': moment(activeSchedule.date, 'YYYY/MM/DD'),
+          'turn': `${activeSchedule.turn.start} - ${activeSchedule.turn.end}`,
+          'date': moment(activeSchedule.date, 'DD-MM-yyyy HH:mm:ss'),
         })        
       } else {
         setActiveTurn( turns[0] )
